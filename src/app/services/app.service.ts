@@ -37,7 +37,7 @@ export class AppService {
 
   public localStorage = {
     get: (key: string) => {
-      window.localStorage.getItem(`sqlchecking_${key}`);
+      return JSON.parse(window.localStorage.getItem(`sqlchecking_${key}`));
     },
     set: (key: string, data: any) => {
       return window.localStorage.setItem(

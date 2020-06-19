@@ -31,15 +31,14 @@ export class LoginComponent implements OnInit {
       if (value.oldPath) this.oldPath = value.oldPath;
       if (value.sso) {
         this.service
-          .httpGet(`/user/getSSO?perid=${value.perid}`)
+          .httpGet(`/loginsso?perid=${value.perid}`)
           .then((value: any) => {
-            // console.log(value);
-            if (value) {
-              if (value.success) {
-                this.service.navRouter(this.oldPath);
-              } else {
-                this.service.showAlert('', value.message, 'error');
-              }
+            console.log(value);
+            if(value.success){
+                this.service.localStorage.set("userLogin",value.result);
+                this.service.navRouter("/home")
+            }else{
+              this.service.showAlert('', 'กำลังใช้งานอยู่ที่ '+ value.ip, 'error');
             }
           });
       }
@@ -62,6 +61,6 @@ export class LoginComponent implements OnInit {
   };
 
   public openSSO = () => {
-
+    window.location.replace(environment.ssoLogin);
   };
 }

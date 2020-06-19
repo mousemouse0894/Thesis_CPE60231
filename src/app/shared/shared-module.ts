@@ -20,7 +20,7 @@ import { CommonModule } from '@angular/common';
     MaterialModule,
   ],
 })
-export class DemoMaterialModule {}
+export class SharedModule {}
 
 /**  Copyright 2019 Google LLC. All Rights Reserved.
     Use of this source code is governed by an MIT-style license that

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import Swal from 'sweetalert2';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -8,6 +9,29 @@ import Swal from 'sweetalert2';
 export class AppService {
   private rootAPI: string =
     'http://www.cpe.rmuti.ac.th/project/sqlchecking/api/index.php/';
+  public month: Array<string> = [
+    'มกราคม',
+    'กุมภาพันธ์',
+    'มีนาคม',
+    'เมษายน',
+    'พฤษภาคม',
+    'มิถุนายน',
+    'กรกฎาคม',
+    'สิงหาคม',
+    'กันยายน',
+    'ตุลาคม',
+    'พฤษจิกายน',
+    'ธันวาคม',
+  ];
+  public day: Array<string> = [
+    'อาทิตย์',
+    'จันทร์',
+    'อังคาร',
+    'พุธ',
+    'พฤหัสบดี',
+    'ศุกร์',
+    'เสาร์',
+  ];
 
   constructor(private http: HttpClient, private router: Router) {}
 

@@ -3,16 +3,32 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { DefaultComponent } from './components/default/default.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { PrivateComponent } from './components/private/private.component';
+import { LayoutModule } from '@angular/cdk/layout';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatIconModule } from '@angular/material/icon';
+import { MatListModule } from '@angular/material/list';
+import { AppService } from './services/app.service';
+import { CheckLoginGuard } from './guards/check-login.guard';
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
+  declarations: [AppComponent, DefaultComponent, PrivateComponent],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    LayoutModule,
+    MatToolbarModule,
+    MatButtonModule,
+    MatSidenavModule,
+    MatIconModule,
+    MatListModule,
   ],
-  providers: [],
-  bootstrap: [AppComponent]
+  providers: [AppService, CheckLoginGuard],
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

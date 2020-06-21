@@ -7,7 +7,7 @@ import { AppService } from 'src/app/services/app.service';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {
   private oldPath: string = '/home';
@@ -17,8 +17,7 @@ export class LoginComponent implements OnInit {
     public service: AppService,
     private activeRoute: ActivatedRoute,
     private formBuilder: FormBuilder
-  ) {
-  }
+  ) {}
 
   async ngOnInit() {
     this.formLogin = this.formBuilder.group({
@@ -33,13 +32,17 @@ export class LoginComponent implements OnInit {
         this.service
           .httpGet(`/loginsso?perid=${value.perid}`)
           .then((value: any) => {
-            console.log(value);
+            // console.log(value);
 
-            if(value.success){
-                this.service.localStorage.set("userLogin",value.result);
-                this.service.navRouter("/home")
-            }else{
-              this.service.showAlert('', 'กำลังใช้งานอยู่ที่ '+ value.ip, 'error');
+            if (value.success) {
+              this.service.localStorage.set('userLogin', value.result);
+              this.service.navRouter('/home');
+            } else {
+              this.service.showAlert(
+                '',
+                'กำลังใช้งานอยู่ที่ ' + value.ip,
+                'error'
+              );
             }
           });
       }
@@ -48,17 +51,24 @@ export class LoginComponent implements OnInit {
 
   public onLogin = () => {
     this.service
-      .httpPost('/loginmanual', JSON.stringify(this.formLogin.value))
+      .httpPost(
+        `/loginmanual`,
+        JSON.stringify(this.formLogin.value)
+      )
       .then((value: any) => {
-        console.log(value);
-          if (value.success) {
-            this.service.localStorage.set("userLogin",value.result);
-            this.service.navRouter("/home");
-          } else if(value.ip){
-            this.service.showAlert('', 'กำลังใช้งานอยู่ที่ IP '+ value.ip, 'error');
-          }else {
-            this.service.showAlert('', value.message, 'error');
-          }
+        // console.log(value);
+        if (value.success) {
+          this.service.localStorage.set('userLogin', value.result);
+          this.service.navRouter('/home');
+        } else if (value.ip) {
+          this.service.showAlert(
+            '',
+            'กำลังใช้งานอยู่ที่ IP ' + value.ip,
+            'error'
+          );
+        } else {
+          this.service.showAlert('', value.message, 'error');
+        }
       });
   };
 

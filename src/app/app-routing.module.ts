@@ -22,6 +22,11 @@ const routes: Routes = [
         import('./pages/notfound/notfound.module').then((m)=> m.NotfoundModule),
       },
       {
+        path:'forget-password',
+        loadChildren:() =>
+        import('./pages/forget-password/forget-password.module').then((m) => m.ForgetPasswordModule),
+      },
+      {
         path: '',
         component: PrivateComponent,
         canActivate: [CheckLoginGuard],
@@ -30,6 +35,11 @@ const routes: Routes = [
             path: 'home',
             loadChildren: () =>
               import('./pages/home/home.module').then((m) => m.HomeModule),
+          },
+          {
+            path:'change-password',
+            loadChildren:() =>
+              import('./pages/change-password/change-password.module').then((m) => m.ChangePasswordModule)
           },
           {
             path:'clear-access',

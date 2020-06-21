@@ -1,3 +1,5 @@
+import { TeacherGuard } from './guards/teacher.guard';
+import { StudentGuard } from './guards/student.guard';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
@@ -30,7 +32,7 @@ import { SharedModule } from './shared/shared-module';
     MatListModule,
     SharedModule
   ],
-  providers: [AppService, CheckLoginGuard],
+  providers: [AppService, CheckLoginGuard,StudentGuard,TeacherGuard],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

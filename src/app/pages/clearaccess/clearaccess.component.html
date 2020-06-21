@@ -1,0 +1,53 @@
+<div class="col-6 mb-3 text-right">
+  <button type="button" class="btn btn-danger btn-sm" (click)="deleteSelect()">
+    ลบที่เลือก
+  </button>
+</div>
+
+<table class="table table-sm table-borderless table-striped table-hover">
+  <thead>
+    <tr>
+      <th></th>
+      <th>No.</th>
+      <th>ip</th>
+      <th>time_end</th>
+      <th>token</th>
+      <th>uid</th>
+      <th>edit</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let x of accessStudentrecord; let i = index">
+      <th>
+        <input
+          type="checkbox"
+          aria-label="Checkbox Body"
+          id="check_{{ x.uid }}"
+          (change)="checkAllselect = false"
+        />
+      </th>
+      <th>
+        {{ i + 1 }}
+      </th>
+      <th>
+        {{ x.ip_address }}
+      </th>
+      <td>{{ x.time_end }}</td>
+      <td>
+        {{ x.firstNameThai }} {{ x.lastNameThai }}
+      </td>
+      <td (click)="tableCheck(x.uid); checkAllselect = false">
+        {{ x.uid }}
+      </td>
+      <td>
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="deleteAccressStudent('\''+x.uid+'\'')"
+        >
+          delete
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>

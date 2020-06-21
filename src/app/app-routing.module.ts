@@ -1,3 +1,5 @@
+import { TeacherGuard } from './guards/teacher.guard';
+import { StudentGuard } from './guards/student.guard';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { DefaultComponent } from './components/default/default.component';
@@ -15,6 +17,11 @@ const routes: Routes = [
           import('./pages/login/login.module').then((m) => m.LoginModule),
       },
       {
+        path:'notfound',
+        loadChildren: ()=>
+        import('./pages/notfound/notfound.module').then((m)=> m.NotfoundModule),
+      },
+      {
         path: '',
         component: PrivateComponent,
         canActivate: [CheckLoginGuard],
@@ -25,12 +32,23 @@ const routes: Routes = [
               import('./pages/home/home.module').then((m) => m.HomeModule),
           },
           {
+            path:'clear-access',
+            canActivate: [StudentGuard],
+            loadChildren:() =>
+            import('./pages/clearaccess/clearaccess.module').then((m) => m.ClearaccessModule),
+          },
+          {
             path: '',
             redirectTo: '/home',
             pathMatch: 'full',
           },
         ],
       },
+      {
+        path:'**',
+        loadChildren: ()=>
+          import('./pages/notfound/notfound.module').then((m)=>m.NotfoundModule)
+      }
     ],
   },
 ];

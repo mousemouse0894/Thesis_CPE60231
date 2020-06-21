@@ -34,6 +34,7 @@ export class LoginComponent implements OnInit {
           .httpGet(`/loginsso?perid=${value.perid}`)
           .then((value: any) => {
             console.log(value);
+
             if(value.success){
                 this.service.localStorage.set("userLogin",value.result);
                 this.service.navRouter("/home")
@@ -47,16 +48,17 @@ export class LoginComponent implements OnInit {
 
   public onLogin = () => {
     this.service
-      .httpPost('/user/login', JSON.stringify(this.formLogin.value))
+      .httpPost('/loginmanual', JSON.stringify(this.formLogin.value))
       .then((value: any) => {
-        // console.log(value);
-        if (value) {
+        console.log(value);
           if (value.success) {
-            this.service.navRouter(this.oldPath);
-          } else {
+            this.service.localStorage.set("userLogin",value.result);
+            this.service.navRouter("/home");
+          } else if(value.ip){
+            this.service.showAlert('', 'กำลังใช้งานอยู่ที่ IP '+ value.ip, 'error');
+          }else {
             this.service.showAlert('', value.message, 'error');
           }
-        }
       });
   };
 

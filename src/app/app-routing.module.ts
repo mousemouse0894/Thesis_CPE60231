@@ -55,6 +55,11 @@ const routes: Routes = [
             import('./pages/teacher/group-student/group-student.module').then((m)=>m.GroupStudentModule),
           },
           {
+            path:'group',
+            loadChildren:()=>
+            import('./pages/student/group/group.module').then((m)=>m.GroupModule),
+          },
+          {
             path: '',
             redirectTo: '/home',
             pathMatch: 'full',

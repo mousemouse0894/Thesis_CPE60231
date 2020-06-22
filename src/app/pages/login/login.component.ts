@@ -56,7 +56,7 @@ export class LoginComponent implements OnInit {
         JSON.stringify(this.formLogin.value)
       )
       .then((value: any) => {
-        // console.log(value);
+        console.log(value);
         if (value.success) {
           this.service.localStorage.set('userLogin', value.result);
           this.service.navRouter('/home');

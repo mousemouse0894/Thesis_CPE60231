@@ -1,0 +1,66 @@
+<p>group works!</p>
+
+<!--เข้ากลุ่ม-->
+<div>
+  <form
+  [formGroup]="formJoingroup"
+    (ngSubmit)="formJoingroup.valid ? onJoinGroup() : ''"
+  >
+    <p>ชื่อกลุ่ม:{{groupName}} </p>
+    <div class="mb-3">
+      <mat-form-field>
+        <input
+          matInput
+          placeholder="รหัสผ่านกลุ่ม (Grouppassword)"
+          type="text"
+          required
+          formControlName="password"
+        />
+      </mat-form-field>
+    </div>
+    <div style="margin-top: 20px;" class="text-center mb-1">
+      <button type="submit" class="btn btn-primary" >
+        ตกลง
+      </button>
+    </div>
+  </form>
+
+
+<!--เเสดงกลุ่มเรียน-->
+<table class="table table-sm table-borderless table-striped table-hover">
+  <thead>
+    <tr>
+      <th></th>
+      <th>createAt</th>
+      <th>groupID</th>
+      <th>name</th>
+      <th>owner</th>
+      <th>password</th>
+      <th>status</th>
+      <th>year</th>
+      <th>edit</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let x of Allgroupstudent; let i = index">
+      <td>{{ i + 1 }}</td>
+      <td>{{ x.createAt }}</td>
+      <td>{{ x.groupID }}</td>
+      <td>{{ x.name }}</td>
+      <td>{{ x.owner }}</td>
+      <td>{{ x.password }}</td>
+      <td>{{ x.status }}</td>
+      <td>{{ x.year }}</td>
+      <td>
+        <button
+        type="button"
+        class="btn btn-primary"
+        (click)="onSendGid(x.groupID,x.name)"
+      >
+        เข้ากลุ่ม
+      </button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+</div>

@@ -1,5 +1,5 @@
 <p>group-student works!</p>
-
+<!--เพิ่ม&เเก้ไขกลุ่มเรียน-->
 <div class="text-center mb-3">
   <form
     [formGroup]="formInsertgroup"
@@ -47,7 +47,7 @@
     </div>
   </form>
 </div>
-
+<!--เเสดงกลุ่มเรียน-->
 <table class="table table-sm table-borderless table-striped table-hover">
   <thead>
     <tr>
@@ -59,18 +59,67 @@
       <th>password</th>
       <th>status</th>
       <th>year</th>
+      <th>edit</th>
+      <th>editstudent</th>
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let x of groupStudent; let i = index" >
-      <td>{{ i+1}}</td>
-      <td>{{ x.createAt}}</td>
-      <td>{{ x.groupID}}</td>
-      <td>{{ x.name}}</td>
-      <td>{{ x.owner}}</td>
-      <td>{{ x.password}}</td>
-      <td>{{ x.status}}</td>
-      <td>{{ x.year}}</td>
+    <tr *ngFor="let x of groupStudent; let i = index">
+      <td>{{ i + 1 }}</td>
+      <td>{{ x.createAt }}</td>
+      <td>{{ x.groupID }}</td>
+      <td>{{ x.name }}</td>
+      <td>{{ x.owner }}</td>
+      <td>{{ x.password }}</td>
+      <td>{{ x.status }}</td>
+      <td>{{ x.year }}</td>
+      <td>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="onEditgroup(x.groupID, x.name, x.status, x.password)"
+        >
+          เเก้ไขกลุ่ม
+        </button>
+      </td>
+      <td>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="getStudentingroup(x.groupID)"
+        >
+          เเก้ไขนักเรียนในกลุ่ม
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<!--เเสดงนักเรียนในกลุ่ม-->
+<table class="table table-sm table-borderless table-striped table-hover">
+  <thead>
+    <tr>
+      <th></th>
+      <th>firstNameThai</th>
+      <th>lastNameThai</th>
+      <th>studentId</th>
+      <th>edit</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let x of studentingroup; let i = index">
+      <td>{{ i + 1 }}</td>
+      <td>{{ x.firstNameThai }}</td>
+      <td>{{ x.lastNameThai }}</td>
+      <td>{{ x.studentId }}</td>
+      <td>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="onDeletestudent(x.uid,x.groupid_fk)"
+        >
+          ลบ
+        </button>
+      </td>
     </tr>
   </tbody>
 </table>

@@ -1,0 +1,76 @@
+<p>group-student works!</p>
+
+<div class="text-center mb-3">
+  <form
+    [formGroup]="formInsertgroup"
+    (ngSubmit)="formInsertgroup.valid ? onInsartgroup() : ''"
+  >
+    <div class="mb-3">
+      <mat-form-field>
+        <input
+          matInput
+          placeholder="ชื่่อกลุ่ม (namegroup)"
+          type="text"
+          required
+          formControlName="groupname"
+        />
+      </mat-form-field>
+    </div>
+
+    <div class="mb-3">
+      <mat-form-field>
+        <input
+          matInput
+          placeholder="สถานะ (status)"
+          type="text"
+          required
+          formControlName="status"
+        />
+      </mat-form-field>
+    </div>
+
+    <div class="mb-3">
+      <mat-form-field>
+        <input
+          matInput
+          placeholder="รหัสกลุ่ม (grouppassword)"
+          type="text"
+          required
+          formControlName="password"
+        />
+      </mat-form-field>
+    </div>
+    <div style="margin-top: 20px;" class="text-center mb-1">
+      <button type="submit" class="btn btn-primary">
+        ตกลง
+      </button>
+    </div>
+  </form>
+</div>
+
+<table class="table table-sm table-borderless table-striped table-hover">
+  <thead>
+    <tr>
+      <th></th>
+      <th>createAt</th>
+      <th>groupID</th>
+      <th>name</th>
+      <th>owner</th>
+      <th>password</th>
+      <th>status</th>
+      <th>year</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let x of groupStudent; let i = index" >
+      <td>{{ i+1}}</td>
+      <td>{{ x.createAt}}</td>
+      <td>{{ x.groupID}}</td>
+      <td>{{ x.name}}</td>
+      <td>{{ x.owner}}</td>
+      <td>{{ x.password}}</td>
+      <td>{{ x.status}}</td>
+      <td>{{ x.year}}</td>
+    </tr>
+  </tbody>
+</table>

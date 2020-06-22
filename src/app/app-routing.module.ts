@@ -48,6 +48,13 @@ const routes: Routes = [
             import('./pages/clearaccess/clearaccess.module').then((m) => m.ClearaccessModule),
           },
           {
+            path:'group-student',
+            canActivate:[StudentGuard],
+            // canActivate:[TeacherGuard],
+            loadChildren:()=>
+            import('./pages/teacher/group-student/group-student.module').then((m)=>m.GroupStudentModule),
+          },
+          {
             path: '',
             redirectTo: '/home',
             pathMatch: 'full',

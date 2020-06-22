@@ -42,7 +42,7 @@ export class PrivateComponent {
   };
 
   public onchange1(){
-    this.service.navRouter("/change-password");
+    this.service.navRouter("/group-student");
   }
 
 

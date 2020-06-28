@@ -1,0 +1,120 @@
+<p>เพิ่มunit</p>
+<!--เพิ่ม&เเก้ไขกลุ่มหน่วยเรียน-->
+<div class="text-center mb-3">
+  <form
+    [formGroup]="formInsertUnit"
+    (ngSubmit)="formInsertUnit.valid ? insertUnit() : ''"
+  >
+    <div class="mb-3">
+      <mat-form-field>
+        <input
+          matInput
+          placeholder="ชื่่อหน่วยการเรียนรู้ (unitname)"
+          type="text"
+          required
+          formControlName="name"
+        />
+      </mat-form-field>
+    </div>
+    <div class="mb-3">
+      <mat-form-field>
+        <input
+          matInput
+          placeholder="เนื่อหาหน่วยเรียน"
+          type="text"
+          required
+          formControlName="text"
+        />
+      </mat-form-field>
+    </div>
+    <div style="margin-top: 20px;" class="text-center mb-1">
+      <button type="submit" class="btn btn-primary">
+        ตกลง
+      </button>
+    </div>
+  </form>
+</div>
+<!--เเสดงกลุ่มหน่วยเรียน-->
+<table class="table table-sm table-borderless table-striped table-hover">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Unit</th>
+      <th>text<th>
+      <th>เเสดงจุดประสงค์</th>
+      <th>เเก้ไข</th>
+      <th>ลบ</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let x of getunit; let i = index">
+      <td>{{x.examUnitID}}</td>
+      <td>{{x.name}}</td>
+      <td>{{x.text}}</td>
+      <td>
+        <button type="button" class="btn btn-primary" (click)="getPurpose(x.examUnitID)">
+          เเสดงจุดประสงค์
+        </button>
+      </td>
+      <td>
+        <button type="button" class="btn btn-primary"
+        (click)="onUpdate(x.name,x.text,x.examUnitID)"
+        >
+          เเก้ไข
+        </button>
+      </td>
+      <td>
+        <button type="button" class="btn btn-primary"
+        (click)="onDelunit(x.examUnitID)"
+        >
+          ลบ
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<!--เพิ่มจุดประสงค์-->
+<p>เพิ่มจุดประสงค์:{{examUnitIDPurpose}}</p>
+<div class="text-center mb-3">
+  <form
+    [formGroup]="formInsertPurpose"
+    (ngSubmit)="formInsertPurpose.valid ? onInertPurpose() : ''"
+  >
+    <div class="mb-3">
+      <mat-form-field>
+        <input
+          matInput
+          placeholder="จุดประสงค์ (purpose)"
+          type="text"
+          required
+          formControlName="text"
+        />
+      </mat-form-field>
+    </div>
+    <div style="margin-top: 20px;" class="text-center mb-1">
+      <button type="submit" class="btn btn-primary">
+        ตกลง
+      </button>
+    </div>
+  </form>
+</div>
+
+<!--เเสดงจุดประสงค์-->
+<div *ngIf="getPurpose != null">
+<table class="table table-sm table-borderless table-striped table-hover">
+  <thead>
+    <tr>
+      <th></th>
+      <th>purpose</th>
+      <th>text<th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let x of getpurposeTable; let i = index">
+      <td>{{i+1}}</td>
+      <td>{{x.name}}</td>
+      <td>{{x.text}}</td>
+    </tr>
+  </tbody>
+</table>
+</div>

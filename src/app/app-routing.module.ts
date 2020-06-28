@@ -49,10 +49,15 @@ const routes: Routes = [
           },
           {
             path:'group-student',
-            canActivate:[StudentGuard],
             // canActivate:[TeacherGuard],
             loadChildren:()=>
             import('./pages/teacher/group-student/group-student.module').then((m)=>m.GroupStudentModule),
+          },
+          {
+            path:'unit',
+            // canActivate:[TeacherGuard],
+            loadChildren:()=>
+            import('./pages/teacher/unit/unit.module').then((m)=>m.UnitModule)
           },
           {
             path:'group',

@@ -79,7 +79,7 @@ export class PrivateComponent implements OnInit {
   };
 
   public onchange1() {
-    this.service.navRouter('/group');
+    this.service.navRouter('/unit');
   }
   public onchange2() {
     this.service.navRouter('/group-student');

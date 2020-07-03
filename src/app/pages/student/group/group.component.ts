@@ -9,14 +9,14 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 })
 export class GroupComponent implements OnInit {
   public Allgroupstudent: any = null;
-  public gid: any = null;
-  public groupName: any = null;
-  public checkselectgroup: boolean = false;
   public formJoingroup: FormGroup;
   constructor(public service: AppService, private formBuilder: FormBuilder) {}
 
   ngOnInit() {
     this.formJoingroup = this.formBuilder.group({
+      username: [this.service.localStorage.get('userLogin')['uid']],
+      groupName: [''],
+      groupID: ['', Validators.required],
       password: ['', Validators.required],
     });
     this.onGetgroupstudent();
@@ -37,37 +37,20 @@ export class GroupComponent implements OnInit {
       });
   };
 
-  public onSendGid = (groupID: any, gname: any) => {
-    this.gid = groupID;
-    this.groupName = gname;
-    this.checkselectgroup = true;
-  };
-
   public onJoinGroup = () => {
-    if (this.checkselectgroup) {
-      let data = {
-        groupID: this.gid,
-        username: this.service.localStorage.get('userLogin')['uid'],
-        password: this.formJoingroup.value.password,
-      };
-      this.service
-        .httpPost(
-          '/groupst/stjoingroup?token=' +
-            this.service.localStorage.get('userLogin')['token'],
-          JSON.stringify(data)
-        )
-        .then((value: any) => {
-          console.log(value);
-          console.log(data);
-          if (value.success) {
-            this.checkselectgroup = false;
-            this.service.showAlert('', 'เข้าสำเร็จ', 'success');
-          } else {
-            this.service.showAlert('', value.message, 'error');
-          }
-        });
-    } else {
-      this.service.showAlert('', 'เลือกกลุ่มด้วย', 'error');
-    }
+    this.service
+      .httpPost(
+        '/groupst/stjoingroup?token=' +
+          this.service.localStorage.get('userLogin')['token'],
+        JSON.stringify(this.formJoingroup.value)
+      )
+      .then((value: any) => {
+        console.log(value);
+        if (value.success) {
+          window.location.reload();
+        } else {
+          this.service.showAlert('', value.message, 'error');
+        }
+      });
   };
 }

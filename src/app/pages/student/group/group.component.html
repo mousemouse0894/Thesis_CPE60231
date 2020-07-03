@@ -1,66 +1,109 @@
-<p>group works!</p>
-
-<!--เข้ากลุ่ม-->
-<div>
-  <form
-  [formGroup]="formJoingroup"
-    (ngSubmit)="formJoingroup.valid ? onJoinGroup() : ''"
+<div class="box-padding">
+  <div
+    class="card"
+    *ngIf="!service.localStorage.get('userLogin')['groupid_fk']"
   >
-    <p>ชื่อกลุ่ม:{{groupName}} </p>
-    <div class="mb-3">
-      <mat-form-field>
-        <input
-          matInput
-          placeholder="รหัสผ่านกลุ่ม (Grouppassword)"
-          type="text"
-          required
-          formControlName="password"
-        />
-      </mat-form-field>
+    <div class="card-body">
+      <div class="mb-3">
+        <h2>เข้ากลุ่มเรียน</h2>
+      </div>
+      <table class="table table-sm table-borderless table-hover">
+        <thead>
+          <tr>
+            <th>ชื่อกลุ่มเรียน</th>
+            <th>ผู้ดูแลกลุ่ม</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let x of Allgroupstudent; let i = index">
+            <td style="vertical-align: middle;">{{ x.name }}</td>
+            <td style="vertical-align: middle;">{{ x.owner }}</td>
+            <td style="vertical-align: middle;">
+              <button
+                type="button"
+                class="btn btn-success btn-sm"
+                (click)="
+                  service.modal.show('modalJoinGroup');
+                  formJoingroup.patchValue({
+                    groupName: x.name,
+                    groupID: x.groupID
+                  })
+                "
+              >
+                เข้ากลุ่มเรียน
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-    <div style="margin-top: 20px;" class="text-center mb-1">
-      <button type="submit" class="btn btn-primary" >
-        ตกลง
-      </button>
+  </div>
+
+  <div class="card" *ngIf="service.localStorage.get('userLogin')['groupid_fk']">
+    <div class="card-body">
+      <h2>
+        กลุ่มเรียน&nbsp;{{ service.localStorage.get("userLogin")["groupname"] }}
+      </h2>
+      <p>
+        {{ service.localStorage.get("userLogin")["owner"] }}
+      </p>
     </div>
-  </form>
+  </div>
+</div>
 
-
-<!--เเสดงกลุ่มเรียน-->
-<table class="table table-sm table-borderless table-striped table-hover">
-  <thead>
-    <tr>
-      <th></th>
-      <th>createAt</th>
-      <th>groupID</th>
-      <th>name</th>
-      <th>owner</th>
-      <th>password</th>
-      <th>status</th>
-      <th>year</th>
-      <th>edit</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let x of Allgroupstudent; let i = index">
-      <td>{{ i + 1 }}</td>
-      <td>{{ x.createAt }}</td>
-      <td>{{ x.groupID }}</td>
-      <td>{{ x.name }}</td>
-      <td>{{ x.owner }}</td>
-      <td>{{ x.password }}</td>
-      <td>{{ x.status }}</td>
-      <td>{{ x.year }}</td>
-      <td>
-        <button
-        type="button"
-        class="btn btn-primary"
-        (click)="onSendGid(x.groupID,x.name)"
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="modalJoinGroup"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="modalJoinGroupLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <form
+        [formGroup]="formJoingroup"
+        (ngSubmit)="formJoingroup.valid ? onJoinGroup() : ''"
       >
-        เข้ากลุ่ม
-      </button>
-      </td>
-    </tr>
-  </tbody>
-</table>
+        <div class="modal-header">
+          <h3 class="modal-title" id="modalJoinGroupLabel">
+            เข้ากลุ่มเรียน {{ formJoingroup.value.groupName }}
+          </h3>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <mat-form-field appearance="outline">
+            <mat-label>รหัสเข้ากลุ่มเรียน</mat-label>
+            <input
+              matInput
+              placeholder=""
+              type="text"
+              formControlName="password"
+            />
+          </mat-form-field>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">
+            ยกเลิก
+          </button>
+          <button
+            type="submit"
+            class="btn btn-success"
+            [disabled]="formJoingroup.invalid"
+          >
+            ตกลง
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>

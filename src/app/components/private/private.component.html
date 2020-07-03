@@ -1,32 +1,57 @@
 <mat-sidenav-container class="sidenav-container">
   <mat-sidenav
     #drawer
-    class="sidenav"
+    class="sidenav box-shadow"
     fixedInViewport
     [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
     [mode]="(isHandset$ | async) ? 'over' : 'side'"
     [opened]="(isHandset$ | async) === false"
   >
-    <mat-toolbar>Menu</mat-toolbar>
+    <div class="text-center mt-3 mb-3">
+      <img src="assets/img/RMUTI_LOGO.png" alt="RMUTI_LOGO" width="90px" />
+      <h3>
+        {{ service.localStorage.get("userLogin")["firstNameThai"] }}&nbsp;{{
+          service.localStorage.get("userLogin")["lastNameThai"]
+        }}
+      </h3>
+      <h3 *ngIf="service.localStorage.get('userLogin')['gidNumber'] == '4500'">
+        {{ service.localStorage.get("userLogin")["studentId"] }}
+      </h3>
+    </div>
     <mat-nav-list>
-      <a mat-list-item (click)="onchange1()">Link 1</a>
-      <a mat-list-item (click)="onchange2()">Link 2</a>
-      <a mat-list-item (click)="onLogout()">ออกจากระบบ</a>
-
+      <!-- <!-- <a mat-list-item (click)="onchange1()">Link 1</a> -->
+      <a
+        mat-list-item
+        *ngFor="let x of menuList"
+        [routerLink]="x.path"
+        routerLinkActive="menuActive"
+      >
+        <span
+          style="display: inline-block; width: 35px;"
+          [innerHTML]="x.icon"
+        ></span
+        >{{ x.text }}
+      </a>
+      <a mat-list-item (click)="onLogout()" href="javascript:void(0)">
+        <span style="display: inline-block; width: 35px;">
+          <i class="fas fa-sign-out-alt"></i
+        ></span>
+        ออกจากระบบ
+      </a>
     </mat-nav-list>
   </mat-sidenav>
+
   <mat-sidenav-content>
-    <mat-toolbar color="primary">
+    <mat-toolbar class="box-shadow">
       <button
         type="button"
         aria-label="Toggle sidenav"
         mat-icon-button
         (click)="drawer.toggle()"
-        *ngIf="isHandset$ | async"
       >
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
-      <span>my-project</span>
+      <span>&nbsp;&nbsp;ระบบตรวจสอบการเขียนคำสั่งเอสคิวแอล</span>
     </mat-toolbar>
     <!-- Add Content Here -->
     <router-outlet></router-outlet>

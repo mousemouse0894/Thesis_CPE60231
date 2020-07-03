@@ -20,7 +20,6 @@ p {
   margin: unset !important;
 }
 
-
 .material-icons {
   font-family: "Material Icons" !important;
 }
@@ -94,4 +93,12 @@ mat-form-field {
 
 .fc-left {
   font-size: 10px !important;
+}
+
+.modal-backdrop {
+  display: none !important;
+}
+
+.modal {
+  background: rgba(0, 0, 0, 0.3);
 }

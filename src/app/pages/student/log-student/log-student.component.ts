@@ -7,7 +7,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./log-student.component.scss'],
 })
 export class LogStudentComponent implements OnInit {
-  public logResult:any = null;
+  public logResult: any = null;
   constructor(public service: AppService) {}
 
   ngOnInit() {
@@ -23,8 +23,7 @@ export class LogStudentComponent implements OnInit {
       )
       .then((value: any) => {
         if (value.success) {
-          this.logResult = value.result
-          console.log(value);
+          this.logResult = value.result;
         } else {
           this.service.showAlert('', value.message, 'error');
         }

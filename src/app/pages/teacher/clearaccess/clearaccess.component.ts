@@ -1,4 +1,4 @@
-import { AppService } from './../../services/app.service';
+import { AppService } from './../../../services/app.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -27,7 +27,7 @@ export class ClearaccessComponent implements OnInit {
       .then((value: any) => {
         if (value.isLogin) {
           if (value.success) {
-            console.log(value)
+            console.log(value);
             this.accessStudentrecord = value.result;
           }
         } else {
@@ -46,7 +46,7 @@ export class ClearaccessComponent implements OnInit {
         ``
       )
       .then((value: any) => {
-        console.log(value)
+        console.log(value);
         this.getAccessStudent();
       });
   };
@@ -59,11 +59,10 @@ export class ClearaccessComponent implements OnInit {
       if (listCheck.checked == true) {
         arrChecked.push(`\'${element.uid}\'`);
       }
-
     });
-    console.log(arrChecked.join(", "));
+    console.log(arrChecked.join(', '));
     if (arrChecked.length > 0) {
-          this.deleteAccressStudent(arrChecked.join(", "));
+      this.deleteAccressStudent(arrChecked.join(', '));
     } else {
       this.service.showAlert('', 'ไม่ได้เลือก', 'error');
     }

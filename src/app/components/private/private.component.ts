@@ -4,7 +4,6 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { JsonPipe } from '@angular/common';
 
 @Component({
   selector: 'app-private',
@@ -18,13 +17,42 @@ export class PrivateComponent implements OnInit {
       map((result) => result.matches),
       shareReplay()
     );
+  public menuList: Array<{ path: string; text: string; icon: string }> = [];
 
   constructor(
     private breakpointObserver: BreakpointObserver,
     public service: AppService
   ) {}
+
   ngOnInit() {
-    this.onGetgroup();
+    if (this.service.localStorage.get('userLogin')['gidNumber'] == '4500') {
+      this.getGroup();
+      // นักศึกษา
+      this.menuList = [
+        {
+          path: '/home',
+          text: 'หน้าหลัก',
+          icon: '<i class="fas fa-home"></i>',
+        },
+        {
+          path: '/group',
+          text: 'กลุ่มเรียน',
+          icon: '<i class="fas fa-users"></i>',
+        },
+        {
+          path: '/log',
+          text: 'ประวัติการเข้าใช้งานระบบ',
+          icon: '<i class="fas fa-clipboard-list"></i>',
+        },
+        {
+          path: '/change-password',
+          text: 'เปลี่ยนรหัสผ่าน',
+          icon: '<i class="fas fa-key"></i>',
+        },
+      ];
+    } else {
+      // อาจารย์
+    }
   }
 
   public onLogout = () => {
@@ -54,7 +82,7 @@ export class PrivateComponent implements OnInit {
       });
   };
 
-  public onGetgroup = () => {
+  public getGroup = () => {
     let data = {
       username: this.service.localStorage.get('userLogin')['uid'],
       personalId: this.service.localStorage.get('userLogin')['personalId'],
@@ -66,22 +94,14 @@ export class PrivateComponent implements OnInit {
       )
       .then((value: any) => {
         if (value.success) {
-          let setGroup = {
+          this.service.localStorage.set('userLogin', {
             ...this.service.localStorage.get('userLogin'),
             ...value.result,
-          };
-          this.service.localStorage.set('userLogin', setGroup);
+          });
           console.log(this.service.localStorage.get('userLogin'));
         } else {
           this.service.showAlert('', value.message, 'error');
         }
       });
   };
-
-  public onchange1() {
-    this.service.navRouter('/log-student');
-  }
-  public onchange2() {
-    this.service.navRouter('/group-student');
-  }
 }

@@ -55,8 +55,13 @@ export class AppService {
       this.http
         .get(`${this.rootAPI}${url}`)
         .toPromise()
-        .then((value) => {
+        .then((value: any) => {
           resolve(value);
+          console.log(value);
+          if (value.isLogin == false) {
+            this.navRouter('/login');
+            this.localStorage.clear();
+          }
         })
         .catch((reason) => {
           reject(reason);
@@ -69,8 +74,13 @@ export class AppService {
       this.http
         .post(`${this.rootAPI}${url}`, data)
         .toPromise()
-        .then((value) => {
+        .then((value: any) => {
           resolve(value);
+          console.log(value);
+          if (value.isLogin == false) {
+            this.navRouter('/login');
+            this.localStorage.clear();
+          }
         })
         .catch((reason) => {
           reject(reason);
@@ -88,6 +98,14 @@ export class AppService {
       title: title,
       text: message,
       confirmButtonText: 'ตกลง',
+      onBeforeOpen: function (ele) {
+        const windows: any = window;
+        windows
+          .$(ele)
+          .find('button.swal2-confirm.swal2-styled')
+          .toggleClass('swal2-confirm swal2-styled btn btn-success')
+          .attr('style', '');
+      },
     });
   };
 
@@ -102,11 +120,24 @@ export class AppService {
         text: message,
         icon: type,
         showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
         confirmButtonText: 'ตกลง',
         cancelButtonText: 'ยกเลิก',
+        reverseButtons: true,
         focusCancel: true,
+        onBeforeOpen: function (ele) {
+          const windows: any = window;
+          windows
+            .$(ele)
+            .find('button.swal2-confirm.swal2-styled')
+            .toggleClass('swal2-confirm swal2-styled btn btn-success ml-2')
+            .attr('style', '');
+
+          windows
+            .$(ele)
+            .find('button.swal2-cancel.swal2-styled')
+            .toggleClass('swal2-cancel swal2-styled btn btn-danger mr-2')
+            .attr('style', '');
+        },
       }).then((result) => {
         if (result.value) {
           resolve(true);
@@ -131,5 +162,17 @@ export class AppService {
 
   public navRouter = (path: string, params: any = {}) => {
     this.router.navigate([`${path}`], { queryParams: params });
+  };
+
+  public modal = {
+    show: (id: string) => {
+      const windows: any = window;
+
+      windows.$(`#${id}`).modal('show');
+    },
+    hide: (id: string) => {
+      const windows: any = window;
+      windows.$(`#${id}`).modal('hide');
+    },
   };
 }

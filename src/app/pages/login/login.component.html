@@ -35,7 +35,7 @@
                 [formGroup]="formLogin"
                 (ngSubmit)="formLogin.valid ? onLogin() : ''"
               >
-                <div class="mb-4">
+                <div class="mb-3">
                   <mat-form-field appearance="outline">
                     <mat-label>ชื่อผู้ใช้งาน</mat-label>
                     <input
@@ -44,9 +44,9 @@
                       type="text"
                       formControlName="username"
                     />
-                    <mat-hint style="font-size: 13px;">
+                    <!-- <mat-hint style="font-size: 13px;">
                       *สำหรับนักศึกษา ให้ใช้รหัสประจำตัวนักศึกษาในการเข้าสู่ระบบ
-                    </mat-hint>
+                    </mat-hint> -->
                   </mat-form-field>
                 </div>
 
@@ -75,8 +75,7 @@
 
         <div class="text-center">
           <p>
-            Copyright © 2020 มหาวิทยาลัยเทคโนโลยีราชมงคลอีสาน
-            นครราชสีมา
+            Copyright © 2020 มหาวิทยาลัยเทคโนโลยีราชมงคลอีสาน นครราชสีมา
           </p>
         </div>
       </div>

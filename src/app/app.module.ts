@@ -17,6 +17,8 @@ import { MatListModule } from '@angular/material/list';
 import { AppService } from './services/app.service';
 import { CheckLoginGuard } from './guards/check-login.guard';
 import { SharedModule } from './shared/shared-module';
+import { CalendarModule, DateAdapter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 
 @NgModule({
   declarations: [AppComponent, DefaultComponent, PrivateComponent],
@@ -30,9 +32,13 @@ import { SharedModule } from './shared/shared-module';
     MatSidenavModule,
     MatIconModule,
     MatListModule,
-    SharedModule
+    SharedModule,
+    CalendarModule.forRoot({
+      provide: DateAdapter,
+      useFactory: adapterFactory,
+    }),
   ],
-  providers: [AppService, CheckLoginGuard,StudentGuard,TeacherGuard],
+  providers: [AppService, CheckLoginGuard, StudentGuard, TeacherGuard],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

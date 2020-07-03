@@ -103,6 +103,7 @@
       <th>lastNameThai</th>
       <th>studentId</th>
       <th>edit</th>
+      <th>log</th>
     </tr>
   </thead>
   <tbody>
@@ -120,6 +121,43 @@
           ลบ
         </button>
       </td>
+      <td>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="onGetlogstudent(x.uid)"
+        >
+          ดู log
+        </button>
+      </td>
     </tr>
   </tbody>
 </table>
+
+
+<!--ดูlog-->
+<div class="text-center mb-3">
+  <table class="table table-sm table-borderless table-striped table-hover">
+    <thead>
+      <tr>
+        <th></th>
+        <th>ip_address</th>
+        <th>status</th>
+        <th>times</th>
+        <th>uid</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let x of logResult; let i = index">
+        <td>{{ i + 1 }}</td>
+        <td>{{ x.ip_address }}</td>
+        <td>{{ x.status }}</td>
+        <td>{{ x.times }}</td>
+        <td>
+          {{x.uid}}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>

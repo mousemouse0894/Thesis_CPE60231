@@ -13,6 +13,7 @@ export class GroupStudentComponent implements OnInit {
   public studentingroup: any = null;
   public formInsertgroup: FormGroup;
   public checkedit: boolean = false;
+  public logResult: any = null;
   constructor(public service: AppService, private formBuilder: FormBuilder) {}
 
   ngOnInit() {
@@ -138,4 +139,25 @@ export class GroupStudentComponent implements OnInit {
         }
       });
   };
+
+    //------------------------------------------------------------------------
+  // getlog
+  public onGetlogstudent = (studentid:any) => {
+    this.service
+      .httpGet(
+        `/logmember/${
+          studentid
+        }?token=${this.service.localStorage.get('userLogin')['token']}`
+      )
+      .then((value: any) => {
+        if (value.success) {
+          this.logResult = value.result
+          console.log(value);
+        } else {
+          this.service.showAlert('', value.message, 'error');
+        }
+      });
+  };
+
+
 }

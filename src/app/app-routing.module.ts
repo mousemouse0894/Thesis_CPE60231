@@ -65,6 +65,11 @@ const routes: Routes = [
             import('./pages/student/group/group.module').then((m)=>m.GroupModule),
           },
           {
+            path:'log-student',
+            loadChildren:()=>
+            import('./pages/student/log-student/log-student.module').then((m)=>m.LogStudentModule),
+          },
+          {
             path: '',
             redirectTo: '/home',
             pathMatch: 'full',

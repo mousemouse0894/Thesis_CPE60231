@@ -23,6 +23,7 @@ export class UnitComponent implements OnInit {
       text: ['', Validators.required],
     });
     this.formInsertPurpose = this.formBuilder.group({
+      name: ['', Validators.required],
       text: ['', Validators.required],
     });
     this.getUnittable();
@@ -61,7 +62,6 @@ export class UnitComponent implements OnInit {
             this.getUnittable();
           } else {
             this.checkupdate = false;
-
             this.service.showAlert('', value.message, 'error');
             this.getUnittable();
           }
@@ -107,12 +107,13 @@ export class UnitComponent implements OnInit {
           this.getUnittable();
           this.service.showAlert('', 'ลบสำเร็จ', 'success');
         } else {
+          console.log(value)
           this.service.showAlert('', value.message, 'error');
         }
       });
   };
 
-  public onUpdate = (unitname: any, unitContent: any, examUnitID: any) => {
+  public onUpdateUnit = (unitname: any, unitContent: any, examUnitID: any) => {
     this.formInsertUnit = this.formBuilder.group({
       examUnitID: examUnitID,
       name: [unitname, Validators.required],
@@ -142,24 +143,74 @@ export class UnitComponent implements OnInit {
   };
 
   public onInertPurpose = () => {
-    let dataPurpost = {
-      name: this.service.localStorage.get('userLogin')['uid'],
-      text: this.formInsertPurpose.value.text,
-      examunitID_fk: this.examUnitIDPurpose,
-    };
-    this.service
-      .httpPost(
-        `/exampurpose/insertpurpose?token=${
-          this.service.localStorage.get('userLogin')['token']
-        }`,
-        JSON.stringify(dataPurpost)
-      )
-      .then((value: any) => {
-        if (value.success) {
-          this.service.showAlert('', 'เพิ่มสำเร็จ', 'success');
-        } else {
-          this.service.showAlert('', value.message, 'error');
-        }
-      });
+    if (this.checkupdate) {
+      //อัพเดทจุดประสงค์
+      console.log(this.formInsertPurpose.value);
+      this.service
+        .httpPost(
+          `/exampurpose/updatepurpose?token=${
+            this.service.localStorage.get('userLogin')['token']
+          }`,
+          JSON.stringify(this.formInsertPurpose.value)
+        )
+        .then((value: any) => {
+          if (value.success) {
+            console.log(value);
+            this.checkupdate = false;
+            this.getPurpose(this.formInsertPurpose.value.examunitID_fk);
+            this.service.showAlert('', 'เพิ่มสำเร็จ', 'success');
+          } else {
+            this.checkupdate = false;
+            this.service.showAlert('', value.message, 'error');
+          }
+        });
+    } else {
+      //เพิ่มจุดประสงค์
+      let dataPurpost = {
+        name: this.formInsertPurpose.value.name,
+        text: this.formInsertPurpose.value.text,
+        examunitID_fk: this.examUnitIDPurpose,
+      };
+      this.service
+        .httpPost(
+          `/exampurpose/insertpurpose?token=${
+            this.service.localStorage.get('userLogin')['token']
+          }`,
+          JSON.stringify(dataPurpost)
+        )
+        .then((value: any) => {
+          if (value.success) {
+            this.service.showAlert('', 'เพิ่มสำเร็จ', 'success');
+          } else {
+            this.service.showAlert('', value.message, 'error');
+          }
+        });
+    }
   };
+
+  public onUpdatePurpose = (name: any, text: any, exampurposeID: any) => {
+    this.formInsertPurpose = this.formBuilder.group({
+      exampurposeID: exampurposeID,
+      name: [name, Validators.required],
+      text: [text, Validators.required],
+    });
+    this.checkupdate = true;
+  };
+
+  public onDeletePurpose = (
+    exampurposeID:any
+  ) => {
+    let deldata = {
+      exampurposeID:exampurposeID
+    }
+    this.service.httpPost(`/exampurpose/delpurpose?token=${this.service.localStorage.get('userLogin')['token']}`,JSON.stringify(deldata)).then((value: any) => {
+          if(value.success){
+            this.service.showAlert('','ลบสำเร็จ','success')
+          }else{
+            this.service.showAlert('',value.message,'error')
+          }
+    });
+  };
+
+
 }

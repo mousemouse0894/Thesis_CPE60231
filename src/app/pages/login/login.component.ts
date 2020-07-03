@@ -26,13 +26,14 @@ export class LoginComponent implements OnInit {
     });
 
     this.activeRoute.queryParams.subscribe((value: any) => {
-      // console.log(value);
+      console.log(value.perid);
+      console.log(value);
       if (value.oldPath) this.oldPath = value.oldPath;
       if (value.sso) {
         this.service
           .httpGet(`/loginsso?perid=${value.perid}`)
           .then((value: any) => {
-            // console.log(value);
+            console.log(value);
 
             if (value.success) {
               this.service.localStorage.set('userLogin', value.result);
@@ -58,6 +59,7 @@ export class LoginComponent implements OnInit {
       .then((value: any) => {
         console.log(value);
         if (value.success) {
+
           this.service.localStorage.set('userLogin', value.result);
           this.service.navRouter('/home');
         } else if (value.ip) {

@@ -18,7 +18,7 @@
         <tbody>
           <tr *ngFor="let x of Allgroupstudent; let i = index">
             <td style="vertical-align: middle;">{{ x.name }}</td>
-            <td style="vertical-align: middle;">{{ x.owner }}</td>
+            <td style="vertical-align: middle;">{{ x.firstNameThai }} {{x.lastNameThai}}</td>
             <td style="vertical-align: middle;">
               <button
                 type="button"
@@ -46,7 +46,7 @@
         กลุ่มเรียน&nbsp;{{ service.localStorage.get("userLogin")["groupname"] }}
       </h2>
       <p>
-        {{ service.localStorage.get("userLogin")["owner"] }}
+        {{ service.localStorage.get("userLogin")["firstNameThai"] }}      {{ service.localStorage.get("userLogin")["lastNameThai"] }}
       </p>
     </div>
   </div>

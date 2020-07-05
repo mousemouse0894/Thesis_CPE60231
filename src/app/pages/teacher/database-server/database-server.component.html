@@ -1,0 +1,74 @@
+<!--เเสดง database-->
+<h1>database</h1>
+<div class="text-center mb-3">
+  <table class="table table-sm table-borderless table-striped table-hover">
+    <thead>
+      <tr>
+        <th></th>
+        <th>database</th>
+        <th>showtable</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let x of databaseResult; let i = index">
+        <td>{{ i + 1 }}</td>
+        <td>{{ x.Database }}</td>
+        <td>
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="onGettable(x.Database)"
+          >
+            เเสดงtable
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<hr />
+
+<!--เเสดง table-->
+<h1>table</h1>
+<div class="text-center mb-3">
+  <table class="table table-sm table-borderless table-striped table-hover">
+    <thead>
+      <tr>
+        <th></th>
+        <th>name</th>
+        <th>showtable</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let x of tableResult; let i = index">
+        <td>{{ i + 1 }}</td>
+        <td>{{ x.table_name }}</td>
+        <td>
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="onGetDataintable(x.table_name)"
+          >
+            เเสดงResultintable
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<hr />
+<!--เเสดง dataintable-->
+<div class="text-center mb-3" *ngIf = "Dataintable != null">
+  <table class="table table-sm table-bordered" *ngIf="getKeyObject(Dataintable).length > 0">
+    <thead>
+      <tr>
+        <th *ngFor="let x of getKeyObject(Dataintable)">{{ x }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let x of Dataintable; let i = index">
+        <td *ngFor="let xx of getKeyObject(x)">{{ x[xx] }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

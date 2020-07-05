@@ -45,7 +45,6 @@ export class GroupComponent implements OnInit {
         JSON.stringify(this.formJoingroup.value)
       )
       .then((value: any) => {
-        console.log(value);
         if (value.success) {
           window.location.reload();
         } else {

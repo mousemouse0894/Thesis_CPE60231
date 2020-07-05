@@ -16,17 +16,6 @@
         />
       </mat-form-field>
     </div>
-    <div class="mb-3">
-      <mat-form-field>
-        <input
-          matInput
-          placeholder="เนื่อหาหน่วยเรียน"
-          type="text"
-          required
-          formControlName="text"
-        />
-      </mat-form-field>
-    </div>
     <div style="margin-top: 20px;" class="text-center mb-1">
       <button type="submit" class="btn btn-primary">
         ตกลง
@@ -40,9 +29,7 @@
     <tr>
       <th></th>
       <th>Unit</th>
-      <th>text</th>
-      <th></th>
-      <th>เเสดงจุดประสงค์</th>
+            <th>เเสดงจุดประสงค์</th>
       <th>เเก้ไข</th>
       <th>ลบ</th>
     </tr>
@@ -51,7 +38,6 @@
     <tr *ngFor="let x of getunit; let i = index">
       <td>{{ x.examUnitID }}</td>
       <td>{{ x.name }}</td>
-      <td>{{ x.text }}</td>
       <td>
         <button
           type="button"
@@ -65,7 +51,7 @@
         <button
           type="button"
           class="btn btn-primary"
-          (click)="onUpdateUnit(x.name, x.text, x.examUnitID)"
+          (click)="onUpdateUnit(x.name, x.examUnitID)"
         >
           เเก้ไข
         </button>
@@ -83,6 +69,7 @@
   </tbody>
 </table>
 <!--เพิ่มจุดประสงค์-->
+<div *ngIf="getpurposeTable != null">
 <p>เพิ่มจุดประสงค์:{{ examUnitIDPurpose }}</p>
 <div class="text-center mb-3">
   <form
@@ -100,18 +87,6 @@
       />
     </mat-form-field>
   </div>
-
-    <div class="mb-3">
-      <mat-form-field>
-        <input
-          matInput
-          placeholder="จุดประสงค์ (purpose)"
-          type="text"
-          required
-          formControlName="text"
-        />
-      </mat-form-field>
-    </div>
     <div style="margin-top: 20px;" class="text-center mb-1">
       <button type="submit" class="btn btn-primary">
         ตกลง
@@ -119,29 +94,29 @@
     </div>
   </form>
 </div>
+</div>
 
 <!--เเสดงจุดประสงค์-->
-<div *ngIf="getPurpose != null">
+<div *ngIf="getpurposeTable != null">
   <table class="table table-sm table-borderless table-striped table-hover">
     <thead>
       <tr>
         <th></th>
         <th>purpose</th>
-        <th>text</th>
         <th>edit</th>
         <th>delete</th>
+        <th>ย้ายจุดประสงค์</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let x of getpurposeTable; let i = index">
-        <td>{{ i + 1 }}</td>
+        <td>{{ x.exampurposeID}}</td>
         <td>{{ x.name }}</td>
-        <td>{{ x.text }}</td>
         <td>
           <button
             type="button"
             class="btn btn-primary"
-            (click)="onUpdatePurpose(x.name, x.text,x.exampurposeID)"
+            (click)="onUpdatePurpose(x.name,x.exampurposeID)"
           >
             เเก้ไข
           </button>
@@ -153,6 +128,41 @@
             (click)="onDeletePurpose(x.exampurposeID)"
           >
             ลบ
+          </button>
+        </td>
+        <td>
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="onCkeckChange(x.exampurposeID)"
+          >
+            ย้ายจุดประสงค์
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<!--ย้ายpurpose-->
+<div *ngIf="CkeckChange">
+  <table class="table table-sm table-borderless table-striped table-hover">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Unit</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let x of getunit; let i = index">
+        <td>{{ x.examUnitID }}</td>
+        <td>{{ x.name }}</td>
+        <td>
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="onChangepurpose(x.examUnitID)"
+          >
+            ย้าย
           </button>
         </td>
       </tr>

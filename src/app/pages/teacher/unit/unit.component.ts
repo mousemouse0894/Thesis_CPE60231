@@ -15,16 +15,16 @@ export class UnitComponent implements OnInit {
   public checkupdate: boolean = false;
   public getpurposeTable: any = null;
   public examUnitIDPurpose: any = null;
+  public CkeckChange: boolean = false;
+  public selectPurpose:any =null;
   constructor(public service: AppService, private formBuilder: FormBuilder) {}
 
   ngOnInit() {
     this.formInsertUnit = this.formBuilder.group({
       name: ['', Validators.required],
-      text: ['', Validators.required],
     });
     this.formInsertPurpose = this.formBuilder.group({
       name: ['', Validators.required],
-      text: ['', Validators.required],
     });
     this.getUnittable();
   }
@@ -48,6 +48,7 @@ export class UnitComponent implements OnInit {
 
   public insertUnit = () => {
     if (this.checkupdate) {
+      console.log(this.formInsertUnit.value)
       //เเก้ไขunit
       this.service
         .httpPost(
@@ -57,6 +58,7 @@ export class UnitComponent implements OnInit {
         )
         .then((value: any) => {
           if (value.success) {
+            console.log(value)
             this.checkupdate = false;
             this.service.showAlert('', 'เเก้ไขสำเร็จ', 'success');
             this.getUnittable();
@@ -70,8 +72,7 @@ export class UnitComponent implements OnInit {
       //เพิ่มunit
       let datainsertUnit = {
         owner: this.service.localStorage.get('userLogin')['uid'],
-        name: this.formInsertUnit.value.name,
-        text: this.formInsertUnit.value.text,
+        name: this.formInsertUnit.value.name
       };
       console.log(JSON.stringify(datainsertUnit));
       this.service
@@ -113,11 +114,11 @@ export class UnitComponent implements OnInit {
       });
   };
 
-  public onUpdateUnit = (unitname: any, unitContent: any, examUnitID: any) => {
+  public onUpdateUnit = (unitname: any, examUnitID: any) => {
+    console.log(examUnitID)
     this.formInsertUnit = this.formBuilder.group({
       examUnitID: examUnitID,
       name: [unitname, Validators.required],
-      text: [unitContent, Validators.required],
     });
     this.checkupdate = true;
   };
@@ -125,6 +126,7 @@ export class UnitComponent implements OnInit {
   //-------------------------------------------------------------------------------------
   public getPurpose = (examUnitID: any) => {
     this.examUnitIDPurpose = examUnitID;
+    console.log(examUnitID)
     this.service
       .httpGet(
         `/exampurpose/get/` +
@@ -135,7 +137,6 @@ export class UnitComponent implements OnInit {
       .then((value: any) => {
         if (value.success) {
           this.getpurposeTable = value.result;
-          console.log(this.getpurposeTable);
         } else {
           this.service.showAlert('', value.message, 'error');
         }
@@ -145,7 +146,6 @@ export class UnitComponent implements OnInit {
   public onInertPurpose = () => {
     if (this.checkupdate) {
       //อัพเดทจุดประสงค์
-      console.log(this.formInsertPurpose.value);
       this.service
         .httpPost(
           `/exampurpose/updatepurpose?token=${
@@ -168,7 +168,6 @@ export class UnitComponent implements OnInit {
       //เพิ่มจุดประสงค์
       let dataPurpost = {
         name: this.formInsertPurpose.value.name,
-        text: this.formInsertPurpose.value.text,
         examunitID_fk: this.examUnitIDPurpose,
       };
       this.service
@@ -188,11 +187,10 @@ export class UnitComponent implements OnInit {
     }
   };
 
-  public onUpdatePurpose = (name: any, text: any, exampurposeID: any) => {
+  public onUpdatePurpose = (name: any, exampurposeID: any) => {
     this.formInsertPurpose = this.formBuilder.group({
       exampurposeID: exampurposeID,
       name: [name, Validators.required],
-      text: [text, Validators.required],
     });
     this.checkupdate = true;
   };
@@ -212,5 +210,26 @@ export class UnitComponent implements OnInit {
     });
   };
 
+  //ย้ายจุดประสงค์
+
+  public onCkeckChange = (exampurposeID:any) =>{
+    this.selectPurpose = exampurposeID
+    this.CkeckChange = true
+  }
+  public onChangepurpose = (examUnitID:any) =>{
+    let changedata={
+      exampurposeID:this.selectPurpose,
+      examunitID_fk:examUnitID
+    }
+    this.service.httpPost(`/exampurpose/updateunitid?token=${this.service.localStorage.get('userLogin')['token']}`,JSON.stringify(changedata)).then((value:any) => {
+      if(value.success){
+          this.CkeckChange = false;
+          this.service.showAlert('','ย้ายสำเร็จ','success')
+      }else{
+        this.service.showAlert('',value.message,'error')
+      }
+
+    })
+  }
 
 }

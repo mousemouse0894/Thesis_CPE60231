@@ -1,0 +1,144 @@
+<!--เพิ่มข้อสอบ-->
+<div class="text-center mb-3">
+  <form
+    [formGroup]="formInsertexam"
+    (ngSubmit)="formInsertexam.valid ? onInsartexam() : ''"
+  >
+    <mat-form-field appearance="fill">
+      <mat-label>หน่วยการเรียนรู้</mat-label>
+      <mat-select
+        #examUnitID
+        (selectionChange)="onGetselectunit(examUnitID.value)"
+        formControlName="UnitID"
+      >
+        <mat-option [value]="x.examUnitID" *ngFor="let x of getunit">{{
+          x.name
+        }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" *ngIf="getpurposeTable != null">
+      <mat-label>จุดประสงค์</mat-label>
+      <mat-select   formControlName="purposeID_fk">
+        <mat-option
+          [value]="x.exampurposeID"
+          *ngFor="let x of getpurposeTable"
+          >{{ x.name }}</mat-option
+        >
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>ฐานข้อมูล</mat-label>
+      <mat-select formControlName="databaseName">
+        <mat-option [value]="x.Database" *ngFor="let x of databaseResult">{{
+          x.Database
+        }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <div class="mb-3">
+      <mat-form-field>
+        <input
+          matInput
+          placeholder="ข้อความ (text)"
+          type="text"
+          required
+          formControlName="text"
+        />
+      </mat-form-field>
+    </div>
+    <div class="mb-3">
+      <mat-form-field>
+        <input
+          matInput
+          placeholder="คำตอบ (answer)"
+          type="text"
+          required
+          formControlName="answer"
+        />
+      </mat-form-field>
+    </div>
+    <div class="mb-3">
+      <mat-form-field>
+        <input
+          matInput
+          placeholder="keyword (keyword)"
+          type="text"
+          required
+          formControlName="keyword"
+        />
+      </mat-form-field>
+    </div>
+    <div class="mb-3">
+      <mat-form-field>
+        <input
+          matInput
+          placeholder="คะเเนน (score)"
+          type="number"
+          required
+          formControlName="score"
+        />
+      </mat-form-field>
+    </div>
+    <div style="margin-top: 20px;" class="text-center mb-1">
+      <button type="submit" class="btn btn-primary">
+        ตกลง
+      </button>
+    </div>
+  </form>
+</div>
+
+<!-- เเสดงexam -->
+<div class="text-center mb-3">
+  <table class="table table-sm table-borderless table-striped table-hover">
+    <thead>
+      <tr>
+        <th></th>
+        <th>answer</th>
+        <th>createAt</th>
+        <th>databaseName</th>
+        <th>keyword</th>
+        <th>owner</th>
+        <th>purposeID_fk</th>
+        <th>score</th>
+        <th>storeID</th>
+        <th>text</th>
+        <th>edit</th>
+        <th>delete</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let x of examResult; let i = index">
+        <td>{{ i + 1 }}</td>
+        <td>{{ x.answer }}</td>
+        <td>{{ x.createAt }}</td>
+        <td>{{ x.databaseName }}</td>
+        <td>{{ x.keyword }}</td>
+        <td>{{ x.owner }}</td>
+        <td>{{ x.purposeID_fk }}</td>
+        <td>{{ x.score }}</td>
+        <td>{{ x.storeID }}</td>
+        <td>{{ x.text }}</td>
+        <td>
+          <button
+            type="button"
+            class="btn btn-primary"
+
+          >
+             เเก้ไข
+          </button>
+        </td>
+        <td>
+          <button
+            type="button"
+            class="btn btn-primary"
+
+          >
+             ลบ
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

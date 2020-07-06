@@ -1,7 +1,7 @@
 import { AppService } from './../../../services/app.service';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { JsonPipe } from '@angular/common';
+
 
 @Component({
   selector: 'app-group-student',
@@ -21,6 +21,7 @@ export class GroupStudentComponent implements OnInit {
       groupname: ['', Validators.required],
       password: ['', Validators.required],
       status: ['', Validators.required],
+      owner: this.service.localStorage.get('userLogin')['uid'],
     });
     this.onGetgroupstudent();
   }
@@ -42,9 +43,9 @@ export class GroupStudentComponent implements OnInit {
   };
 
   public onInsartgroup = () => {
+    this.formInsertgroup.value.groupname = 'CPE.'+ this.formInsertgroup.value.groupname
     if (this.checkedit) {
       //updategroup
-      console.log(JSON.stringify(this.formInsertgroup.value));
       this.service
         .httpPost(
           `/groupst/update?token=${
@@ -54,8 +55,9 @@ export class GroupStudentComponent implements OnInit {
         )
         .then((value: any) => {
           if (value.success) {
+            console.log(value);
             this.checkedit = false;
-            this.service.showAlert('', 'เพิ่มสำเร็จ', 'success');
+            this.service.showAlert('', 'เเก้ไขสำเร็จ', 'success');
             this.onGetgroupstudent();
           } else {
             this.service.showAlert('', value.message, 'error');
@@ -63,18 +65,12 @@ export class GroupStudentComponent implements OnInit {
         });
     } else {
       //insartgroup
-      let data = {
-        groupname: this.formInsertgroup.value.groupname,
-        password: this.formInsertgroup.value.password,
-        status: this.formInsertgroup.value.status,
-        owner: this.service.localStorage.get('userLogin')['uid'],
-      };
       this.service
         .httpPost(
           `/groupst/insert?token=${
             this.service.localStorage.get('userLogin')['token']
           }`,
-          JSON.stringify(data)
+          JSON.stringify(this.formInsertgroup.value)
         )
         .then((value: any) => {
           if (value.success) {
@@ -88,16 +84,13 @@ export class GroupStudentComponent implements OnInit {
   };
 
   public onEditgroup = (
-    groupID: any,
-    name: String,
-    status: String,
-    password: String
+    x: any,
   ) => {
     this.formInsertgroup = this.formBuilder.group({
-      groupID: groupID,
-      groupname: [name, Validators.required],
-      password: [password, Validators.required],
-      status: [status, Validators.required],
+      groupID: x.groupID,
+      groupname: [x.name.replace('CPE.',''), Validators.required],
+      password: [x.password, Validators.required],
+      status: [x.status, Validators.required],
     });
     this.checkedit = true;
   };

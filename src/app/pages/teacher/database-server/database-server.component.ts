@@ -63,4 +63,19 @@ export class DatabaseServerComponent implements OnInit {
     }
   };
 
+  public onClosedatabase = (Database:any) => {
+    let data = {
+      dbName:Database,
+      status: 1
+    }
+      this.service.httpPost(`/exdatabase/insertdup?token=${this.service.localStorage.get('userLogin')['token']}`,JSON.stringify(data)).then((value:any)=>{
+          if(value.success){
+            this.service.showAlert('',value.message,'success')
+          }else{
+              this.service.showAlert('',value.message,'error')
+          }
+
+      })
+  }
+
 }

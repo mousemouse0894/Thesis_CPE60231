@@ -1,11 +1,13 @@
-<p>group-student works!</p>
+
 <!--เพิ่ม&เเก้ไขกลุ่มเรียน-->
 <div class="text-center mb-3">
   <form
     [formGroup]="formInsertgroup"
     (ngSubmit)="formInsertgroup.valid ? onInsartgroup() : ''"
   >
+
     <div class="mb-3">
+
       <mat-form-field>
         <input
           matInput
@@ -13,7 +15,9 @@
           type="text"
           required
           formControlName="groupname"
+
         />
+        <span matPrefix>CPE.&nbsp;</span>
       </mat-form-field>
     </div>
 
@@ -77,7 +81,7 @@
         <button
           type="button"
           class="btn btn-primary"
-          (click)="onEditgroup(x.groupID, x.name, x.status, x.password)"
+          (click)="onEditgroup(x)"
         >
           เเก้ไขกลุ่ม
         </button>
@@ -95,48 +99,53 @@
   </tbody>
 </table>
 <!--เเสดงนักเรียนในกลุ่ม-->
-<table class="table table-sm table-borderless table-striped table-hover">
-  <thead>
-    <tr>
-      <th></th>
-      <th>firstNameThai</th>
-      <th>lastNameThai</th>
-      <th>studentId</th>
-      <th>edit</th>
-      <th>log</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let x of studentingroup; let i = index">
-      <td>{{ i + 1 }}</td>
-      <td>{{ x.firstNameThai }}</td>
-      <td>{{ x.lastNameThai }}</td>
-      <td>{{ x.studentId }}</td>
-      <td>
-        <button
-          type="button"
-          class="btn btn-primary"
-          (click)="onDeletestudent(x.uid,x.groupid_fk)"
-        >
-          ลบ
-        </button>
-      </td>
-      <td>
-        <button
-          type="button"
-          class="btn btn-primary"
-          (click)="onGetlogstudent(x.uid)"
-        >
-          ดู log
-        </button>
-      </td>
-    </tr>
-  </tbody>
-</table>
+<div *ngIf="studentingroup != null">
+  <div *ngIf="studentingroup.length>0">
+  <table class="table table-sm table-borderless table-striped table-hover">
+    <thead>
+      <tr>
+        <th></th>
+        <th>firstNameThai</th>
+        <th>lastNameThai</th>
+        <th>studentId</th>
+        <th>edit</th>
+        <th>log</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let x of studentingroup; let i = index">
+        <td>{{ i + 1 }}</td>
+        <td>{{ x.firstNameThai }}</td>
+        <td>{{ x.lastNameThai }}</td>
+        <td>{{ x.studentId }}</td>
+        <td>
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="onDeletestudent(x.uid,x.groupid_fk)"
+          >
+            ลบ
+          </button>
+        </td>
+        <td>
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="onGetlogstudent(x.uid)"
+          >
+            ดู log
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+</div>
+
 
 
 <!--ดูlog-->
-<div class="text-center mb-3">
+<div class="text-center mb-3" *ngIf="logResult != null ">
   <table class="table table-sm table-borderless table-striped table-hover">
     <thead>
       <tr>
@@ -159,5 +168,4 @@
       </tr>
     </tbody>
   </table>
-
 </div>

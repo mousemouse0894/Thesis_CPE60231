@@ -14,14 +14,18 @@ export class DatabaseServerComponent implements OnInit {
   constructor(public service:AppService) { }
 
   ngOnInit() {
+
       this.onGetdatabse();
   }
 
   public onGetdatabse = () =>{
     this.service.httpGet(`/exdatabase/show?token=${this.service.localStorage.get('userLogin')['token']}`).then((value:any)=>{
         if(value.success){
-            this.databaseResult = value.result
-            // console.log(this.databaseResult)
+            if(this.service.localStorage.get('userLogin')['gidNumber'] == 4500){
+              this.databaseResult= value.result.filter(value => value.status.indexOf(1) > -1)
+            }else {
+              this.databaseResult = value.result;
+            }
 
         }else{
             this.service.showAlert('',value.message,'error')
@@ -63,13 +67,14 @@ export class DatabaseServerComponent implements OnInit {
     }
   };
 
-  public onClosedatabase = (Database:any) => {
+  public onClosedatabase = (x:any) => {
     let data = {
-      dbName:Database,
-      status: 1
+      dbName:x.Database,
+      status: x.status==1?0 : 1
     }
       this.service.httpPost(`/exdatabase/insertdup?token=${this.service.localStorage.get('userLogin')['token']}`,JSON.stringify(data)).then((value:any)=>{
           if(value.success){
+            this.onGetdatabse();
             this.service.showAlert('',value.message,'success')
           }else{
               this.service.showAlert('',value.message,'error')

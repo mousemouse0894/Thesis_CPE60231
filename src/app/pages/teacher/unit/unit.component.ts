@@ -22,6 +22,7 @@ export class UnitComponent implements OnInit {
   ngOnInit() {
     this.formInsertUnit = this.formBuilder.group({
       name: ['', Validators.required],
+      owner: this.service.localStorage.get('userLogin')['uid']
     });
     this.formInsertPurpose = this.formBuilder.group({
       name: ['', Validators.required],
@@ -48,7 +49,6 @@ export class UnitComponent implements OnInit {
 
   public insertUnit = () => {
     if (this.checkupdate) {
-      console.log(this.formInsertUnit.value)
       //เเก้ไขunit
       this.service
         .httpPost(
@@ -70,16 +70,11 @@ export class UnitComponent implements OnInit {
         });
     } else {
       //เพิ่มunit
-      let datainsertUnit = {
-        owner: this.service.localStorage.get('userLogin')['uid'],
-        name: this.formInsertUnit.value.name
-      };
-      console.log(JSON.stringify(datainsertUnit));
       this.service
         .httpPost(
           '/examunit/insertunit?token=' +
             this.service.localStorage.get('userLogin')['token'],
-          JSON.stringify(datainsertUnit)
+          JSON.stringify(this.formInsertUnit.value)
         )
         .then((value: any) => {
           if (value.success) {
@@ -115,7 +110,6 @@ export class UnitComponent implements OnInit {
   };
 
   public onUpdateUnit = (unitname: any, examUnitID: any) => {
-    console.log(examUnitID)
     this.formInsertUnit = this.formBuilder.group({
       examUnitID: examUnitID,
       name: [unitname, Validators.required],
@@ -155,10 +149,9 @@ export class UnitComponent implements OnInit {
         )
         .then((value: any) => {
           if (value.success) {
-            console.log(value);
             this.checkupdate = false;
-            this.getPurpose(this.formInsertPurpose.value.examunitID_fk);
-            this.service.showAlert('', 'เพิ่มสำเร็จ', 'success');
+            this.getPurpose(this.examUnitIDPurpose);
+            this.service.showAlert('', 'แก้ไขสำเร็จ', 'success');
           } else {
             this.checkupdate = false;
             this.service.showAlert('', value.message, 'error');
@@ -179,6 +172,7 @@ export class UnitComponent implements OnInit {
         )
         .then((value: any) => {
           if (value.success) {
+            this.getPurpose(this.examUnitIDPurpose);
             this.service.showAlert('', 'เพิ่มสำเร็จ', 'success');
           } else {
             this.service.showAlert('', value.message, 'error');
@@ -186,6 +180,7 @@ export class UnitComponent implements OnInit {
         });
     }
   };
+
 
   public onUpdatePurpose = (name: any, exampurposeID: any) => {
     this.formInsertPurpose = this.formBuilder.group({
@@ -210,8 +205,8 @@ export class UnitComponent implements OnInit {
     });
   };
 
-  //ย้ายจุดประสงค์
 
+  //ย้ายจุดประสงค์
   public onCkeckChange = (exampurposeID:any) =>{
     this.selectPurpose = exampurposeID
     this.CkeckChange = true

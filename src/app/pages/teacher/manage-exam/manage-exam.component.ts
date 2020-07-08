@@ -1,6 +1,8 @@
 import { AppService } from './../../../services/app.service';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { MatChipInputEvent } from '@angular/material/chips';
 
 @Component({
   selector: 'app-manage-exam',
@@ -13,7 +15,14 @@ export class ManageExamComponent implements OnInit {
   public formInsertexam: FormGroup;
   public databaseResult: any = null;
   public examResult: any = null;
-  public checkEditexam:boolean = false;
+  public checkEditexam: boolean = false;
+  visible = true;
+  selectable = true;
+  removable = true;
+  addOnBlur = true;
+  readonly separatorKeysCodes: number[] = [ENTER, COMMA];
+  fruits: any[] = [];
+
   constructor(public service: AppService, private formBuilder: FormBuilder) {}
 
   ngOnInit() {
@@ -25,6 +34,8 @@ export class ManageExamComponent implements OnInit {
       keyword: ['', Validators.required],
       score: ['', Validators.required],
       UnitID: ['', Validators.required],
+      owner: this.service.localStorage.get('userLogin')['uid'],
+      oldOwner: this.service.localStorage.get('userLogin')['uid'],
     });
     this.getUnittable();
     this.onGetdatabse();
@@ -65,7 +76,6 @@ export class ManageExamComponent implements OnInit {
       });
   };
 
-
   public onGetdatabse = () => {
     this.service
       .httpGet(
@@ -82,8 +92,6 @@ export class ManageExamComponent implements OnInit {
       });
   };
 
-
-
   public onGetexam = () => {
     this.service
       .httpGet(
@@ -94,54 +102,39 @@ export class ManageExamComponent implements OnInit {
       .then((value: any) => {
         if (value.success) {
           this.examResult = value.result;
-          console.log(value);
         } else {
           this.service.showAlert('', value.message, 'error');
         }
       });
   };
 
-
-
   public onInsartexam = () => {
-    if(this.checkEditexam){
-          console.log(this.formInsertexam.value)
-          this.service
-          .httpPost(
-            `/exstore/update?token=${
-              this.service.localStorage.get('userLogin')['token']
-            }`,
-            JSON.stringify(this.formInsertexam.value)
-          )
-          .then((value: any) => {
-            if (value.success) {
-              console.log(value);
-              this.checkEditexam = false
-              this.onGetexam();
-              this.service.showAlert('', 'เเก้ไขสำเร็จสำเร็จ', 'success');
-            } else {
-              this.service.showAlert('', value.message, 'error');
-            }
-          });
-
-
-    }else{
-      let dataInsartexam = {
-        purposeID_fk: this.formInsertexam.value.purposeID_fk,
-        text: this.formInsertexam.value.text,
-        answer: this.formInsertexam.value.answer,
-        keyword: this.formInsertexam.value.keyword,
-        score: this.formInsertexam.value.score,
-        databaseName: this.formInsertexam.value.databaseName,
-        owner: this.service.localStorage.get('userLogin')['uid'],
-      };
-      console.log(JSON.stringify(dataInsartexam));
+    if (this.checkEditexam) {
+      this.service
+        .httpPost(
+          `/exstore/update?token=${
+            this.service.localStorage.get('userLogin')['token']
+          }`,
+          JSON.stringify(this.formInsertexam.value)
+        )
+        .then((value: any) => {
+          if (value.success) {
+            console.log(value);
+            this.checkEditexam = false;
+            this.onGetexam();
+            this.service.showAlert('', 'เเก้ไขสำเร็จสำเร็จ', 'success');
+          } else {
+            this.service.showAlert('', value.message, 'error');
+          }
+        });
+    } else {
+      console.log(JSON.stringify(this.formInsertexam.value));
       this.service
         .httpPost(
           `/exstore/insertexam?token=${
             this.service.localStorage.get('userLogin')['token']
           }`,
-          JSON.stringify(dataInsartexam)
+          JSON.stringify(this.formInsertexam.value)
         )
         .then((value: any) => {
           if (value.success) {
@@ -155,13 +148,12 @@ export class ManageExamComponent implements OnInit {
     }
   };
 
-  public onCheckupdateexam = (
-  x:any
-  ) => {
+  public onCheckupdateexam = (x: any) => {
     this.getUnittable();
     this.onGetselectunit(x.examunitID_fk);
+    this.fruits = JSON.parse(x.keyword);
     this.formInsertexam = this.formBuilder.group({
-      answer:  [x.answer, Validators.required],
+      answer: [x.answer, Validators.required],
       databaseName: [x.databaseName, Validators.required],
       keyword: [x.keyword, Validators.required],
       purposeID_fk: [x.purposeID_fk, Validators.required],
@@ -171,21 +163,53 @@ export class ManageExamComponent implements OnInit {
       owner: this.service.localStorage.get('userLogin')['uid'],
       UnitID: [x.examunitID_fk, Validators.required],
     });
-    this.checkEditexam = true
+    this.checkEditexam = true;
   };
 
-
-  public onDeleteexam = (x:any) => {
+  public onDeleteexam = (x: any) => {
     let dataDeleteexam = {
-      storeID:x.storeID
-    }
-    this.service.httpPost(`/exstore/delexam?token=${this.service.localStorage.get('userLogin')['token']}`, JSON.stringify(dataDeleteexam)).then((value: any) => {
-      if (value.success) {
-        this.onGetexam();
-        this.service.showAlert('', 'ลบสำเร็จ', 'success');
-      } else {
-        this.service.showAlert('', value.message, 'error');
-      }
-    });
+      storeID: x.storeID,
+    };
+    this.service
+      .httpPost(
+        `/exstore/delexam?token=${
+          this.service.localStorage.get('userLogin')['token']
+        }`,
+        JSON.stringify(dataDeleteexam)
+      )
+      .then((value: any) => {
+        if (value.success) {
+          this.onGetexam();
+          this.service.showAlert('', 'ลบสำเร็จ', 'success');
+        } else {
+          this.service.showAlert('', value.message, 'error');
+        }
+      });
   };
+
+  add(event: MatChipInputEvent): void {
+    const input = event.input;
+    const value = event.value;
+    if ((value || '').trim()) {
+      this.fruits.push({ name: value.trim() });
+    }
+    if (input) {
+      input.value = '';
+    }
+    this.formInsertexam.patchValue({
+      keyword: this.fruits.length > 0 ? JSON.stringify(this.fruits) : '',
+    });
+  }
+
+  remove(fruit: any): void {
+    const index = this.fruits.indexOf(fruit);
+
+    if (index >= 0) {
+      this.fruits.splice(index, 1);
+    }
+
+    this.formInsertexam.patchValue({
+      keyword: this.fruits.length > 0 ? JSON.stringify(this.fruits) : '',
+    });
+  }
 }

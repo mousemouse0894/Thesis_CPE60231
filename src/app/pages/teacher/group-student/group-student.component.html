@@ -22,15 +22,10 @@
     </div>
 
     <div class="mb-3">
-      <mat-form-field>
-        <input
-          matInput
-          placeholder="สถานะ (status)"
-          type="text"
-          required
-          formControlName="status"
-        />
-      </mat-form-field>
+      <mat-radio-group aria-label="Select an option" #status formControlName="status">
+        <mat-radio-button value="on">ON</mat-radio-button>
+        <mat-radio-button value="off">OFF</mat-radio-button>
+      </mat-radio-group>
     </div>
 
     <div class="mb-3">

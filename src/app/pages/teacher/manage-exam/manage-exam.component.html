@@ -60,19 +60,31 @@
       </mat-form-field>
     </div>
 
-    <div class="mb-3">
-      <mat-form-field>
+    <mat-form-field>
+      <mat-chip-list
+        #chipList
+        aria-label="Fruit selection"
+        required
+        formControlName="keyword"
+      >
+        <mat-chip
+          *ngFor="let fruit of fruits"
+          [selectable]="selectable"
+          [removable]="removable"
+          (removed)="remove(fruit)"
+        >
+          {{ fruit.name }}
+          <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+        </mat-chip>
         <input
-          matInput
-          placeholder="keyword (keyword)"
-          type="text"
-          required
-          formControlName="keyword"
+          placeholder="Keyword"
+          [matChipInputFor]="chipList"
+          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+          [matChipInputAddOnBlur]="addOnBlur"
+          (matChipInputTokenEnd)="add($event)"
         />
-      </mat-form-field>
-    </div>
-
-
+      </mat-chip-list>
+    </mat-form-field>
 
     <div class="mb-3">
       <mat-form-field>
@@ -128,11 +140,7 @@
           <button
             type="button"
             class="btn btn-primary"
-            (click)="
-            onCheckupdateexam(
-      x
-              )
-            "
+            (click)="onCheckupdateexam(x)"
           >
             เเก้ไข
           </button>
@@ -141,9 +149,7 @@
           <button
             type="button"
             class="btn btn-primary"
-            (click)="onDeleteexam(
-              x
-            )"
+            (click)="onDeleteexam(x)"
           >
             ลบ
           </button>
@@ -152,5 +158,3 @@
     </tbody>
   </table>
 </div>
-
-

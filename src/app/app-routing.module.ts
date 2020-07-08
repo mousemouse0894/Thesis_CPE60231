@@ -72,6 +72,14 @@ const routes: Routes = [
               ),
           },
           {
+            path: 'share',
+            canActivate: [TeacherGuard],
+            loadChildren: () =>
+              import('./pages/teacher/share-exam/share-exam.module').then(
+                (m) => m.ShareExamModule
+              ),
+          },
+          {
             path: 'group',
             canActivate: [StudentGuard],
             loadChildren: () =>
@@ -87,27 +95,28 @@ const routes: Routes = [
                 (m) => m.LogStudentModule
               ),
           },
+
           {
             path: '',
             redirectTo: '/home',
             pathMatch: 'full',
           },
           {
-            path:'database',
+            path: 'database',
             // canActivate:[TeacherGuard],
-            loadChildren:() =>
-            import('./pages/teacher/database-server/database-server.module').then(
-              (m) => m.DatabaseServerModule
-            )
+            loadChildren: () =>
+              import(
+                './pages/teacher/database-server/database-server.module'
+              ).then((m) => m.DatabaseServerModule),
           },
           {
-            path:'exam',
+            path: 'exam',
             // canActivate:[TeacherGuard],
-            loadChildren:() =>
-            import('./pages/teacher/manage-exam/manage-exam.module').then(
-              (m) => m.ManageExamModule
-            )
-          }
+            loadChildren: () =>
+              import('./pages/teacher/manage-exam/manage-exam.module').then(
+                (m) => m.ManageExamModule
+              ),
+          },
         ],
       },
       {

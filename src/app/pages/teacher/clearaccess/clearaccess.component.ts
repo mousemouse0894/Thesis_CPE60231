@@ -16,7 +16,6 @@ export class ClearaccessComponent implements OnInit {
   }
 
   public getAccessStudent = () => {
-    console.log(this.service.localStorage.get('userLogin')['token']);
     this.accessStudentrecord = null;
     this.service
       .httpGet(
@@ -27,7 +26,6 @@ export class ClearaccessComponent implements OnInit {
       .then((value: any) => {
         if (value.isLogin) {
           if (value.success) {
-            console.log(value);
             this.accessStudentrecord = value.result;
           }
         } else {
@@ -42,7 +40,7 @@ export class ClearaccessComponent implements OnInit {
       .httpPost(
         `/logoutsso?token=${
           this.service.localStorage.get('userLogin')['token']
-        }&username=${uid}&status=clear_token`,
+        }&username=${uid}&status=ออกจากระบบโดยอาจารย์`,
         ``
       )
       .then((value: any) => {
@@ -60,7 +58,7 @@ export class ClearaccessComponent implements OnInit {
         arrChecked.push(`\'${element.uid}\'`);
       }
     });
-    console.log(arrChecked.join(', '));
+
     if (arrChecked.length > 0) {
       this.deleteAccressStudent(arrChecked.join(', '));
     } else {
@@ -71,5 +69,10 @@ export class ClearaccessComponent implements OnInit {
   public tableCheck = (id: string) => {
     let listCheck: any = document.getElementById(`check_${id}`);
     listCheck.checked = !listCheck.checked;
+  };
+
+  public readTimeEnd = (data: string) => {
+    let dt = new Date(parseInt(data) * 1000);
+    return `${dt.toISOString().replace('T', ' ').replace('.000Z', '')}`;
   };
 }

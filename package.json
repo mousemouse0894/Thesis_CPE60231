@@ -28,6 +28,7 @@
     "bootstrap": "^4.5.0",
     "date-fns": "^2.14.0",
     "jquery": "^3.5.1",
+    "ngx-toastr": "^12.1.0",
     "rxjs": "~6.5.4",
     "sweetalert2": "^9.15.1",
     "tslib": "^1.10.0",

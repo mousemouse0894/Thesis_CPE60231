@@ -13,7 +13,7 @@ import {
 export class TeacherGuard implements CanActivate {
   constructor(private router: Router, public sevice: AppService) {}
   canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    if (this.sevice.localStorage.get('userLogin')['gidNumber'] != '4500') {
+    if (this.sevice.localStorage.get('userLogin')['gidNumber'] == '4500') {
       this.router.navigate(['/notfound']);
       return false;
     }

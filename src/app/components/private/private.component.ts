@@ -40,6 +40,11 @@ export class PrivateComponent implements OnInit {
           icon: '<i class="fas fa-users"></i>',
         },
         {
+          path: '/database',
+          text: 'ฐานข้อมูล',
+          icon: '<i class="fas fa-database"></i>',
+        },
+        {
           path: '/log',
           text: 'ประวัติการเข้าใช้งานระบบ',
           icon: '<i class="fas fa-clipboard-list"></i>',
@@ -52,6 +57,34 @@ export class PrivateComponent implements OnInit {
       ];
     } else {
       // อาจารย์
+
+      this.menuList = [
+        {
+          path: '/home',
+          text: 'หน้าหลัก',
+          icon: '<i class="fas fa-home"></i>',
+        },
+        {
+          path: '/group-student',
+          text: 'กลุ่มเรียน',
+          icon: '<i class="fas fa-users"></i>',
+        },
+        {
+          path: '/database',
+          text: 'ฐานข้อมูล',
+          icon: '<i class="fas fa-database"></i>',
+        },
+        {
+          path: '/clear-access',
+          text: 'ลบสถานะการเข้าสู่ระบบ',
+          icon: '<i class="fas fa-clipboard-list"></i>',
+        },
+        {
+          path: '/change-password',
+          text: 'เปลี่ยนรหัสผ่าน',
+          icon: '<i class="fas fa-key"></i>',
+        },
+      ];
     }
   }
 

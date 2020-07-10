@@ -1,53 +1,64 @@
-<div class="col-6 mb-3 text-right">
-  <button type="button" class="btn btn-danger btn-sm" (click)="deleteSelect()">
-    ลบที่เลือก
-  </button>
-</div>
+<div class="box-padding">
+  <div class="card">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <h2>ลบสถานะการเข้าสู่ระบบ</h2>
+        </div>
+        <div class="col-md-6 mb-3">
+          <div class="text-right"></div>
+        </div>
+      </div>
 
-<table class="table table-sm table-borderless table-striped table-hover">
-  <thead>
-    <tr>
-      <th></th>
-      <th>No.</th>
-      <th>ip</th>
-      <th>time_end</th>
-      <th>token</th>
-      <th>uid</th>
-      <th>edit</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let x of accessStudentrecord; let i = index">
-      <th>
-        <input
-          type="checkbox"
-          aria-label="Checkbox Body"
-          id="check_{{ x.uid }}"
-          (change)="checkAllselect = false"
-        />
-      </th>
-      <th>
-        {{ i + 1 }}
-      </th>
-      <th>
-        {{ x.ip_address }}
-      </th>
-      <td>{{ x.time_end }}</td>
-      <td>
-        {{ x.firstNameThai }} {{ x.lastNameThai }}
-      </td>
-      <td (click)="tableCheck(x.uid); checkAllselect = false">
-        {{ x.uid }}
-      </td>
-      <td>
-        <button
-          type="button"
-          class="btn btn-secondary"
-          (click)="deleteAccressStudent('\''+x.uid+'\'')"
-        >
-          delete
-        </button>
-      </td>
-    </tr>
-  </tbody>
-</table>
+      <table class="table table-sm table-borderless table-hover">
+        <thead>
+          <tr>
+            <th style="text-align: center; vertical-align: middle;">
+              <button
+                type="button"
+                class="btn btn-danger btn-sm"
+                (click)="deleteSelect()"
+              >
+                ลบที่เลือก
+              </button>
+            </th>
+            <th style="vertical-align: middle;">ชื่อ</th>
+            <th style="vertical-align: middle;">ที่อยู่ IP</th>
+            <th style="vertical-align: middle;">เวลาหมดอายุ</th>
+            <th style="vertical-align: middle;"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let x of accessStudentrecord; let i = index">
+            <td style="text-align: center; vertical-align: middle;">
+              <input
+                type="checkbox"
+                aria-label="Checkbox Body"
+                id="check_{{ x.uid }}"
+                (change)="checkAllselect = false"
+              />
+            </td>
+            <td style="vertical-align: middle;">
+              {{ x.firstNameThai }} {{ x.lastNameThai }}
+            </td>
+            <td style="vertical-align: middle;">
+              {{ x.ip_address }}
+            </td>
+            <td style="vertical-align: middle;">
+              {{ readTimeEnd(x.time_end) }}
+            </td>
+            <td>
+              <button
+                type="button"
+                class="btn btn-danger btn-sm"
+                (click)="deleteAccressStudent('\'' + x.uid + '\'')"
+              >
+                ลบ
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

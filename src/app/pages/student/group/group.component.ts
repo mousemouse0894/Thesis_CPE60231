@@ -8,7 +8,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
   styleUrls: ['./group.component.scss'],
 })
 export class GroupComponent implements OnInit {
-  public Allgroupstudent: any = null;
+  public Allgroupstudent: Array<any> = [];
   public formJoingroup: FormGroup;
   constructor(public service: AppService, private formBuilder: FormBuilder) {}
 

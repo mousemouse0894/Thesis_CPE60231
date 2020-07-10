@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root',
@@ -33,7 +34,20 @@ export class AppService {
     'เสาร์',
   ];
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private toastrCtrl: ToastrService
+  ) {}
+
+  public toastr = {
+    success: (title: string, message = '') => {
+      this.toastrCtrl.success(title, message);
+    },
+    error: (title: string, message = '') => {
+      this.toastrCtrl.error(title, message);
+    },
+  };
 
   public localStorage = {
     get: (key: string) => {
@@ -51,12 +65,12 @@ export class AppService {
   };
 
   public httpGet = (url: string) => {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       this.http
         .get(`${this.rootAPI}${url}`)
         .toPromise()
         .then((value: any) => {
-          resolve(value);
+          resolve({ connect: true, ...value });
           console.log(value);
           if (value.isLogin == false) {
             this.navRouter('/login');
@@ -64,18 +78,21 @@ export class AppService {
           }
         })
         .catch((reason) => {
-          reject(reason);
+          console.log(reason);
+          let newReason = reason;
+          newReason['message'] = reason['name'];
+          resolve({ connect: false, ...newReason });
         });
     });
   };
 
   public httpPost = (url: string, data: any) => {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       this.http
         .post(`${this.rootAPI}${url}`, data)
         .toPromise()
         .then((value: any) => {
-          resolve(value);
+          resolve({ connect: true, ...value });
           console.log(value);
           if (value.isLogin == false) {
             this.navRouter('/login');
@@ -83,7 +100,10 @@ export class AppService {
           }
         })
         .catch((reason) => {
-          reject(reason);
+          console.log(reason);
+          let newReason = reason;
+          newReason['message'] = reason['name'];
+          resolve({ connect: false, ...newReason });
         });
     });
   };

@@ -6,7 +6,7 @@ import { CalendarView } from 'angular-calendar';
   template: `
     <div class="row text-center">
       <div class="col-md-4">
-        <div class="btn-group">
+        <!-- <div class="btn-group">
           <div
             class="btn btn-primary"
             mwlCalendarPreviousView
@@ -33,13 +33,13 @@ import { CalendarView } from 'angular-calendar';
           >
             เดือนต่อไป
           </div>
-        </div>
+        </div> -->
       </div>
       <div class="col-md-4">
-        <h3>{{ viewDate | calendarDate: view + 'ViewTitle':locale }}</h3>
+        <h2>{{ viewDate | calendarDate: view + 'ViewTitle':locale }}</h2>
       </div>
       <div class="col-md-4">
-        <div class="btn-group">
+        <!-- <div class="btn-group">
           <div
             class="btn btn-primary"
             (click)="viewChange.emit(CalendarView.Month)"
@@ -61,7 +61,7 @@ import { CalendarView } from 'angular-calendar';
           >
             วัน
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
     <br />

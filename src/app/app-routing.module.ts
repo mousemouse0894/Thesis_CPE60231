@@ -95,15 +95,8 @@ const routes: Routes = [
                 (m) => m.LogStudentModule
               ),
           },
-
-          {
-            path: '',
-            redirectTo: '/home',
-            pathMatch: 'full',
-          },
           {
             path: 'database',
-            // canActivate:[TeacherGuard],
             loadChildren: () =>
               import(
                 './pages/teacher/database-server/database-server.module'
@@ -116,6 +109,11 @@ const routes: Routes = [
               import('./pages/teacher/manage-exam/manage-exam.module').then(
                 (m) => m.ManageExamModule
               ),
+          },
+          {
+            path: '',
+            redirectTo: '/home',
+            pathMatch: 'full',
           },
         ],
       },

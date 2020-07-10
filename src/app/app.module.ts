@@ -19,6 +19,7 @@ import { CheckLoginGuard } from './guards/check-login.guard';
 import { SharedModule } from './shared/shared-module';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
   declarations: [AppComponent, DefaultComponent, PrivateComponent],
@@ -37,6 +38,7 @@ import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
       provide: DateAdapter,
       useFactory: adapterFactory,
     }),
+    ToastrModule.forRoot(),
   ],
   providers: [AppService, CheckLoginGuard, StudentGuard, TeacherGuard],
   bootstrap: [AppComponent],

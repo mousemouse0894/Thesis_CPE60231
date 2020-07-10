@@ -1,117 +1,173 @@
 <!--เเสดง database-->
+<div class="box-padding">
+  <div class="row">
+    <div class="col-md-6 mb-3">
+      <div class="card">
+        <div class="card-body">
+          <h2 class="mb-3">รายชื่อฐานข้อมูล</h2>
+          <table class="table table-sm table-borderless table-hover">
+            <thead>
+              <tr>
+                <th></th>
+                <th>ชื่อ</th>
+                <th></th>
+                <th
+                  *ngIf="
+                    this.service.localStorage.get('userLogin')['gidNumber'] !=
+                    4500
+                  "
+                >
+                  สถานะ
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let x of databaseResult; let i = index">
+                <td style="vertical-align: middle;">{{ i + 1 }}</td>
+                <td style="vertical-align: middle;">{{ x.Database }}</td>
+                <td style="vertical-align: middle;">
+                  <button
+                    type="button"
+                    class="btn btn-primary btn-sm"
+                    (click)="onGettable(x.Database)"
+                  >
+                    ดูตาราง
+                  </button>
+                </td>
+                <td
+                  *ngIf="
+                    this.service.localStorage.get('userLogin')['gidNumber'] !=
+                    4500
+                  "
+                  style="vertical-align: middle;"
+                >
+                  <mat-slide-toggle
+                    [checked]="x.status == 1"
+                    (toggleChange)="onToggleDatabase(x)"
+                  ></mat-slide-toggle>
+                  <!-- <button
+                    type="button"
+                    class="btn btn-primary"
+                    (click)="onClosedatabase(x)"
+                    *ngIf="x.status != 1"
+                  >
+                    เปิดการใช้งาน
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-danger"
+                    (click)="onClosedatabase(x)"
+                    *ngIf="x.status == 1"
+                  >
+                    ปิดการใช้งาน
+                  </button> -->
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
 
-<div class="text-center mb-3">
-  <h1>database</h1>
-  <table class="table table-sm table-borderless table-striped table-hover">
-    <thead>
-      <tr>
-        <th></th>
-        <th>database</th>
-        <th>showtable</th>
-        <th
-          *ngIf="
-            this.service.localStorage.get('userLogin')['gidNumber'] != 4500
-          "
-        >
-          status
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let x of databaseResult; let i = index">
-        <td>{{ i + 1 }}</td>
-        <td>{{ x.Database }}</td>
-        <td
-          *ngIf="
-            this.service.localStorage.get('userLogin')['gidNumber'] != 4500
-          "
-        >
-          {{ x.status }}
-        </td>
-        <td>
-          <button
-            type="button"
-            class="btn btn-primary"
-            (click)="onGettable(x.Database)"
-          >
-            เเสดงtable
-          </button>
-        </td>
-        <td
-          *ngIf="
-            this.service.localStorage.get('userLogin')['gidNumber'] != 4500
-          "
-        >
-          <button
-            type="button"
-            class="btn btn-success"
-            (click)="onClosedatabase(x)"
-            *ngIf="x.status != 1"
-          >
-            เปิดการใช้งาน
-          </button>
-          <button
-            type="button"
-            class="btn btn-danger"
-            (click)="onClosedatabase(x)"
-            *ngIf="x.status == 1"
-          >
-            ปิดการใช้งาน
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+    <div
+      class="col-md-6 mb-3"
+      *ngIf="tableResult != null && tableResult.length > 0"
+    >
+      <div class="card">
+        <div class="card-body">
+          <h2 class="mb-3">รายชื่อตาราง</h2>
+          <table class="table table-sm table-borderless table-hover">
+            <thead>
+              <tr>
+                <th></th>
+                <th>ชื่อตาราง</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let x of tableResult; let i = index">
+                <td style="vertical-align: middle;">{{ i + 1 }}</td>
+                <td style="vertical-align: middle;">{{ x.table_name }}</td>
+                <td style="vertical-align: middle;">
+                  <button
+                    type="button"
+                    class="btn btn-primary btn-sm"
+                    (click)="onGetDataintable(x.table_name)"
+                    data-toggle="modal"
+                    data-target="#showDataInTable"
+                  >
+                    ดูข้อมูลในตาราง
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
-
-<!--เเสดง table-->
 
 <div
-  class="text-center mb-3"
-  *ngIf="tableResult != null && tableResult.length > 0"
+  class="modal fade"
+  id="showDataInTable"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="showDataInTableLabel"
+  aria-hidden="true"
 >
-  <h1>table</h1>
-  <table class="table table-sm table-borderless table-striped table-hover">
-    <thead>
-      <tr>
-        <th></th>
-        <th>name</th>
-        <th>showtable</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let x of tableResult; let i = index">
-        <td>{{ i + 1 }}</td>
-        <td>{{ x.table_name }}</td>
-        <td>
-          <button
-            type="button"
-            class="btn btn-primary"
-            (click)="onGetDataintable(x.table_name)"
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" id="showDataInTableLabel">ข้อมูลในตาราง</h2>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div
+          class="box-padding"
+          *ngIf="Dataintable != null"
+          style="overflow: auto;"
+        >
+          <table
+            class="table table-sm table-bordered table-hover"
+            *ngIf="getKeyObject(Dataintable).length > 0"
           >
-            เเสดงResultintable
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+            <thead>
+              <tr>
+                <th *ngFor="let x of getKeyObject(Dataintable)">{{ x }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let x of Dataintable; let i = index">
+                <td *ngFor="let xx of getKeyObject(x)">{{ x[xx] }}</td>
+              </tr>
+            </tbody>
+          </table>
 
-<!--เเสดง dataintable-->
-<div class="text-center mb-3" *ngIf="Dataintable != null">
-  <table
-    class="table table-sm table-bordered"
-    *ngIf="getKeyObject(Dataintable).length > 0"
-  >
-    <thead>
-      <tr>
-        <th *ngFor="let x of getKeyObject(Dataintable)">{{ x }}</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let x of Dataintable; let i = index">
-        <td *ngFor="let xx of getKeyObject(x)">{{ x[xx] }}</td>
-      </tr>
-    </tbody>
-  </table>
+          <div
+            class="box-padding text-center"
+            *ngIf="getKeyObject(Dataintable).length <= 0"
+          >
+            <h3>ไม่พบข้อมูลในตาราง</h3>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-danger btn-sm"
+          data-dismiss="modal"
+        >
+          ปิด
+        </button>
+      </div>
+    </div>
+  </div>
 </div>

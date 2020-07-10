@@ -8,6 +8,7 @@ import { FullCalendarModule } from '@fullcalendar/angular'; // the main connecto
 import dayGridPlugin from '@fullcalendar/daygrid'; // a plugin
 import interactionPlugin from '@fullcalendar/interaction'; // a plugin
 import { CalendarHeaderComponent } from './calendar-header.component';
+import { ToastrModule } from 'ngx-toastr';
 
 FullCalendarModule.registerPlugins([
   // register FullCalendar plugins
@@ -23,7 +24,9 @@ FullCalendarModule.registerPlugins([
     ReactiveFormsModule,
     HttpClientModule,
     MaterialModule,
+    FullCalendarModule,
     CalendarModule,
+    ToastrModule,
   ],
   exports: [
     CommonModule,
@@ -34,6 +37,7 @@ FullCalendarModule.registerPlugins([
     FullCalendarModule,
     CalendarModule,
     CalendarHeaderComponent,
+    ToastrModule,
   ],
 })
 export class SharedModule {}

@@ -51,6 +51,8 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.fetchEvents();
+    let windows: any = window;
+    windows.$('div.cal-header').replaceWith('<h2>New heading</h2>');
   }
 
   fetchEvents(): void {

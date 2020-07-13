@@ -7,7 +7,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./clearaccess.component.scss'],
 })
 export class ClearaccessComponent implements OnInit {
-  public accessStudentrecord: any = null;
+  public accessStudentRecord: any = null;
   public checkAllselect: boolean = false;
   constructor(public service: AppService) {}
 
@@ -16,21 +16,20 @@ export class ClearaccessComponent implements OnInit {
   }
 
   public getAccessStudent = () => {
-    this.accessStudentrecord = null;
+    this.accessStudentRecord = null;
     this.service
       .httpGet(
-        `/getaccess?token=${
-          this.service.localStorage.get('userLogin')['token']
-        }`
+        `/getaccess/${
+          this.service.localStorage.get('userLogin')['uid']
+        }?token=${this.service.localStorage.get('userLogin')['token']}`
       )
       .then((value: any) => {
-        if (value.isLogin) {
-          if (value.success) {
-            this.accessStudentrecord = value.result;
+        if (value.success) {
+          if (value.result.length > 0) {
+            this.accessStudentRecord = value.result.filter((e) => {
+              return parseInt(e.time_end) * 1000 >= new Date().getTime();
+            });
           }
-        } else {
-          this.service.showAlert('', value.message, 'error');
-          this.service.navRouter('/login');
         }
       });
   };
@@ -52,7 +51,7 @@ export class ClearaccessComponent implements OnInit {
   public deleteSelect = () => {
     let listCheck: any = null;
     let arrChecked = [];
-    this.accessStudentrecord.forEach((element) => {
+    this.accessStudentRecord.forEach((element) => {
       listCheck = document.getElementById(`check_${element.uid}`);
       if (listCheck.checked == true) {
         arrChecked.push(`\'${element.uid}\'`);
@@ -62,7 +61,7 @@ export class ClearaccessComponent implements OnInit {
     if (arrChecked.length > 0) {
       this.deleteAccressStudent(arrChecked.join(', '));
     } else {
-      this.service.showAlert('', 'ไม่ได้เลือก', 'error');
+      // this.service.showAlert('', 'ไม่ได้เลือก', 'error');
     }
   };
 

@@ -6,22 +6,25 @@
           <h2>ลบสถานะการเข้าสู่ระบบ</h2>
         </div>
         <div class="col-md-6 mb-3">
-          <div class="text-right"></div>
+          <div class="text-right">
+            <button
+              type="button"
+              class="btn btn-danger btn-sm"
+              (click)="deleteSelect()"
+            >
+              ลบที่เลือก
+            </button>
+          </div>
         </div>
       </div>
 
-      <table class="table table-sm table-borderless table-hover">
+      <table
+        class="table table-sm table-borderless table-hover"
+        *ngIf="accessStudentRecord != null"
+      >
         <thead>
           <tr>
-            <th style="text-align: center; vertical-align: middle;">
-              <button
-                type="button"
-                class="btn btn-danger btn-sm"
-                (click)="deleteSelect()"
-              >
-                ลบที่เลือก
-              </button>
-            </th>
+            <th style="text-align: center; vertical-align: middle;"></th>
             <th style="vertical-align: middle;">ชื่อ</th>
             <th style="vertical-align: middle;">ที่อยู่ IP</th>
             <th style="vertical-align: middle;">เวลาหมดอายุ</th>
@@ -29,17 +32,16 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let x of accessStudentrecord; let i = index">
+          <tr *ngFor="let x of accessStudentRecord; let i = index">
             <td style="text-align: center; vertical-align: middle;">
               <input
                 type="checkbox"
                 aria-label="Checkbox Body"
                 id="check_{{ x.uid }}"
-                (change)="checkAllselect = false"
               />
             </td>
             <td style="vertical-align: middle;">
-              {{ x.firstNameThai }} {{ x.lastNameThai }}
+              {{ x.prename }}{{ x.firstNameThai }} {{ x.lastNameThai }}
             </td>
             <td style="vertical-align: middle;">
               {{ x.ip_address }}

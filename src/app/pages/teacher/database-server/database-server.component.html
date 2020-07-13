@@ -10,7 +10,7 @@
               <tr>
                 <th></th>
                 <th>ชื่อ</th>
-                <th></th>
+
                 <th
                   *ngIf="
                     this.service.localStorage.get('userLogin')['gidNumber'] !=
@@ -19,21 +19,14 @@
                 >
                   สถานะ
                 </th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
               <tr *ngFor="let x of databaseResult; let i = index">
                 <td style="vertical-align: middle;">{{ i + 1 }}</td>
                 <td style="vertical-align: middle;">{{ x.Database }}</td>
-                <td style="vertical-align: middle;">
-                  <button
-                    type="button"
-                    class="btn btn-primary btn-sm"
-                    (click)="onGettable(x.Database)"
-                  >
-                    ดูตาราง
-                  </button>
-                </td>
+
                 <td
                   *ngIf="
                     this.service.localStorage.get('userLogin')['gidNumber'] !=
@@ -45,22 +38,15 @@
                     [checked]="x.status == 1"
                     (toggleChange)="onToggleDatabase(x)"
                   ></mat-slide-toggle>
-                  <!-- <button
-                    type="button"
-                    class="btn btn-primary"
-                    (click)="onClosedatabase(x)"
-                    *ngIf="x.status != 1"
-                  >
-                    เปิดการใช้งาน
-                  </button>
+                </td>
+                <td style="vertical-align: middle;">
                   <button
                     type="button"
-                    class="btn btn-danger"
-                    (click)="onClosedatabase(x)"
-                    *ngIf="x.status == 1"
+                    class="btn btn-primary btn-sm"
+                    (click)="onGettable(x.Database)"
                   >
-                    ปิดการใช้งาน
-                  </button> -->
+                    ดูตาราง
+                  </button>
                 </td>
               </tr>
             </tbody>

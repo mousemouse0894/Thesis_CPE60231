@@ -104,7 +104,7 @@ const routes: Routes = [
           },
           {
             path: 'exam',
-            // canActivate:[TeacherGuard],
+            canActivate: [TeacherGuard],
             loadChildren: () =>
               import('./pages/teacher/manage-exam/manage-exam.module').then(
                 (m) => m.ManageExamModule

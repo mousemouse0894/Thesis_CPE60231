@@ -34,6 +34,8 @@ export class AppService {
     'เสาร์',
   ];
 
+  public stateLoading: boolean = false;
+
   constructor(
     private http: HttpClient,
     private router: Router,
@@ -65,46 +67,58 @@ export class AppService {
   };
 
   public httpGet = (url: string) => {
+    this.stateLoading = true;
     return new Promise((resolve) => {
-      this.http
-        .get(`${this.rootAPI}${url}`)
-        .toPromise()
-        .then((value: any) => {
-          resolve({ connect: true, ...value });
-          console.log(value);
-          if (value.isLogin == false) {
-            this.navRouter('/login');
-            this.localStorage.clear();
-          }
-        })
-        .catch((reason) => {
-          console.log(reason);
-          let newReason = reason;
-          newReason['message'] = reason['name'];
-          resolve({ connect: false, ...newReason });
-        });
+      setTimeout(() => {
+        this.http
+          .get(`${this.rootAPI}${url}`)
+          .toPromise()
+          .then((value: any) => {
+            resolve({ connect: true, ...value });
+            console.log(value);
+            if (value.isLogin == false) {
+              this.navRouter('/login');
+              this.localStorage.clear();
+            }
+          })
+          .catch((reason) => {
+            console.log(reason);
+            let newReason = reason;
+            newReason['message'] = reason['name'];
+            resolve({ connect: false, ...newReason });
+          })
+          .finally(() => {
+            this.stateLoading = false;
+          });
+      }, Math.round(Math.random() * 1200));
     });
   };
 
   public httpPost = (url: string, data: any) => {
+    this.stateLoading = true;
     return new Promise((resolve) => {
-      this.http
-        .post(`${this.rootAPI}${url}`, data)
-        .toPromise()
-        .then((value: any) => {
-          resolve({ connect: true, ...value });
-          console.log(value);
-          if (value.isLogin == false) {
-            this.navRouter('/login');
-            this.localStorage.clear();
-          }
-        })
-        .catch((reason) => {
-          console.log(reason);
-          let newReason = reason;
-          newReason['message'] = reason['name'];
-          resolve({ connect: false, ...newReason });
-        });
+      setTimeout(() => {
+        this.http
+          .post(`${this.rootAPI}${url}`, data)
+          .toPromise()
+          .then((value: any) => {
+            resolve({ connect: true, ...value });
+            console.log(value);
+            if (value.isLogin == false) {
+              this.navRouter('/login');
+              this.localStorage.clear();
+            }
+          })
+          .catch((reason) => {
+            console.log(reason);
+            let newReason = reason;
+            newReason['message'] = reason['name'];
+            resolve({ connect: false, ...newReason });
+          })
+          .finally(() => {
+            this.stateLoading = false;
+          });
+      }, Math.round(Math.random() * 1200));
     });
   };
 

@@ -20,6 +20,7 @@ import { SharedModule } from './shared/shared-module';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { ToastrModule } from 'ngx-toastr';
+import { NgxLoadingModule, ngxLoadingAnimationTypes } from 'ngx-loading';
 
 @NgModule({
   declarations: [AppComponent, DefaultComponent, PrivateComponent],
@@ -39,6 +40,14 @@ import { ToastrModule } from 'ngx-toastr';
       useFactory: adapterFactory,
     }),
     ToastrModule.forRoot(),
+    NgxLoadingModule.forRoot({
+      animationType: ngxLoadingAnimationTypes.circle,
+      backdropBackgroundColour: 'rgba(0,0,0,0.5)',
+      backdropBorderRadius: '0px',
+      primaryColour: '#007bff',
+      secondaryColour: '#fafafa',
+      tertiaryColour: '#ffffff',
+    }),
   ],
   providers: [AppService, CheckLoginGuard, StudentGuard, TeacherGuard],
   bootstrap: [AppComponent],

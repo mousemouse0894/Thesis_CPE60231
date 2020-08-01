@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AppService } from 'src/app/services/app.service';
+import { SelectDatabase } from '../database';
 
 @Component({
   selector: 'app-view',
@@ -34,8 +35,10 @@ export class ViewComponent implements OnInit {
             this.databaseResult = value.result.filter(
               (value) => value.status.indexOf(1) > -1
             );
+            SelectDatabase.setdatabaseResult(this.databaseResult);
           } else {
             this.databaseResult = value.result;
+            SelectDatabase.setdatabaseResult(this.databaseResult);
           }
         } else {
           this.service.showAlert('', value.message, 'error');
@@ -111,5 +114,10 @@ export class ViewComponent implements OnInit {
           this.service.showAlert('', value.message, 'error');
         }
       });
+  };
+
+  public getQueryDatabase = () => {
+    SelectDatabase.setDatabase(this.selectDatabase);
+    this.service.navRouter('/database/query/' + this.selectDatabase);
   };
 }

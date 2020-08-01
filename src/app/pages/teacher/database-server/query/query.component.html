@@ -1,1 +1,50 @@
-<p>query works!</p>
+<mat-form-field appearance="fill">
+  <mat-label>หน่วยการเรียนรู้</mat-label>
+  <mat-select [(ngModel)]="selectDB" (selectionChange)="onSelectedDB()">
+    <mat-option *ngFor="let x of databaseResult" [value]="x.Database">{{
+      x.Database
+    }}</mat-option>
+  </mat-select>
+</mat-form-field>
+
+<mat-form-field class="example-full-width">
+  <mat-label>Leave a comment</mat-label>
+  <textarea
+    matInput
+    placeholder=""
+    (keyup)="setCommand()"
+    [(ngModel)]="inputCommand"
+  ></textarea>
+</mat-form-field>
+
+<button
+  type="button"
+  class="btn btn-primary btn-sm"
+  (click)="onQuery()"
+  [disabled]="selectDB.length <= 0"
+>
+  Query
+</button>
+
+<div *ngIf="queryResult != null">
+  <div *ngIf="queryResult.isQuery">
+    <table
+      class="table table-sm table-bordered table-hover"
+      *ngIf="getKeyObject(queryResult.result).length > 0"
+    >
+      <thead>
+        <tr>
+          <th *ngFor="let x of getKeyObject(queryResult.result)">{{ x }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let x of queryResult.result; let i = index">
+          <td *ngFor="let xx of getKeyObject(x)">{{ x[xx] }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div *ngIf="!queryResult.isQuery">
+    <h4>{{ queryResult.message }}</h4>
+  </div>
+</div>

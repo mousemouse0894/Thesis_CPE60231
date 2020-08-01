@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { SelectDatabase } from './database';
 
 @Component({
   selector: 'app-database-server',
@@ -6,6 +7,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./database-server.component.scss'],
 })
 export class DatabaseServerComponent implements OnInit {
+  public selectDatabase = SelectDatabase;
   constructor() {}
 
   ngOnInit() {}

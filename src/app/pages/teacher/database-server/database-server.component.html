@@ -9,7 +9,7 @@
 
   <a
     mat-tab-link
-    [routerLink]="['/database/query']"
+    [routerLink]="['/database/query/' + selectDatabase.getDatabase()]"
     routerLinkActive="router-active"
   >
     {{ "Query" }}

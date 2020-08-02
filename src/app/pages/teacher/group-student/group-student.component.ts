@@ -2,7 +2,6 @@ import { AppService } from './../../../services/app.service';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
-
 @Component({
   selector: 'app-group-student',
   templateUrl: './group-student.component.html',
@@ -20,7 +19,7 @@ export class GroupStudentComponent implements OnInit {
     this.formInsertgroup = this.formBuilder.group({
       groupname: ['', Validators.required],
       password: ['', Validators.required],
-      status: ['', Validators.required],
+      status: ['on', Validators.required],
       owner: this.service.localStorage.get('userLogin')['uid'],
     });
     this.onGetgroupstudent();
@@ -43,7 +42,8 @@ export class GroupStudentComponent implements OnInit {
   };
 
   public onInsartgroup = () => {
-    this.formInsertgroup.value.groupname = 'CPE.'+ this.formInsertgroup.value.groupname
+    this.formInsertgroup.value.groupname =
+      'CPE.' + this.formInsertgroup.value.groupname;
     if (this.checkedit) {
       //updategroup
       this.service
@@ -83,12 +83,10 @@ export class GroupStudentComponent implements OnInit {
     }
   };
 
-  public onEditgroup = (
-    x: any,
-  ) => {
+  public onEditgroup = (x: any) => {
     this.formInsertgroup = this.formBuilder.group({
       groupID: x.groupID,
-      groupname: [x.name.replace('CPE.',''), Validators.required],
+      groupname: [x.name.replace('CPE.', ''), Validators.required],
       password: [x.password, Validators.required],
       status: [x.status, Validators.required],
     });
@@ -112,9 +110,9 @@ export class GroupStudentComponent implements OnInit {
       });
   };
 
-  public onDeletestudent = (uid: any,groupid_fk:any) => {
+  public onDeletestudent = (uid: any, groupid_fk: any) => {
     let data = {
-      username: uid
+      username: uid,
     };
     console.log(data);
     this.service
@@ -133,24 +131,22 @@ export class GroupStudentComponent implements OnInit {
       });
   };
 
-    //------------------------------------------------------------------------
+  //------------------------------------------------------------------------
   // getlog
-  public onGetlogstudent = (studentid:any) => {
+  public onGetlogstudent = (studentid: any) => {
     this.service
       .httpGet(
-        `/logmember/${
-          studentid
-        }?token=${this.service.localStorage.get('userLogin')['token']}`
+        `/logmember/${studentid}?token=${
+          this.service.localStorage.get('userLogin')['token']
+        }`
       )
       .then((value: any) => {
         if (value.success) {
-          this.logResult = value.result
+          this.logResult = value.result;
           console.log(value);
         } else {
           this.service.showAlert('', value.message, 'error');
         }
       });
   };
-
-
 }

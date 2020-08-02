@@ -1,166 +1,186 @@
-
 <!--เพิ่ม&เเก้ไขกลุ่มเรียน-->
-<div class="text-center mb-3">
-  <form
-    [formGroup]="formInsertgroup"
-    (ngSubmit)="formInsertgroup.valid ? onInsartgroup() : ''"
-  >
 
-    <div class="mb-3">
+<div class="box-padding">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <h2 class="mb-3">เพิ่มกลุ่มเรียน</h2>
 
-      <mat-form-field>
-        <input
-          matInput
-          placeholder="ชื่่อกลุ่ม (namegroup)"
-          type="text"
-          required
-          formControlName="groupname"
+          <div class="text-center mb-3">
+            <form
+              [formGroup]="formInsertgroup"
+              (ngSubmit)="formInsertgroup.valid ? onInsartgroup() : ''"
+            >
+              <div class="mb-3">
+                <mat-form-field appearance="outline">
+                  <mat-label>ชื่่อกลุ่ม (namegroup)</mat-label>
+                  <input
+                    matInput
+                    placeholder="ชื่่อกลุ่ม (namegroup)"
+                    type="text"
+                    required
+                    formControlName="groupname"
+                  />
+                  <span matPrefix>CPE.&nbsp;</span>
+                </mat-form-field>
+              </div>
 
-        />
-        <span matPrefix>CPE.&nbsp;</span>
-      </mat-form-field>
+              <div class="mb-3">
+                <mat-form-field appearance="outline">
+                  <mat-label>รหัสกลุ่ม (grouppassword)</mat-label>
+                  <input
+                    matInput
+                    placeholder="รหัสกลุ่ม (grouppassword)"
+                    type="text"
+                    required
+                    formControlName="password"
+                  />
+                </mat-form-field>
+              </div>
+
+              <div class="mb-3">
+                <mat-radio-group
+                  aria-label="Select an option"
+                  #status
+                  formControlName="status"
+                >
+                  <mat-radio-button value="on">ON</mat-radio-button>
+                  &nbsp;
+                  <mat-radio-button value="off">OFF</mat-radio-button>
+                </mat-radio-group>
+              </div>
+
+              <div style="margin-top: 20px;" class="text-center mb-1">
+                <button type="submit" class="btn btn-primary">
+                  ตกลง
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
-
-    <div class="mb-3">
-      <mat-radio-group aria-label="Select an option" #status formControlName="status">
-        <mat-radio-button value="on">ON</mat-radio-button>
-        <mat-radio-button value="off">OFF</mat-radio-button>
-      </mat-radio-group>
-    </div>
-
-    <div class="mb-3">
-      <mat-form-field>
-        <input
-          matInput
-          placeholder="รหัสกลุ่ม (grouppassword)"
-          type="text"
-          required
-          formControlName="password"
-        />
-      </mat-form-field>
-    </div>
-    <div style="margin-top: 20px;" class="text-center mb-1">
-      <button type="submit" class="btn btn-primary">
-        ตกลง
-      </button>
-    </div>
-  </form>
+  </div>
 </div>
+
 <!--เเสดงกลุ่มเรียน-->
-<table class="table table-sm table-borderless table-striped table-hover">
-  <thead>
-    <tr>
-      <th></th>
-      <th>createAt</th>
-      <th>groupID</th>
-      <th>name</th>
-      <th>owner</th>
-      <th>password</th>
-      <th>status</th>
-      <th>year</th>
-      <th>edit</th>
-      <th>editstudent</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let x of groupStudent; let i = index">
-      <td>{{ i + 1 }}</td>
-      <td>{{ x.createAt }}</td>
-      <td>{{ x.groupID }}</td>
-      <td>{{ x.name }}</td>
-      <td>{{ x.owner }}</td>
-      <td>{{ x.password }}</td>
-      <td>{{ x.status }}</td>
-      <td>{{ x.year }}</td>
-      <td>
-        <button
-          type="button"
-          class="btn btn-primary"
-          (click)="onEditgroup(x)"
+<div class="box-padding">
+  <div class="card">
+    <div class="card-body">
+      <h2 class="mb-3">รายชื่อกลุ่มเรียน</h2>
+      <table class="table table-sm table-borderless table-hover">
+        <thead>
+          <tr>
+            <th></th>
+            <th>วันที่สร้าง</th>
+            <th>ชื่อกลุ่ม</th>
+            <th>รหัสผ่าน</th>
+            <th>สถานะกลุ่ม</th>
+            <th>เเก้ไขกลุ่มเรียน</th>
+            <th>เเสดงนักศึกษา</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let x of groupStudent; let i = index">
+            <td style="vertical-align: middle;">{{ i + 1 }}</td>
+            <td style="vertical-align: middle;">{{ x.createAt }}</td>
+            <td style="vertical-align: middle;">{{ x.name }}</td>
+            <td style="vertical-align: middle;">{{ x.password }}</td>
+            <td style="vertical-align: middle;">{{ x.status }}</td>
+            <td style="vertical-align: middle;">
+              <button
+                type="button"
+                class="btn btn-primary btn-sm"
+                (click)="onEditgroup(x)"
+              >
+                เเก้ไข
+              </button>
+            </td>
+            <td style="vertical-align: middle;">
+              <button
+                type="button"
+                class="btn btn-primary btn-sm"
+                (click)="getStudentingroup(x.groupID)"
+              >
+                เเสดง
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!--เเสดงนักเรียนในกลุ่ม-->
+    <div *ngIf="studentingroup != null">
+      <div *ngIf="studentingroup.length > 0">
+        <table
+          class="table table-sm table-borderless table-striped table-hover"
         >
-          เเก้ไขกลุ่ม
-        </button>
-      </td>
-      <td>
-        <button
-          type="button"
-          class="btn btn-primary"
-          (click)="getStudentingroup(x.groupID)"
-        >
-          เเก้ไขนักเรียนในกลุ่ม
-        </button>
-      </td>
-    </tr>
-  </tbody>
-</table>
-<!--เเสดงนักเรียนในกลุ่ม-->
-<div *ngIf="studentingroup != null">
-  <div *ngIf="studentingroup.length>0">
-  <table class="table table-sm table-borderless table-striped table-hover">
-    <thead>
-      <tr>
-        <th></th>
-        <th>firstNameThai</th>
-        <th>lastNameThai</th>
-        <th>studentId</th>
-        <th>edit</th>
-        <th>log</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let x of studentingroup; let i = index">
-        <td>{{ i + 1 }}</td>
-        <td>{{ x.firstNameThai }}</td>
-        <td>{{ x.lastNameThai }}</td>
-        <td>{{ x.studentId }}</td>
-        <td>
-          <button
-            type="button"
-            class="btn btn-primary"
-            (click)="onDeletestudent(x.uid,x.groupid_fk)"
-          >
-            ลบ
-          </button>
-        </td>
-        <td>
-          <button
-            type="button"
-            class="btn btn-primary"
-            (click)="onGetlogstudent(x.uid)"
-          >
-            ดู log
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-</div>
+          <thead>
+            <tr>
+              <th></th>
+              <th>firstNameThai</th>
+              <th>lastNameThai</th>
+              <th>studentId</th>
+              <th>edit</th>
+              <th>log</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let x of studentingroup; let i = index">
+              <td>{{ i + 1 }}</td>
+              <td>{{ x.firstNameThai }}</td>
+              <td>{{ x.lastNameThai }}</td>
+              <td>{{ x.studentId }}</td>
+              <td>
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  (click)="onDeletestudent(x.uid, x.groupid_fk)"
+                >
+                  ลบ
+                </button>
+              </td>
+              <td>
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  (click)="onGetlogstudent(x.uid)"
+                >
+                  ดู log
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
 
-
-
-<!--ดูlog-->
-<div class="text-center mb-3" *ngIf="logResult != null ">
-  <table class="table table-sm table-borderless table-striped table-hover">
-    <thead>
-      <tr>
-        <th></th>
-        <th>ip_address</th>
-        <th>status</th>
-        <th>times</th>
-        <th>uid</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let x of logResult; let i = index">
-        <td>{{ i + 1 }}</td>
-        <td>{{ x.ip_address }}</td>
-        <td>{{ x.status }}</td>
-        <td>{{ x.times }}</td>
-        <td>
-          {{x.uid}}
-        </td>
-      </tr>
-    </tbody>
-  </table>
+    <!--ดูlog-->
+    <div class="text-center mb-3" *ngIf="logResult != null">
+      <table class="table table-sm table-borderless table-striped table-hover">
+        <thead>
+          <tr>
+            <th></th>
+            <th>ip_address</th>
+            <th>status</th>
+            <th>times</th>
+            <th>uid</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let x of logResult; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ x.ip_address }}</td>
+            <td>{{ x.status }}</td>
+            <td>{{ x.times }}</td>
+            <td>
+              {{ x.uid }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>

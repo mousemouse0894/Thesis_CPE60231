@@ -13,17 +13,32 @@ export class GroupStudentComponent implements OnInit {
   public formInsertgroup: FormGroup;
   public checkedit: boolean = false;
   public logResult: any = null;
+  public groupSelectName: string = '';
+
   constructor(public service: AppService, private formBuilder: FormBuilder) {}
 
   ngOnInit() {
     this.formInsertgroup = this.formBuilder.group({
+      groupID: [''],
       groupname: ['', Validators.required],
       password: ['', Validators.required],
       status: ['on', Validators.required],
       owner: this.service.localStorage.get('userLogin')['uid'],
     });
+
     this.onGetgroupstudent();
   }
+
+  public onInsertGroup = () => {
+    this.formInsertgroup.patchValue({
+      groupID: '',
+      groupname: '',
+      password: '',
+      status: 'on',
+    });
+
+    this.checkedit = false;
+  };
 
   public onGetgroupstudent = () => {
     this.service
@@ -42,8 +57,12 @@ export class GroupStudentComponent implements OnInit {
   };
 
   public onInsartgroup = () => {
-    this.formInsertgroup.value.groupname =
-      'CPE.' + this.formInsertgroup.value.groupname;
+    this.formInsertgroup.patchValue({
+      groupname: 'CPE.' + this.formInsertgroup.value.groupname,
+    });
+
+    console.log('asdasd');
+
     if (this.checkedit) {
       //updategroup
       this.service
@@ -55,7 +74,6 @@ export class GroupStudentComponent implements OnInit {
         )
         .then((value: any) => {
           if (value.success) {
-            console.log(value);
             this.checkedit = false;
             this.service.showAlert('', 'เเก้ไขสำเร็จ', 'success');
             this.onGetgroupstudent();
@@ -84,20 +102,24 @@ export class GroupStudentComponent implements OnInit {
   };
 
   public onEditgroup = (x: any) => {
-    this.formInsertgroup = this.formBuilder.group({
+    this.formInsertgroup.patchValue({
       groupID: x.groupID,
-      groupname: [x.name.replace('CPE.', ''), Validators.required],
-      password: [x.password, Validators.required],
-      status: [x.status, Validators.required],
+      groupname: x.name.replace('CPE.', ''),
+      password: x.password,
+      status: x.status,
     });
+
     this.checkedit = true;
   };
 
-  public getStudentingroup = (groupId: any) => {
+  public getStudentingroup = (data: any) => {
+    this.studentingroup = null;
+    this.groupSelectName = data.name;
+
     this.service
       .httpGet(
         '/groupst/getstingroup/' +
-          groupId +
+          data.groupID +
           '?token=' +
           this.service.localStorage.get('userLogin')['token']
       )
@@ -111,22 +133,28 @@ export class GroupStudentComponent implements OnInit {
   };
 
   public onDeletestudent = (uid: any, groupid_fk: any) => {
-    let data = {
-      username: uid,
-    };
-    console.log(data);
     this.service
-      .httpPost(
-        '/groupst/clearmember?token=' +
-          this.service.localStorage.get('userLogin')['token'],
-        JSON.stringify(data)
-      )
-      .then((value: any) => {
-        if (value.success) {
-          this.service.showAlert('', 'ลบสำเร็จ', 'success');
-          this.getStudentingroup(groupid_fk);
-        } else {
-          this.service.showAlert('', value.message, 'error');
+      .showConfirm('ยืนยันการลบรายชื่อจากกลุ่มเรียน', '', 'warning')
+      .then((val: boolean) => {
+        if (val) {
+          let data = {
+            username: uid,
+          };
+          console.log(data);
+          this.service
+            .httpPost(
+              '/groupst/clearmember?token=' +
+                this.service.localStorage.get('userLogin')['token'],
+              JSON.stringify(data)
+            )
+            .then((value: any) => {
+              if (value.success) {
+                this.service.showAlert('', 'ลบสำเร็จ', 'success');
+                this.getStudentingroup(groupid_fk);
+              } else {
+                this.service.showAlert('', value.message, 'error');
+              }
+            });
         }
       });
   };

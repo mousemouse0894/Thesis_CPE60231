@@ -1,7 +1,7 @@
 class Database {
   private dbSelect: string = '';
   private dbCommand: string = '';
-  private databaseResult: any = '';
+  private databaseResult: any = null;
 
   constructor() {}
 

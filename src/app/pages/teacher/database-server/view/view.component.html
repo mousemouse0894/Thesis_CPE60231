@@ -1,101 +1,110 @@
 <!--เเสดง database-->
-<div class="box-padding">
-  <div class="row">
-    <div class="col-md-6 mb-3">
-      <div class="card">
-        <div class="card-body">
-          <h2 class="mb-3">รายชื่อฐานข้อมูล</h2>
-          <table class="table table-sm table-borderless table-hover">
-            <thead>
-              <tr>
-                <th></th>
-                <th>ชื่อ</th>
 
-                <th
-                  *ngIf="
-                    this.service.localStorage.get('userLogin')['gidNumber'] !=
-                    4500
-                  "
-                >
-                  สถานะ
-                </th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let x of databaseResult; let i = index">
-                <td style="vertical-align: middle;">{{ i + 1 }}</td>
-                <td style="vertical-align: middle;">{{ x.Database }}</td>
+<div class="row">
+  <div class="col-md-6 mb-3">
+    <div class="card">
+      <div class="card-body">
+        <h2 class="mb-3">รายชื่อฐานข้อมูล</h2>
+        <table class="table table-sm table-borderless table-hover">
+          <thead>
+            <tr>
+              <th></th>
+              <th>ชื่อฐานข้อมูล</th>
 
-                <td
-                  *ngIf="
-                    this.service.localStorage.get('userLogin')['gidNumber'] !=
-                    4500
-                  "
-                  style="vertical-align: middle;"
+              <th
+                *ngIf="
+                  this.service.localStorage.get('userLogin')['gidNumber'] !=
+                  4500
+                "
+              >
+                สถานะ
+              </th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let x of databaseResult; let i = index">
+              <td style="vertical-align: middle;">{{ i + 1 }}</td>
+              <td style="vertical-align: middle;">{{ x.Database }}</td>
+
+              <td
+                *ngIf="
+                  this.service.localStorage.get('userLogin')['gidNumber'] !=
+                  4500
+                "
+                style="vertical-align: middle;"
+              >
+                <mat-slide-toggle
+                  [checked]="x.status == 1"
+                  (toggleChange)="onToggleDatabase(x)"
+                ></mat-slide-toggle>
+              </td>
+              <td style="vertical-align: middle;">
+                <button
+                  type="button"
+                  class="btn btn-primary btn-sm"
+                  (click)="onGettable(x.Database)"
                 >
-                  <mat-slide-toggle
-                    [checked]="x.status == 1"
-                    (toggleChange)="onToggleDatabase(x)"
-                  ></mat-slide-toggle>
-                </td>
-                <td style="vertical-align: middle;">
-                  <button
-                    type="button"
-                    class="btn btn-primary btn-sm"
-                    (click)="onGettable(x.Database)"
-                  >
-                    ดูตาราง
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+                  ดูตาราง
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
+  </div>
 
-    <div
-      class="col-md-6 mb-3"
-      *ngIf="tableResult != null && tableResult.length > 0"
-    >
-      <div class="card">
-        <div class="card-body">
-          <h2 class="mb-3">รายชื่อตาราง</h2>
-          <button
-            type="button"
-            class="btn btn-primary btn-sm"
-            (click)="getQueryDatabase()"
-          >
-            Query
-          </button>
-          <table class="table table-sm table-borderless table-hover">
-            <thead>
-              <tr>
-                <th></th>
-                <th>ชื่อตาราง</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let x of tableResult; let i = index">
-                <td style="vertical-align: middle;">{{ i + 1 }}</td>
-                <td style="vertical-align: middle;">{{ x.table_name }}</td>
-                <td style="vertical-align: middle;">
-                  <button
-                    type="button"
-                    class="btn btn-primary btn-sm"
-                    (click)="onGetDataintable(x.table_name)"
-                    data-toggle="modal"
-                    data-target="#showDataInTable"
-                  >
-                    ดูข้อมูลในตาราง
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+  <div
+    class="col-md-6 mb-3"
+    *ngIf="tableResult != null && tableResult.length > 0"
+  >
+    <div class="card">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-9 mb-3">
+            <h2 class="">รายชื่อตารางของฐานข้อมูล {{ selectDatabase }}</h2>
+          </div>
+
+          <div class="col-md-3 mb-3">
+            <div class="text-right">
+              <button
+                type="button"
+                class="btn btn-primary btn-sm"
+                (click)="getQueryDatabase()"
+              >
+                Query
+              </button>
+            </div>
+          </div>
         </div>
+
+        <table class="table table-sm table-borderless table-hover">
+          <thead>
+            <tr>
+              <th></th>
+              <th>ชื่อตาราง</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let x of tableResult; let i = index">
+              <td style="vertical-align: middle;">{{ i + 1 }}</td>
+              <td style="vertical-align: middle;">{{ x.table_name }}</td>
+              <td style="vertical-align: middle;">
+                <button
+                  type="button"
+                  class="btn btn-primary btn-sm"
+                  (click)="onGetDataintable(x.table_name)"
+                  data-toggle="modal"
+                  data-target="#showDataInTable"
+                >
+                  ดูข้อมูลในตาราง
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>

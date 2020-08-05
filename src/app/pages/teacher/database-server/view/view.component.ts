@@ -12,6 +12,7 @@ export class ViewComponent implements OnInit {
   public tableResult: any = null;
   public Dataintable: any = null;
   public selectDatabase: any = null;
+
   constructor(public service: AppService) {}
 
   ngOnInit() {
@@ -32,9 +33,9 @@ export class ViewComponent implements OnInit {
       .then((value: any) => {
         if (value.success) {
           if (this.service.localStorage.get('userLogin')['gidNumber'] == 4500) {
-            this.databaseResult = value.result.filter(
-              (value) => value.status.indexOf(1) > -1
-            );
+            this.databaseResult = value.result.filter((value) => {
+              return value.status == '1';
+            });
             SelectDatabase.setdatabaseResult(this.databaseResult);
           } else {
             this.databaseResult = value.result;

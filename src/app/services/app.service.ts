@@ -137,7 +137,7 @@ export class AppService {
         windows
           .$(ele)
           .find('button.swal2-confirm.swal2-styled')
-          .toggleClass('swal2-confirm swal2-styled btn btn-success')
+          .toggleClass('swal2-confirm swal2-styled btn btn-primary')
           .attr('style', '');
       },
     });
@@ -163,7 +163,7 @@ export class AppService {
           windows
             .$(ele)
             .find('button.swal2-confirm.swal2-styled')
-            .toggleClass('swal2-confirm swal2-styled btn btn-success ml-2')
+            .toggleClass('swal2-confirm swal2-styled btn btn-primary ml-2')
             .attr('style', '');
 
           windows

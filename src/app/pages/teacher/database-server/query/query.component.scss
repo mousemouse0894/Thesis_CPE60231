@@ -1,0 +1,24 @@
+.example-tree-invisible {
+  display: none;
+}
+
+.example-tree ul,
+.example-tree li {
+  margin-top: 0;
+  margin-bottom: 0;
+  list-style-type: none;
+  cursor: pointer;
+}
+
+.example-tree ul {
+  padding-inline-start: 0px;
+}
+
+.mat-tree-node {
+  min-height: unset;
+}
+
+.isExpanded {
+  color: #0b7bff !important;
+  font-weight: bold;
+}

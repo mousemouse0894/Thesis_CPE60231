@@ -1,4 +1,108 @@
-<mat-form-field appearance="fill">
+<div class="row">
+  <div class="col-md-3 mb-3">
+    <div class="card">
+      <div class="card-body">
+        <div class="mb-3">
+          <h2>ฐานข้อมูล</h2>
+        </div>
+        <mat-tree
+          [dataSource]="dataSource"
+          [treeControl]="treeControl"
+          class="example-tree"
+          *ngIf="this.dataSource.data"
+        >
+          <!-- This is the tree node template for leaf nodes -->
+          <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
+            <li
+              class="mat-tree-node"
+              (click)="
+                selectTable(
+                  treeControl.expansionModel.selected[0].name,
+                  node.name
+                )
+              "
+            >
+              <!-- use a disabled button to provide padding for tree leaf -->
+              <button mat-icon-button disabled></button>
+              <span
+                [ngClass]="{
+                  isExpanded:
+                    (treeControl.expansionModel.selected.length > 0
+                      ? treeControl.expansionModel.selected[0].name
+                      : '') == dbSelected && node.name == tbSelected
+                }"
+              >
+                {{ node.name }}
+              </span>
+            </li>
+          </mat-tree-node>
+          <!-- This is the tree node template for expandable nodes -->
+          <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild">
+            <li
+              (click)="
+                treeControl.isExpanded(node)
+                  ? treeControl.collapse(node)
+                  : [treeControl.collapseAll(), treeControl.expand(node)]
+              "
+            >
+              <div class="mat-tree-node">
+                <button mat-icon-button>
+                  <mat-icon class="mat-icon-rtl-mirror">
+                    {{
+                      treeControl.isExpanded(node)
+                        ? "expand_more"
+                        : "chevron_right"
+                    }}
+                  </mat-icon>
+                </button>
+                <span [ngClass]="{ isExpanded: treeControl.isExpanded(node) }">
+                  {{ node.name }}</span
+                >
+              </div>
+              <ul
+                [class.example-tree-invisible]="!treeControl.isExpanded(node)"
+              >
+                <ng-container matTreeNodeOutlet></ng-container>
+              </ul>
+            </li>
+          </mat-nested-tree-node>
+        </mat-tree>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-9 mb-3">
+    <div class="card">
+      <div class="card-body">
+        <div class="mb-3" *ngIf="dataInTable != null">
+          <h2>{{ dbSelected }}&nbsp;>&nbsp;{{ tbSelected }}</h2>
+        </div>
+
+        <div *ngIf="dataInTable != null" style="overflow: auto;">
+          <table
+            class="table table-sm table-bordered table-hover"
+            *ngIf="getKeyObject(dataInTable).length > 0"
+          >
+            <thead>
+              <tr>
+                <th *ngFor="let x of getKeyObject(dataInTable)">
+                  {{ x }}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let x of dataInTable; let i = index">
+                <td *ngFor="let xx of getKeyObject(x)">{{ x[xx] }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- <mat-form-field appearance="fill">
   <mat-label>หน่วยการเรียนรู้</mat-label>
   <mat-select [(ngModel)]="selectDB" (selectionChange)="onSelectedDB()">
     <mat-option *ngFor="let x of databaseResult" [value]="x.Database">{{
@@ -26,25 +130,4 @@
   Query
 </button>
 
-<div *ngIf="queryResult != null">
-  <div *ngIf="queryResult.isQuery">
-    <table
-      class="table table-sm table-bordered table-hover"
-      *ngIf="getKeyObject(queryResult.result).length > 0"
-    >
-      <thead>
-        <tr>
-          <th *ngFor="let x of getKeyObject(queryResult.result)">{{ x }}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let x of queryResult.result; let i = index">
-          <td *ngFor="let xx of getKeyObject(x)">{{ x[xx] }}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  <div *ngIf="!queryResult.isQuery">
-    <h4>{{ queryResult.message }}</h4>
-  </div>
-</div>
+ -->

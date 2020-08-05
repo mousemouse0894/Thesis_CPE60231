@@ -2,7 +2,7 @@ class Database {
   private dbSelect: string = '';
   private dbCommand: string = '';
   private databaseResult: any = null;
-
+  private tbSelect: string = '';
   constructor() {}
 
   public setDatabase = (dbname: string) => {
@@ -27,6 +27,14 @@ class Database {
 
   public getdatabaseResult = () => {
     return this.databaseResult;
+  };
+
+  public setTbResult = (table: string) => {
+    this.tbSelect = table;
+  };
+
+  public getTbResult = () => {
+    return this.tbSelect;
   };
 }
 

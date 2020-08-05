@@ -117,9 +117,4 @@ export class ViewComponent implements OnInit {
         }
       });
   };
-
-  public getQueryDatabase = () => {
-    SelectDatabase.setDatabase(this.selectDatabase);
-    this.service.navRouter('/database/query/' + this.selectDatabase);
-  };
 }

@@ -14,6 +14,7 @@ export class GroupStudentComponent implements OnInit {
   public checkedit: boolean = false;
   public logResult: any = null;
   public groupSelectName: string = '';
+  public pagiShowstudent: number = 1;
 
   constructor(public service: AppService, private formBuilder: FormBuilder) {}
 

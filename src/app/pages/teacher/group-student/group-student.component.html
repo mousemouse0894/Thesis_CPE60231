@@ -68,7 +68,10 @@
       </div>
     </div>
 
-    <div class="col-md-6 mb-3" *ngIf="groupSelectName.length > 0">
+    <div
+      class="col-md-6 mb-3"
+      *ngIf="groupSelectName.length > 0 && studentingroup != null"
+    >
       <div class="card">
         <div class="card-body">
           <div class="row">
@@ -90,7 +93,7 @@
 
           <table
             class="table table-sm table-borderless table-hover"
-            *ngIf="studentingroup"
+            *ngIf="studentingroup != null"
           >
             <thead>
               <tr>
@@ -103,7 +106,18 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let x of studentingroup; let i = index">
+              <tr
+                *ngFor="
+                  let x of studentingroup
+                    | paginate
+                      : {
+                          id: 'pagiShowstudent',
+                          itemsPerPage: 10,
+                          currentPage: pagiShowstudent
+                        };
+                  let i = index
+                "
+              >
                 <td style="vertical-align: middle;">{{ i + 1 }}</td>
                 <td style="vertical-align: middle;">{{ x.firstNameThai }}</td>
                 <td style="vertical-align: middle;">{{ x.lastNameThai }}</td>
@@ -129,6 +143,14 @@
               </tr>
             </tbody>
           </table>
+          <pagination-controls
+            id="pagiShowstudent"
+            *ngIf="studentingroup.length > 10"
+            responsive="true"
+            previousLabel="ย้อนกลับ"
+            nextLabel="ถัดไป"
+            (pageChange)="pagiShowstudent = $event"
+          ></pagination-controls>
         </div>
       </div>
     </div>

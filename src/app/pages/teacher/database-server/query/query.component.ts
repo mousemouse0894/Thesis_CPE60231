@@ -39,7 +39,9 @@ export class QueryComponent implements OnInit {
     // });
     // this.inputCommand = SelectDatabase.getCommand();
     // this.databaseResult = SelectDatabase.getdatabaseResult();
-    // this.selectDB = SelectDatabase.getDatabase();
+    this.dbSelected = SelectDatabase.getDatabase();
+    this.tbSelected = SelectDatabase.getTbResult();
+    this.dataInTable = SelectDatabase.getdatabaseResult();
     this.getDatabase();
   }
 
@@ -61,12 +63,14 @@ export class QueryComponent implements OnInit {
                 list.table_name.split(',').forEach((tb_name) => {
                   children.push({ name: tb_name });
                 });
+
                 data.push({ name: list.database_name, children: children });
               }
             }
           });
 
           this.dataSource.data = data;
+          console.log(this.dataSource);
         }
       });
   };
@@ -75,6 +79,9 @@ export class QueryComponent implements OnInit {
     this.dbSelected = db_name;
     this.tbSelected = tb_name;
     this.dataInTable = null;
+
+    SelectDatabase.setDatabase(this.dbSelected);
+    SelectDatabase.setTbResult(this.tbSelected);
 
     this.service
       .httpGet(
@@ -85,6 +92,7 @@ export class QueryComponent implements OnInit {
       .then((value: any) => {
         if (value.success) {
           this.dataInTable = value.result;
+          SelectDatabase.setdatabaseResult(this.dataInTable);
         } else {
           this.dataInTable = null;
           this.service.showAlert('', value.message, 'error');

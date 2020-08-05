@@ -3,7 +3,7 @@
   <div class="card">
     <div class="card-body">
       <h2>ประวัติการเข้าใช้งานระบบ</h2>
-      <div class="text-center mb-3">
+      <div class="text-center mb-3" *ngIf="logResult != null">
         <table class="table table-sm table-borderless table-hover">
           <thead>
             <tr>
@@ -14,7 +14,18 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let x of logResult; let i = index">
+            <tr
+              *ngFor="
+                let x of logResult
+                  | paginate
+                    : {
+                        id: 'pagiShowlog',
+                        itemsPerPage: 10,
+                        currentPage: pagiShowlog
+                      };
+                let i = index
+              "
+            >
               <td>{{ i + 1 }}</td>
               <td>{{ x.ip_address }}</td>
               <td>{{ x.status }}</td>
@@ -22,6 +33,15 @@
             </tr>
           </tbody>
         </table>
+
+        <pagination-controls
+          id="pagiShowlog"
+          *ngIf="logResult.length > 10"
+          responsive="true"
+          previousLabel="ย้อนกลับ"
+          nextLabel="ถัดไป"
+          (pageChange)="pagiShowlog = $event"
+        ></pagination-controls>
       </div>
     </div>
   </div>

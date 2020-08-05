@@ -147,12 +147,30 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let x of Dataintable; let i = index">
+              <tr
+                *ngFor="
+                  let x of Dataintable
+                    | paginate
+                      : {
+                          id: 'pagiShowdatabase',
+                          itemsPerPage: 15,
+                          currentPage: pagiShowdatabase
+                        }
+                "
+              >
                 <td *ngFor="let xx of getKeyObject(x)">{{ x[xx] }}</td>
               </tr>
             </tbody>
           </table>
 
+          <pagination-controls
+            id="pagiShowdatabase"
+            *ngIf="Dataintable.length > 15"
+            responsive="true"
+            previousLabel="ย้อนกลับ"
+            nextLabel="ถัดไป"
+            (pageChange)="pagiShowdatabase = $event"
+          ></pagination-controls>
           <div
             class="box-padding text-center"
             *ngIf="getKeyObject(Dataintable).length <= 0"

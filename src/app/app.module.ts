@@ -21,6 +21,7 @@ import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { ToastrModule } from 'ngx-toastr';
 import { NgxLoadingModule, ngxLoadingAnimationTypes } from 'ngx-loading';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 @NgModule({
   declarations: [AppComponent, DefaultComponent, PrivateComponent],
@@ -35,6 +36,7 @@ import { NgxLoadingModule, ngxLoadingAnimationTypes } from 'ngx-loading';
     MatIconModule,
     MatListModule,
     SharedModule,
+    NgxPaginationModule,
     CalendarModule.forRoot({
       provide: DateAdapter,
       useFactory: adapterFactory,

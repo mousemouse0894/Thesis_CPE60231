@@ -6,14 +6,15 @@ import { DatabaseServerRoutingModule } from './database-server-routing.module';
 import { DatabaseServerComponent } from './database-server.component';
 import { QueryComponent } from './query/query.component';
 import { ViewComponent } from './view/view.component';
-
+import { NgxPaginationModule } from 'ngx-pagination';
 
 @NgModule({
   declarations: [DatabaseServerComponent, QueryComponent, ViewComponent],
   imports: [
     CommonModule,
     DatabaseServerRoutingModule,
-    SharedModule
-  ]
+    SharedModule,
+    NgxPaginationModule,
+  ],
 })
-export class DatabaseServerModule { }
+export class DatabaseServerModule {}

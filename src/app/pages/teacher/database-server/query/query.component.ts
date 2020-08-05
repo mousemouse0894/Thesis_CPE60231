@@ -19,6 +19,7 @@ export class QueryComponent implements OnInit {
   public dbSelected: string = '';
   public tbSelected: string = '';
   public dataInTable: any = null;
+  public pagiShowdatabase: number = 1;
 
   treeControl = new NestedTreeControl<FoodNode>((node) => node.children);
   dataSource = new MatTreeNestedDataSource<FoodNode>();

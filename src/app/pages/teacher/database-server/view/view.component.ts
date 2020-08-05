@@ -12,6 +12,7 @@ export class ViewComponent implements OnInit {
   public tableResult: any = null;
   public Dataintable: any = null;
   public selectDatabase: any = null;
+  public pagiShowdatabase: number = 1;
 
   constructor(public service: AppService) {}
 

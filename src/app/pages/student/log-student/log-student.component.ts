@@ -8,6 +8,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LogStudentComponent implements OnInit {
   public logResult: any = null;
+  public pagiShowlog: number = 1;
   constructor(public service: AppService) {}
 
   ngOnInit() {

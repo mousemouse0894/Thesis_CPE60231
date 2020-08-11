@@ -19,6 +19,7 @@ export class QueryComponent implements OnInit {
   public dbSelected: string = '';
   public tbSelected: string = '';
   public dataInTable: any = null;
+  public sqlCommand: string = '';
   public pagiShowdatabase: number = 1;
 
   treeControl = new NestedTreeControl<FoodNode>((node) => node.children);
@@ -39,9 +40,9 @@ export class QueryComponent implements OnInit {
     // });
     // this.inputCommand = SelectDatabase.getCommand();
     // this.databaseResult = SelectDatabase.getdatabaseResult();
-    this.dbSelected = SelectDatabase.getDatabase();
-    this.tbSelected = SelectDatabase.getTbResult();
-    this.dataInTable = SelectDatabase.getdatabaseResult();
+    // this.dbSelected = SelectDatabase.getDatabase();
+    // this.tbSelected = SelectDatabase.getTbResult();
+    // this.dataInTable = SelectDatabase.getdatabaseResult();
     this.getDatabase();
   }
 
@@ -108,25 +109,27 @@ export class QueryComponent implements OnInit {
   //   SelectDatabase.setDatabase(this.selectDB);
   // };
 
-  // public onQuery = () => {
-  //   this.service
-  //     .httpPost(
-  //       `/exdatabase/simquery?token=${
-  //         this.service.localStorage.get('userLogin')['token']
-  //       }`,
-  //       JSON.stringify({
-  //         sqldatabase: SelectDatabase.getDatabase(),
-  //         sqlquery: this.inputCommand,
-  //       })
-  //     )
-  //     .then((value: any) => {
-  //       if (value.success) {
-  //         this.queryResult = value.result;
-  //         console.log(this.queryResult);
-  //       } else {
-  //       }
-  //     });
-  // };
+  public onQuery = () => {
+    this.dataInTable = null;
+
+    this.service
+      .httpPost(
+        `/exdatabase/simquery?token=${
+          this.service.localStorage.get('userLogin')['token']
+        }`,
+        JSON.stringify({
+          sqldatabase: this.dbSelected,
+          sqlquery: this.sqlCommand,
+        })
+      )
+      .then((value: any) => {
+        if (value.success) {
+          this.dataInTable = value.result;
+        } else {
+          this.dataInTable = null;
+        }
+      });
+  };
 
   public getKeyObject = (array) => {
     if (array.length > 0) {

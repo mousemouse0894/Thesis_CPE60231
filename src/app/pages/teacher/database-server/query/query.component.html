@@ -16,6 +16,7 @@
             <li
               class="mat-tree-node"
               (click)="
+                pagiShowdatabase = 1;
                 selectTable(
                   treeControl.expansionModel.selected[0].name,
                   node.name
@@ -72,20 +73,55 @@
   </div>
 
   <div class="col-md-9 mb-3">
-    <div class="card">
+    <div class="card mb-3" *ngIf="dbSelected.length > 0">
       <div class="card-body">
-        <div class="mb-3" *ngIf="dataInTable != null">
-          <h2>{{ dbSelected }}&nbsp;>&nbsp;{{ tbSelected }}</h2>
+        <div class="mb-3">
+          <h2>Query ฐานข้อมูล {{ dbSelected }}</h2>
+        </div>
+        <mat-form-field class="example-full-width">
+          <mat-label>SQL Command</mat-label>
+          <textarea
+            matInput
+            placeholder=""
+            rows="3"
+            [(ngModel)]="sqlCommand"
+          ></textarea>
+        </mat-form-field>
+
+        <button
+          type="button"
+          class="btn btn-primary btn-sm"
+          (click)="onQuery()"
+        >
+          Query
+        </button>
+      </div>
+    </div>
+
+    <div class="card" *ngIf="dataInTable != null">
+      <div class="card-body">
+        <div class="mb-3">
+          <h2>ข้อมูล</h2>
+          <p>Row : {{ dataInTable.rowCount ? dataInTable.rowCount : "0" }}</p>
+          <p>
+            Column : {{ dataInTable.colCount ? dataInTable.colCount : "0" }}
+          </p>
         </div>
 
-        <div *ngIf="dataInTable != null" style="overflow: auto;">
+        <div *ngIf="!dataInTable.isQuery">
+          <span class="text-danger">
+            {{ dataInTable.message.split(":")[2].substring(5) }}
+          </span>
+        </div>
+
+        <div *ngIf="dataInTable.rowCount > 0" style="overflow: auto;">
           <table
             class="table table-sm table-bordered table-hover"
-            *ngIf="getKeyObject(dataInTable).length > 0"
+            *ngIf="getKeyObject(dataInTable.result).length > 0"
           >
             <thead>
               <tr>
-                <th *ngFor="let x of getKeyObject(dataInTable)">
+                <th *ngFor="let x of getKeyObject(dataInTable.result)">
                   {{ x }}
                 </th>
               </tr>
@@ -93,7 +129,7 @@
             <tbody>
               <tr
                 *ngFor="
-                  let x of dataInTable
+                  let x of dataInTable.result
                     | paginate
                       : {
                           id: 'pagiShowdatabase',
@@ -106,15 +142,16 @@
               </tr>
             </tbody>
           </table>
-
-          <pagination-controls
-            id="pagiShowdatabase"
-            *ngIf="dataInTable.length > 10"
-            responsive="true"
-            previousLabel="ย้อนกลับ"
-            nextLabel="ถัดไป"
-            (pageChange)="pagiShowdatabase = $event"
-          ></pagination-controls>
+          <div class="text-center">
+            <pagination-controls
+              id="pagiShowdatabase"
+              *ngIf="dataInTable.result.length > 10"
+              responsive="true"
+              previousLabel="ย้อนกลับ"
+              nextLabel="ถัดไป"
+              (pageChange)="pagiShowdatabase = $event"
+            ></pagination-controls>
+          </div>
         </div>
       </div>
     </div>

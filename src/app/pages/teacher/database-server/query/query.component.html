@@ -73,12 +73,12 @@
   </div>
 
   <div class="col-md-9 mb-3">
-    <div class="card mb-3" *ngIf="dbSelected.length > 0">
+    <div class="card mb-3" [hidden]="dbSelected.length <= 0">
       <div class="card-body">
         <div class="mb-3">
           <h2>Query ฐานข้อมูล {{ dbSelected }}</h2>
         </div>
-        <mat-form-field class="example-full-width">
+        <!-- <mat-form-field class="example-full-width">
           <mat-label>SQL Command</mat-label>
           <textarea
             matInput
@@ -86,7 +86,21 @@
             rows="3"
             [(ngModel)]="sqlCommand"
           ></textarea>
-        </mat-form-field>
+        </mat-form-field> -->
+
+        <div style="position: relative; height: 200px;" class="mb-3">
+          <div
+            id="queryTest"
+            style="
+              position: absolute;
+              top: 0px;
+              right: 0;
+              bottom: 0;
+              left: 0;
+              z-index: 4 !important;
+            "
+          ></div>
+        </div>
 
         <button
           type="button"

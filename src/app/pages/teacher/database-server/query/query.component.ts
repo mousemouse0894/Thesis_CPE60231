@@ -5,6 +5,8 @@ import { SelectDatabase } from '../database';
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
 
+const _window: any = window;
+
 interface FoodNode {
   name: string;
   children?: FoodNode[];
@@ -21,6 +23,7 @@ export class QueryComponent implements OnInit {
   public dataInTable: any = null;
   public sqlCommand: string = '';
   public pagiShowdatabase: number = 1;
+  public aceEditor: any = null;
 
   treeControl = new NestedTreeControl<FoodNode>((node) => node.children);
   dataSource = new MatTreeNestedDataSource<FoodNode>();
@@ -44,6 +47,17 @@ export class QueryComponent implements OnInit {
     // this.tbSelected = SelectDatabase.getTbResult();
     // this.dataInTable = SelectDatabase.getdatabaseResult();
     this.getDatabase();
+
+    _window.ace.require('ace/ext/language_tools');
+    this.aceEditor = _window.ace.edit('queryTest');
+
+    this.aceEditor.session.setMode('ace/mode/sql');
+    this.aceEditor.setTheme('ace/theme/tomorrow');
+    this.aceEditor.setOptions({
+      enableBasicAutocompletion: true,
+      enableSnippets: true,
+      enableLiveAutocompletion: true,
+    });
   }
 
   private getDatabase = () => {
@@ -111,7 +125,6 @@ export class QueryComponent implements OnInit {
 
   public onQuery = () => {
     this.dataInTable = null;
-
     this.service
       .httpPost(
         `/exdatabase/simquery?token=${
@@ -119,7 +132,7 @@ export class QueryComponent implements OnInit {
         }`,
         JSON.stringify({
           sqldatabase: this.dbSelected,
-          sqlquery: this.sqlCommand,
+          sqlquery: this.aceEditor.getValue(),
         })
       )
       .then((value: any) => {

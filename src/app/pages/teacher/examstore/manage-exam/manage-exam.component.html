@@ -68,29 +68,39 @@
         formControlName="keyword"
       >
         <mat-chip
-          *ngFor="let fruit of fruits"
-          [selectable]="selectable"
-          [removable]="removable"
+          *ngFor="let fruit of keyword"
+          [selectable]="'true'"
+          [removable]="'true'"
           (removed)="remove(fruit)"
         >
           {{ fruit.name }}
-          <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+          <mat-icon matChipRemove>cancel</mat-icon>
         </mat-chip>
         <input
           placeholder="Keyword"
+          #keywordInput
           [matChipInputFor]="chipList"
+          [matAutocomplete]="auto"
           [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-          [matChipInputAddOnBlur]="addOnBlur"
+          [matChipInputAddOnBlur]="'true'"
           (matChipInputTokenEnd)="add($event)"
         />
       </mat-chip-list>
+      <mat-autocomplete
+        #auto="matAutocomplete"
+        (optionSelected)="selected($event)"
+      >
+        <mat-option *ngFor="let keyword of allKeyword" [value]="keyword">
+          {{ keyword }}
+        </mat-option>
+      </mat-autocomplete>
     </mat-form-field>
 
     <div class="mb-3">
       <mat-form-field>
         <input
           matInput
-          placeholder="คะเเนน (score)"
+          placeholder="คะแนน (score)"
           type="number"
           required
           formControlName="score"

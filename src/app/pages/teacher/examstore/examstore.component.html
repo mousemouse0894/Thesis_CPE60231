@@ -1,0 +1,29 @@
+<nav mat-tab-nav-bar style="border: unset;" class="bg-white box-shadow">
+  <a
+    mat-tab-link
+    [routerLink]="['/exam-store/manage-exam']"
+    routerLinkActive="router-active"
+  >
+    {{ "ข้อสอบ" }}
+  </a>
+
+  <a
+    mat-tab-link
+    [routerLink]="['/exam-store/manage-unit']"
+    routerLinkActive="router-active"
+  >
+    {{ "หน่วยการเรียนรู้" }}
+  </a>
+
+  <a
+    mat-tab-link
+    [routerLink]="['/exam-store/share-exam']"
+    routerLinkActive="router-active"
+  >
+    {{ "แชร์ข้อสอบ" }}
+  </a>
+</nav>
+
+<div class="box-padding">
+  <router-outlet></router-outlet>
+</div>

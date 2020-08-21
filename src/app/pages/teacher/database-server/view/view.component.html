@@ -153,14 +153,17 @@
             </tbody>
           </table>
 
-          <pagination-controls
-            id="pagiShowdatabase"
-            *ngIf="Dataintable.result.length > 15"
-            responsive="true"
-            previousLabel="ย้อนกลับ"
-            nextLabel="ถัดไป"
-            (pageChange)="pagiShowdatabase = $event"
-          ></pagination-controls>
+          <div class="text-center">
+            <pagination-controls
+              id="pagiShowdatabase"
+              *ngIf="Dataintable.result.length > 15"
+              responsive="true"
+              previousLabel="ย้อนกลับ"
+              nextLabel="ถัดไป"
+              (pageChange)="pagiShowdatabase = $event"
+            ></pagination-controls>
+          </div>
+
           <div
             class="box-padding text-center"
             *ngIf="getKeyObject(Dataintable).length <= 0"

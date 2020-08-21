@@ -57,7 +57,6 @@ export class PrivateComponent implements OnInit {
       ];
     } else {
       // อาจารย์
-
       this.menuList = [
         {
           path: '/home',
@@ -73,6 +72,11 @@ export class PrivateComponent implements OnInit {
           path: '/database',
           text: 'ฐานข้อมูล',
           icon: '<i class="fas fa-database"></i>',
+        },
+        {
+          path: '/exam-store',
+          text: 'คลังข้อสอบ',
+          icon: '<i class="fas fa-th-list"></i>',
         },
         {
           path: '/clear-access',

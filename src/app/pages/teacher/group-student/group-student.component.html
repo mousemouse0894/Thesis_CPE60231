@@ -22,13 +22,17 @@
             </div>
           </div>
 
-          <table class="table table-sm table-borderless table-hover">
+          <table
+            class="table table-sm table-borderless table-hover"
+            *ngIf="groupStudent.length > 0"
+          >
             <thead>
               <tr>
                 <th></th>
                 <th>ชื่อกลุ่ม</th>
                 <th>รหัสผ่าน</th>
                 <th>สถานะ</th>
+                <th></th>
                 <th></th>
                 <th></th>
               </tr>
@@ -44,6 +48,15 @@
                 <td style="vertical-align: middle;">
                   <button
                     type="button"
+                    class="btn btn-primary btn-sm"
+                    (click)="getStudentingroup(x)"
+                  >
+                    รายชื่อ
+                  </button>
+                </td>
+                <td style="vertical-align: middle;">
+                  <button
+                    type="button"
                     class="btn btn-warning btn-sm"
                     data-toggle="modal"
                     data-target="#exampleModalEditGroup"
@@ -55,15 +68,19 @@
                 <td style="vertical-align: middle;">
                   <button
                     type="button"
-                    class="btn btn-primary btn-sm"
-                    (click)="getStudentingroup(x)"
+                    class="btn btn-danger btn-sm"
+                    (click)="onDeleteGroup(x)"
                   >
-                    รายชื่อนักศึกษา
+                    ลบ
                   </button>
                 </td>
               </tr>
             </tbody>
           </table>
+
+          <div class="text-center" *ngIf="groupStudent.length <= 0">
+            <h3>ไม่พบกลุ่มเรียน</h3>
+          </div>
         </div>
       </div>
     </div>
@@ -201,10 +218,10 @@
 
           <div class="mb-3">
             <mat-form-field>
-              <mat-label>รหัสกลุ่ม (grouppassword)</mat-label>
+              <mat-label>รหัสกลุ่ม</mat-label>
               <input
                 matInput
-                placeholder="รหัสกลุ่ม (grouppassword)"
+                placeholder="รหัสกลุ่ม"
                 type="text"
                 required
                 formControlName="password"

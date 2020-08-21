@@ -48,6 +48,13 @@ const routes: Routes = [
               ),
           },
           {
+            path: 'database',
+            loadChildren: () =>
+              import(
+                './pages/teacher/database-server/database-server.module'
+              ).then((m) => m.DatabaseServerModule),
+          },
+          {
             path: 'clear-access',
             canActivate: [TeacherGuard],
             loadChildren: () =>
@@ -64,19 +71,11 @@ const routes: Routes = [
               ),
           },
           {
-            path: 'unit',
+            path: 'exam-store',
             canActivate: [TeacherGuard],
             loadChildren: () =>
-              import('./pages/teacher/unit/unit.module').then(
-                (m) => m.UnitModule
-              ),
-          },
-          {
-            path: 'share',
-            canActivate: [TeacherGuard],
-            loadChildren: () =>
-              import('./pages/teacher/share-exam/share-exam.module').then(
-                (m) => m.ShareExamModule
+              import(`./pages/teacher/examstore/examstore.module`).then(
+                (m) => m.ExamstoreModule
               ),
           },
           {
@@ -93,21 +92,6 @@ const routes: Routes = [
             loadChildren: () =>
               import('./pages/student/log-student/log-student.module').then(
                 (m) => m.LogStudentModule
-              ),
-          },
-          {
-            path: 'database',
-            loadChildren: () =>
-              import(
-                './pages/teacher/database-server/database-server.module'
-              ).then((m) => m.DatabaseServerModule),
-          },
-          {
-            path: 'exam',
-            canActivate: [TeacherGuard],
-            loadChildren: () =>
-              import('./pages/teacher/manage-exam/manage-exam.module').then(
-                (m) => m.ManageExamModule
               ),
           },
           {

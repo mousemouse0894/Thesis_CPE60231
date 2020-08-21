@@ -80,14 +80,13 @@ export class AppService {
               this.navRouter('/login');
               this.localStorage.clear();
             }
+            this.stateLoading = false;
           })
           .catch((reason) => {
             console.log(reason);
             let newReason = reason;
             newReason['message'] = reason['name'];
             resolve({ connect: false, ...newReason });
-          })
-          .finally(() => {
             this.stateLoading = false;
           });
       }, Math.round(Math.random() * 1200));
@@ -108,14 +107,13 @@ export class AppService {
               this.navRouter('/login');
               this.localStorage.clear();
             }
+            this.stateLoading = false;
           })
           .catch((reason) => {
             console.log(reason);
             let newReason = reason;
             newReason['message'] = reason['name'];
             resolve({ connect: false, ...newReason });
-          })
-          .finally(() => {
             this.stateLoading = false;
           });
       }, Math.round(Math.random() * 1200));

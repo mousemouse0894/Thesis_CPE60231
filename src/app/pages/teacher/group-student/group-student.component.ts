@@ -2,13 +2,15 @@ import { AppService } from './../../../services/app.service';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
+const _window: any = window;
+
 @Component({
   selector: 'app-group-student',
   templateUrl: './group-student.component.html',
   styleUrls: ['./group-student.component.scss'],
 })
 export class GroupStudentComponent implements OnInit {
-  public groupStudent: any = null;
+  public groupStudent: Array<any> = [];
   public studentingroup: any = null;
   public formInsertgroup: FormGroup;
   public checkedit: boolean = false;
@@ -41,7 +43,40 @@ export class GroupStudentComponent implements OnInit {
     this.checkedit = false;
   };
 
+  public onDeleteGroup = (group: any) => {
+    this.service
+      .showConfirm(
+        `ยืนยันการลบกลุ่มเรียน ${group.name}`,
+        `ข้อมูลนักศึกษาและข้อมูลการสอบทั้งหมดในกลุ่มนี้จะถูกลบด้วย`,
+        `warning`
+      )
+      .then((isConform: boolean) => {
+        if (isConform) {
+          this.service
+            .httpPost(
+              `groupst/del?token=${
+                this.service.localStorage.get('userLogin')['token']
+              }`,
+              JSON.stringify(group)
+            )
+            .then((val: any) => {
+              if (val.success) {
+                this.onGetgroupstudent();
+                this.service.showAlert(
+                  `ลบกลุ่มเรียน ${group.name} สำเร็จ`,
+                  ``,
+                  `success`
+                );
+              } else {
+                this.service.showAlert('', val.message, 'error');
+              }
+            });
+        }
+      });
+  };
+
   public onGetgroupstudent = () => {
+    this.groupStudent = [];
     this.service
       .httpGet(
         '/groupst/getowner/' +
@@ -62,8 +97,6 @@ export class GroupStudentComponent implements OnInit {
       groupname: 'CPE.' + this.formInsertgroup.value.groupname,
     });
 
-    console.log('asdasd');
-
     if (this.checkedit) {
       //updategroup
       this.service
@@ -76,8 +109,9 @@ export class GroupStudentComponent implements OnInit {
         .then((value: any) => {
           if (value.success) {
             this.checkedit = false;
-            this.service.showAlert('', 'เเก้ไขสำเร็จ', 'success');
+            this.service.showAlert('', 'บันทึกสำเร็จ', 'success');
             this.onGetgroupstudent();
+            _window.$(`#exampleModalEditGroup`).modal('hide');
           } else {
             this.service.showAlert('', value.message, 'error');
           }
@@ -93,8 +127,9 @@ export class GroupStudentComponent implements OnInit {
         )
         .then((value: any) => {
           if (value.success) {
-            this.service.showAlert('', 'เเก้ไขสำเร็จ', 'success');
+            this.service.showAlert('', 'บันทึกสำเร็จ', 'success');
             this.onGetgroupstudent();
+            _window.$(`#exampleModalEditGroup`).modal('hide');
           } else {
             this.service.showAlert('', value.message, 'error');
           }
@@ -160,8 +195,6 @@ export class GroupStudentComponent implements OnInit {
       });
   };
 
-  //------------------------------------------------------------------------
-  // getlog
   public onGetlogstudent = (studentid: any) => {
     this.service
       .httpGet(

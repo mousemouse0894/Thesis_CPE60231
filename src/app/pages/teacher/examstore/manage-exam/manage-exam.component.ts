@@ -1,8 +1,9 @@
-import { AppService } from './../../../services/app.service';
-import { Component, OnInit } from '@angular/core';
+import { AppService } from 'src/app/services/app.service';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
 @Component({
   selector: 'app-manage-exam',
@@ -16,12 +17,11 @@ export class ManageExamComponent implements OnInit {
   public databaseResult: any = null;
   public examResult: any = null;
   public checkEditexam: boolean = false;
-  visible = true;
-  selectable = true;
-  removable = true;
-  addOnBlur = true;
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
-  fruits: any[] = [];
+
+  allKeyword: string[] = ['Apple', 'Lemon', 'Lime', 'Orange', 'Strawberry'];
+  keyword: any[] = [];
+  @ViewChild('keywordInput') keywordInput: ElementRef<HTMLInputElement>;
 
   constructor(public service: AppService, private formBuilder: FormBuilder) {}
 
@@ -151,7 +151,7 @@ export class ManageExamComponent implements OnInit {
   public onCheckupdateexam = (x: any) => {
     this.getUnittable();
     this.onGetselectunit(x.examunitID_fk);
-    this.fruits = JSON.parse(x.keyword);
+    this.keyword = JSON.parse(x.keyword);
     this.formInsertexam = this.formBuilder.group({
       answer: [x.answer, Validators.required],
       databaseName: [x.databaseName, Validators.required],
@@ -191,25 +191,36 @@ export class ManageExamComponent implements OnInit {
     const input = event.input;
     const value = event.value;
     if ((value || '').trim()) {
-      this.fruits.push({ name: value.trim() });
+      this.keyword.push({ name: value.trim() });
     }
     if (input) {
       input.value = '';
     }
     this.formInsertexam.patchValue({
-      keyword: this.fruits.length > 0 ? JSON.stringify(this.fruits) : '',
+      keyword: this.keyword.length > 0 ? JSON.stringify(this.keyword) : '',
+    });
+  }
+
+  selected(event: MatAutocompleteSelectedEvent): void {
+    console.log(event);
+    this.keyword.push({ name: event.option.viewValue });
+    this.keywordInput.nativeElement.value = null;
+    this.keywordInput.nativeElement.blur();
+
+    this.formInsertexam.patchValue({
+      keyword: this.keyword.length > 0 ? JSON.stringify(this.keyword) : '',
     });
   }
 
   remove(fruit: any): void {
-    const index = this.fruits.indexOf(fruit);
+    const index = this.keyword.indexOf(fruit);
 
     if (index >= 0) {
-      this.fruits.splice(index, 1);
+      this.keyword.splice(index, 1);
     }
 
     this.formInsertexam.patchValue({
-      keyword: this.fruits.length > 0 ? JSON.stringify(this.fruits) : '',
+      keyword: this.keyword.length > 0 ? JSON.stringify(this.keyword) : '',
     });
   }
 }

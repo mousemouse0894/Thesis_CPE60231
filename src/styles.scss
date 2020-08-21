@@ -14,6 +14,16 @@ body {
   font-family: "Trirong", serif !important;
 }
 
+#editor1 {
+  position: absolute;
+  top: 64px;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 4 !important;
+  font-family: "Monaco", monospace !important;
+}
+
 h1,
 h2,
 h3,

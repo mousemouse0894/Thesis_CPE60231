@@ -79,6 +79,14 @@ const routes: Routes = [
               ),
           },
           {
+            path: 'events-exam',
+            canActivate: [TeacherGuard],
+            loadChildren: () =>
+              import(`./pages/teacher/events-exam/events-exam.module`).then(
+                (m) => m.EventsExamModule
+              ),
+          },
+          {
             path: 'group',
             canActivate: [StudentGuard],
             loadChildren: () =>

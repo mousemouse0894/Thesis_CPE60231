@@ -39,13 +39,13 @@
             </thead>
             <tbody>
               <tr *ngFor="let x of groupStudent; let i = index">
-                <td style="vertical-align: middle;">{{ i + 1 }}</td>
-                <td style="vertical-align: middle;">{{ x.name }}</td>
-                <td style="vertical-align: middle;">{{ x.password }}</td>
-                <td style="vertical-align: middle;">
+                <td style="vertical-align: middle">{{ i + 1 }}</td>
+                <td style="vertical-align: middle">{{ x.name }}</td>
+                <td style="vertical-align: middle">{{ x.password }}</td>
+                <td style="vertical-align: middle">
                   {{ x.status == "off" ? "ปิด" : "เปิด" }}
                 </td>
-                <td style="vertical-align: middle;">
+                <td style="vertical-align: middle">
                   <button
                     type="button"
                     class="btn btn-primary btn-sm"
@@ -54,7 +54,7 @@
                     รายชื่อ
                   </button>
                 </td>
-                <td style="vertical-align: middle;">
+                <td style="vertical-align: middle">
                   <button
                     type="button"
                     class="btn btn-warning btn-sm"
@@ -65,7 +65,7 @@
                     แก้ไข
                   </button>
                 </td>
-                <td style="vertical-align: middle;">
+                <td style="vertical-align: middle">
                   <button
                     type="button"
                     class="btn btn-danger btn-sm"
@@ -135,11 +135,13 @@
                   let i = index
                 "
               >
-                <td style="vertical-align: middle;">{{ i + 1 }}</td>
-                <td style="vertical-align: middle;">{{ x.firstNameThai }}</td>
-                <td style="vertical-align: middle;">{{ x.lastNameThai }}</td>
-                <td style="vertical-align: middle;">{{ x.studentId }}</td>
-                <td style="vertical-align: middle;">
+                <td style="vertical-align: middle">
+                  {{ 10 * pagiShowstudent - 10 + i + 1 }}
+                </td>
+                <td style="vertical-align: middle">{{ x.firstNameThai }}</td>
+                <td style="vertical-align: middle">{{ x.lastNameThai }}</td>
+                <td style="vertical-align: middle">{{ x.studentId }}</td>
+                <td style="vertical-align: middle">
                   <button
                     type="button"
                     class="btn btn-primary btn-sm"
@@ -148,7 +150,7 @@
                     ประวัติการเข้าใช้งาน
                   </button>
                 </td>
-                <td style="vertical-align: middle;">
+                <td style="vertical-align: middle">
                   <button
                     type="button"
                     class="btn btn-danger btn-sm"
@@ -235,7 +237,7 @@
               formControlName="status"
             >
               <mat-radio-button value="on">เปิด</mat-radio-button>
-              <mat-radio-button value="off" style="margin-left: 20px;"
+              <mat-radio-button value="off" style="margin-left: 20px"
                 >ปิด</mat-radio-button
               >
             </mat-radio-group>

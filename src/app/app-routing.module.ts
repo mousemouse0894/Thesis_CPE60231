@@ -87,6 +87,14 @@ const routes: Routes = [
               ),
           },
           {
+            path: 'exam-set',
+            canActivate: [TeacherGuard],
+            loadChildren: () =>
+              import(`./pages/teacher/exam-set/exam-set.module`).then(
+                (m) => m.ExamSetModule
+              ),
+          },
+          {
             path: 'group',
             canActivate: [StudentGuard],
             loadChildren: () =>

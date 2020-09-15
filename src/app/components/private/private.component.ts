@@ -79,6 +79,16 @@ export class PrivateComponent implements OnInit {
           icon: '<i class="fas fa-th-list"></i>',
         },
         {
+          path: '/exam-set',
+          text: 'ชุดข้อสอบ',
+          icon: '<i class="fas fa-box"></i>',
+        },
+        {
+          path: '/events-exam',
+          text: 'ระบบสอบ',
+          icon: '<i class="fas fa-pen-square"></i>',
+        },
+        {
           path: '/clear-access',
           text: 'ลบสถานะการเข้าสู่ระบบ',
           icon: '<i class="fas fa-clipboard-list"></i>',

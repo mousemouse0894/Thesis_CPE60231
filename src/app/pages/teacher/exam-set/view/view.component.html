@@ -1,0 +1,133 @@
+<div class="card">
+  <div class="card-body">
+    <!-- <div class="row">
+      <div class="col-md-8 mb-3">
+        <h2>กลุ่มเรียน&nbsp;{{ groupSelectName }}</h2>
+      </div>
+      <div class="col-md-4">
+        <div class="text-right">
+          <button
+            type="button"
+            class="btn btn-danger btn-sm"
+            (click)="groupSelectName = ''"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      </div>
+    </div> -->
+
+    <table
+      class="table table-sm table-borderless table-hover"
+      *ngIf="listExamSet.length > 0"
+    >
+      <thead>
+        <tr>
+          <th></th>
+          <th>ชื่อชุดข้อสอบ</th>
+          <th>คะแนนรวม</th>
+          <th></th>
+          <th></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="
+            let x of listExamSet
+              | paginate
+                : {
+                    id: 'listExamSet',
+                    itemsPerPage: 10,
+                    currentPage: paginationPage
+                  };
+            let i = index
+          "
+        >
+          <td style="vertical-align: middle">
+            {{ 10 * paginationPage - 10 + i + 1 }}
+          </td>
+          <td style="vertical-align: middle">{{ x.topic }}</td>
+          <td style="vertical-align: middle">{{ x.exambodyScore }}</td>
+          <td style="vertical-align: middle">
+            <button
+              type="button"
+              class="btn btn-primary btn-sm"
+              data-toggle="modal"
+              data-target="#exampleModalShowExam"
+              (click)="examView = []; selectExamView(x)"
+            >
+              ดูข้อสอบ
+            </button>
+          </td>
+          <td style="vertical-align: middle"></td>
+          <td style="vertical-align: middle"></td>
+        </tr>
+      </tbody>
+    </table>
+    <pagination-controls
+      id="listExamSet"
+      *ngIf="listExamSet.length > 10"
+      responsive="true"
+      previousLabel="ย้อนกลับ"
+      nextLabel="ถัดไป"
+      (pageChange)="paginationPage = $event"
+    ></pagination-controls>
+  </div>
+</div>
+
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="exampleModalShowExam"
+  tabindex="-1"
+  aria-labelledby="exampleModalShowExamLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" id="exampleModalShowExamLabel">
+          {{ examView["topic"] }}
+        </h2>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-sm table-borderless table-hover">
+          <thead>
+            <tr>
+              <td>โจทย์</td>
+              <td>คะแนน</td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let xx of examView['exambodyData']; let j = index">
+              <td style="vertical-align: middle">
+                {{ xx.text }}
+              </td>
+              <td style="vertical-align: middle">
+                {{ xx.score }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary btn-sm"
+          data-dismiss="modal"
+        >
+          ปิด
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

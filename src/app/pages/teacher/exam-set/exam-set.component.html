@@ -1,0 +1,21 @@
+<nav mat-tab-nav-bar style="border: unset" class="bg-white box-shadow">
+  <a
+    mat-tab-link
+    [routerLink]="['/exam-set/view']"
+    routerLinkActive="router-active"
+  >
+    {{ "ชุดข้อสอบทั้งหมด" }}
+  </a>
+
+  <a
+    mat-tab-link
+    [routerLink]="['/exam-set/update']"
+    routerLinkActive="router-active"
+  >
+    {{ "จัดการชุดข้อสอบ" }}
+  </a>
+</nav>
+
+<div class="box-padding">
+  <router-outlet></router-outlet>
+</div>

@@ -110,6 +110,7 @@ export class ManageExamComponent implements OnInit {
 
   public onInsartexam = () => {
     if (this.checkEditexam) {
+      console.log(this.formInsertexam.value);
       this.service
         .httpPost(
           `/exstore/update?token=${
@@ -162,6 +163,8 @@ export class ManageExamComponent implements OnInit {
       text: [x.text, Validators.required],
       owner: this.service.localStorage.get('userLogin')['uid'],
       UnitID: [x.examunitID_fk, Validators.required],
+      oldID: x.oldID,
+      oldOwner: x.oldOwner,
     });
     this.checkEditexam = true;
   };

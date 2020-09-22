@@ -1,5 +1,5 @@
 <!--เพิ่มข้อสอบ-->
-<div class="text-center mb-3">
+<!-- <div class="text-center mb-3">
   <form
     [formGroup]="formInsertexam"
     (ngSubmit)="formInsertexam.valid ? onInsartexam() : ''"
@@ -111,58 +111,211 @@
       <button type="submit" class="btn btn-primary">ตกลง</button>
     </div>
   </form>
+</div> -->
+
+<div class="card">
+  <div class="card-body" style="overflow: auto">
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <h2>ข้อสอบทั้งหมด</h2>
+      </div>
+      <div class="col-md-6 mb-3">
+        <div class="text-right">
+          <button
+            type="button"
+            class="btn btn-primary btn-sm"
+            data-toggle="modal"
+            data-target="#exampleModalCreactExam"
+          >
+            เพิ่มข้อสอบ
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center mb-3">
+      <table class="table table-sm table-borderless table-hover">
+        <thead>
+          <tr>
+            <th></th>
+            <th>คะแนน</th>
+            <th>ฐานข้อมูล</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let x of examResult; let i = index">
+            <td style="vertical-align: middle">{{ i + 1 }}</td>
+            <td style="vertical-align: middle">{{ x.score }}</td>
+            <td style="vertical-align: middle">{{ x.databaseName }}</td>
+            <td>
+              <button type="button" class="btn btn-primary btn-sm mr-2">
+                รายละเอียด
+              </button>
+
+              <button
+                type="button"
+                class="btn btn-warning btn-sm ml-2 mr-2"
+                (click)="onCheckupdateexam(x)"
+                data-toggle="modal"
+                data-target="#exampleModalCreactExam"
+              >
+                แก้ไข
+              </button>
+
+              <button
+                type="button"
+                class="btn btn-danger btn-sm ml-2"
+                (click)="onDeleteexam(x)"
+              >
+                ลบ
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
 
-<!-- เเสดงexam -->
-<div class="text-center mb-3">
-  <table class="table table-sm table-borderless table-striped table-hover">
-    <thead>
-      <tr>
-        <th></th>
-        <th>answer</th>
-        <th>createAt</th>
-        <th>databaseName</th>
-        <th>keyword</th>
-        <th>owner</th>
-        <th>purposeID_fk</th>
-        <th>score</th>
-        <th>storeID</th>
-        <th>text</th>
-        <th>edit</th>
-        <th>delete</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let x of examResult; let i = index">
-        <td>{{ i + 1 }}</td>
-        <td>{{ x.answer }}</td>
-        <td>{{ x.createAt }}</td>
-        <td>{{ x.databaseName }}</td>
-        <td>{{ x.keyword }}</td>
-        <td>{{ x.owner }}</td>
-        <td>{{ x.purposeID_fk }}</td>
-        <td>{{ x.score }}</td>
-        <td>{{ x.storeID }}</td>
-        <td>{{ x.text }}</td>
-        <td>
+<!-- Modal exampleModalCreactExam-->
+<div
+  class="modal fade"
+  id="exampleModalCreactExam"
+  tabindex="-1"
+  aria-labelledby="exampleModalCreactExamLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-xl">
+    <form
+      [formGroup]="formInsertexam"
+      (ngSubmit)="formInsertexam.valid ? onInsartexam() : ''"
+    >
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title" id="exampleModalCreactExamLabel">
+            {{ checkEditexam ? "แก้ไขข้อสอบ" : "เพิ่มข้อสอบ" }}
+          </h2>
           <button
             type="button"
-            class="btn btn-primary"
-            (click)="onCheckupdateexam(x)"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
           >
-            เเก้ไข
+            <span aria-hidden="true">&times;</span>
           </button>
-        </td>
-        <td>
+        </div>
+        <div class="modal-body box-padding">
+          <mat-form-field>
+            <mat-label>หน่วยการเรียนรู้</mat-label>
+            <mat-select
+              #examUnitID
+              (selectionChange)="onGetselectunit(examUnitID.value)"
+              formControlName="UnitID"
+            >
+              <mat-option [value]="x.examUnitID" *ngFor="let x of getunit">{{
+                x.name
+              }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field *ngIf="getpurposeTable != null">
+            <mat-label>จุดประสงค์</mat-label>
+            <mat-select formControlName="purposeID_fk">
+              <mat-option
+                [value]="x.exampurposeID"
+                *ngFor="let x of getpurposeTable"
+                >{{ x.name }}</mat-option
+              >
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>ฐานข้อมูล</mat-label>
+            <mat-select formControlName="databaseName">
+              <mat-option
+                [value]="x.Database"
+                *ngFor="let x of databaseResult"
+                >{{ x.Database }}</mat-option
+              >
+            </mat-select>
+          </mat-form-field>
+
+          <div class="mb-3" style="position: relative">
+            <div id="textFroala" [innerHTML]="formInsertexam.value.text"></div>
+          </div>
+
+          <div class="mb-3">
+            <mat-form-field>
+              <input
+                matInput
+                placeholder="คำตอบ (answer)"
+                type="text"
+                required
+                formControlName="answer"
+              />
+            </mat-form-field>
+          </div>
+
+          <mat-form-field>
+            <mat-chip-list
+              #chipList
+              aria-label="Fruit selection"
+              required
+              formControlName="keyword"
+            >
+              <mat-chip
+                *ngFor="let fruit of keyword"
+                [selectable]="'true'"
+                [removable]="'true'"
+                (removed)="remove(fruit)"
+              >
+                {{ fruit.name }}
+                <mat-icon matChipRemove>cancel</mat-icon>
+              </mat-chip>
+              <input
+                placeholder="Keyword"
+                #keywordInput
+                [matChipInputFor]="chipList"
+                [matAutocomplete]="auto"
+                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                [matChipInputAddOnBlur]="'true'"
+                (matChipInputTokenEnd)="add($event)"
+              />
+            </mat-chip-list>
+            <mat-autocomplete
+              #auto="matAutocomplete"
+              (optionSelected)="selected($event)"
+            >
+              <mat-option *ngFor="let keyword of allKeyword" [value]="keyword">
+                {{ keyword }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+
+          <div class="mb-3">
+            <mat-form-field>
+              <input
+                matInput
+                placeholder="คะแนน (score)"
+                type="number"
+                required
+                formControlName="score"
+              />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="modal-footer">
           <button
             type="button"
-            class="btn btn-primary"
-            (click)="onDeleteexam(x)"
+            class="btn btn-secondary btm-sm"
+            data-dismiss="modal"
           >
-            ลบ
+            ปิด
           </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+          <button type="submit" class="btn btn-primary btm-sm">บันทึก</button>
+        </div>
+      </div>
+    </form>
+  </div>
 </div>

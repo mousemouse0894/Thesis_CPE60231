@@ -4,6 +4,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import Compressor from 'compressorjs';
+
+const _window: any = window;
 
 @Component({
   selector: 'app-manage-exam',
@@ -18,6 +21,7 @@ export class ManageExamComponent implements OnInit {
   public examResult: any = null;
   public checkEditexam: boolean = false;
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
+  public froalaEditor: any = null;
 
   allKeyword: string[] = ['Apple', 'Lemon', 'Lime', 'Orange', 'Strawberry'];
   keyword: any[] = [];
@@ -29,7 +33,7 @@ export class ManageExamComponent implements OnInit {
     this.formInsertexam = this.formBuilder.group({
       purposeID_fk: ['', Validators.required],
       databaseName: ['', Validators.required],
-      text: ['', Validators.required],
+      text: [''],
       answer: ['', Validators.required],
       keyword: ['', Validators.required],
       score: ['', Validators.required],
@@ -40,6 +44,63 @@ export class ManageExamComponent implements OnInit {
     this.getUnittable();
     this.onGetdatabse();
     this.onGetexam();
+
+    _window.$('#exampleModalCreactExam').on('hide.bs.modal', async (e) => {
+      let self = this;
+      this.froalaEditor.destroy();
+    });
+
+    _window.$('#exampleModalCreactExam').on('show.bs.modal', async (e) => {
+      let self = this;
+      this.froalaEditor = new _window.FroalaEditor('#textFroala', {
+        placeholderText: 'โจทย์',
+        charCounterCount: false,
+        events: {
+          'image.beforeUpload': function (images) {
+            let that = this;
+            new Compressor(images[0], {
+              quality: 0.75,
+              success(result) {
+                let reader = new FileReader();
+                let imgA: any = result;
+                reader.onload = function (img) {
+                  let data = {
+                    img: img.target.result,
+                    imgType: imgA.name.split('.')[
+                      imgA.name.split('.').length - 1
+                    ],
+                  };
+
+                  self.service
+                    .httpPost(
+                      `/upload?token=${
+                        self.service.localStorage.get('userLogin')['token']
+                      }`,
+                      JSON.stringify(data)
+                    )
+                    .then((val: any) => {
+                      that.image.insert(
+                        `${self.service.rootFile}${val.path}`,
+                        null,
+                        null,
+                        that.image.get()
+                      );
+                    });
+                };
+                reader.readAsDataURL(result);
+              },
+              error(err) {
+                self.service.showAlert('ไม่รองรับไฟล์นี้', '', 'error');
+                console.log(err.message);
+              },
+            });
+
+            this.popups.hideAll();
+            return false;
+          },
+        },
+      });
+    });
   }
 
   public getUnittable = () => {
@@ -109,6 +170,9 @@ export class ManageExamComponent implements OnInit {
   };
 
   public onInsartexam = () => {
+    this.formInsertexam.patchValue({
+      text: this.froalaEditor.html.get(),
+    });
     if (this.checkEditexam) {
       console.log(this.formInsertexam.value);
       this.service
@@ -121,9 +185,10 @@ export class ManageExamComponent implements OnInit {
         .then((value: any) => {
           if (value.success) {
             console.log(value);
+            _window.$('#exampleModalCreactExam').modal('hide');
             this.checkEditexam = false;
             this.onGetexam();
-            this.service.showAlert('', 'เเก้ไขสำเร็จสำเร็จ', 'success');
+            this.service.showAlert('', 'แก้ไขสำเร็จสำเร็จ', 'success');
           } else {
             this.service.showAlert('', value.message, 'error');
           }
@@ -140,6 +205,7 @@ export class ManageExamComponent implements OnInit {
         .then((value: any) => {
           if (value.success) {
             console.log(value);
+            _window.$('#exampleModalCreactExam').modal('hide');
             this.onGetexam();
             this.service.showAlert('', 'เพิ่มสำเร็จ', 'success');
           } else {

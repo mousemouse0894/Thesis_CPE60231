@@ -10,6 +10,8 @@ import { ToastrService } from 'ngx-toastr';
 export class AppService {
   private rootAPI: string =
     'http://www.cpe.rmuti.ac.th/project/sqlchecking/api/index.php/';
+  public rootFile: string =
+    'http://www.cpe.rmuti.ac.th/project/sqlchecking/api/';
   public month: Array<string> = [
     'มกราคม',
     'กุมภาพันธ์',

@@ -1,36 +1,152 @@
-<p>add-events works!</p>
-
-<div class="mb-3">
-  <input
-    matInput
-    placeholder="คะแนน (score)"
-    type="text  "
-    required
-    formControlName="score"
-  />
+<div class="card">
+  <div class="card-body">
+    <table
+      class="table table-sm table-borderless table-hover"
+      *ngIf="listExamSet.length > 0"
+    >
+      <thead>
+        <tr>
+          <th></th>
+          <th>ชื่อชุดข้อสอบ</th>
+          <th>คะแนนรวม</th>
+          <th></th>
+          <th></th>
+          <th></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="
+            let x of listExamSet
+              | paginate
+                : {
+                    id: 'listExamSet',
+                    itemsPerPage: 10,
+                    currentPage: paginationPage
+                  };
+            let i = index
+          "
+        >
+          <td style="vertical-align: middle">
+            {{ 10 * paginationPage - 10 + i + 1 }}
+          </td>
+          <td style="vertical-align: middle">{{ x.topic }}</td>
+          <td style="vertical-align: middle">{{ x.exambodyScore }}</td>
+          <td style="vertical-align: middle">
+            <button
+              type="button"
+              class="btn btn-primary btn-sm"
+              data-toggle="modal"
+              data-target="#exampleModalShowExam"
+              (click)="examView = []; selectExamView(x)"
+            >
+              ดูข้อสอบ
+            </button>
+          </td>
+          <td style="vertical-align: middle">
+            <button
+              type="button"
+              (click)="onSelectExam(x)"
+              class="btn btn-primary btn-sm"
+            >
+              เลือกข้อสอบ
+            </button>
+          </td>
+          <td style="vertical-align: middle"></td>
+          <td style="vertical-align: middle"></td>
+        </tr>
+      </tbody>
+    </table>
+    <pagination-controls
+      id="listExamSet"
+      *ngIf="listExamSet.length > 10"
+      responsive="true"
+      previousLabel="ย้อนกลับ"
+      nextLabel="ถัดไป"
+      (pageChange)="paginationPage = $event"
+    ></pagination-controls>
+  </div>
 </div>
 
-<button
-  type="button"
-  class="btn btn-primary btn-sm"
-  data-toggle="modal"
-  data-target="#selectExam"
->
-  เลือกข้อสอบ
-</button>
+<div class="text-center mb-3">
+  <form
+    [formGroup]="formInserttest"
+    (ngSubmit)="formInserttest.valid ? insertTopic() : ''"
+  >
+    <mat-form-field>
+      <mat-label>กลุ่มเรียน</mat-label>
+      <mat-select #groupID formControlName="groupID_fk">
+        <mat-option [value]="x.groupID" *ngFor="let x of groupStudent">{{
+          x.name
+        }}</mat-option>
+      </mat-select>
+    </mat-form-field>
 
+    <div class="mb-3">
+      <mat-form-field>
+        <input
+          matInput
+          placeholder="รหัสผ่าน (password)"
+          type="text"
+          required
+          formControlName="topicPassword"
+        />
+      </mat-form-field>
+    </div>
+    <div class="mb-3">
+      <mat-form-field>
+        <input
+          matInput
+          placeholder="เวลาเริ่ม (timeStart)"
+          type="time"
+          required
+          formControlName="timeStart"
+        />
+      </mat-form-field>
+    </div>
+    <div class="mb-3">
+      <mat-form-field>
+        <input
+          matInput
+          placeholder="เวลาสิ้นสุด (timeEnd)"
+          type="time"
+          required
+          formControlName="timeEnd"
+        />
+      </mat-form-field>
+    </div>
+    <div class="mb-3">
+      <mat-form-field>
+        <input
+          matInput
+          placeholder="topicText (topicText)"
+          type="text"
+          required
+          formControlName="topicText"
+        />
+      </mat-form-field>
+    </div>
+    <div style="margin-top: 20px" class="text-center mb-1">
+      <button type="submit" class="btn btn-primary">ตกลง</button>
+    </div>
+  </form>
+</div>
+
+<!-- Modal -->
 <div
   class="modal fade"
-  id="selectExam"
+  id="exampleModalShowExam"
   tabindex="-1"
-  role="dialog"
-  aria-labelledby="selectExamLabel"
+  aria-labelledby="exampleModalShowExamLabel"
   aria-hidden="true"
 >
-  <div class="modal-dialog modal-xl" role="document">
+  <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h2 class="modal-title" id="selectExamLabel">ข้อมูลในตาราง</h2>
+        <h2 class="modal-title" id="exampleModalShowExamLabel">
+          {{ examView["topic"] }}
+        </h2>
         <button
           type="button"
           class="close"
@@ -40,11 +156,30 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body">xnxx</div>
+      <div class="modal-body">
+        <table class="table table-sm table-borderless table-hover">
+          <thead>
+            <tr>
+              <td>โจทย์</td>
+              <td>คะแนน</td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let xx of examView['exambodyData']; let j = index">
+              <td style="vertical-align: middle">
+                {{ xx.text }}
+              </td>
+              <td style="vertical-align: middle">
+                {{ xx.score }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
       <div class="modal-footer">
         <button
           type="button"
-          class="btn btn-danger btn-sm"
+          class="btn btn-secondary btn-sm"
           data-dismiss="modal"
         >
           ปิด

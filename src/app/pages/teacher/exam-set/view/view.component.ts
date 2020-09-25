@@ -37,4 +37,26 @@ export class ViewComponent implements OnInit {
         }
       });
   };
+
+  public onDeletebody = (exambodyID: any) => {
+    let dataDelbody = {
+      exambodyID: exambodyID,
+      status: 'off',
+    };
+    this.service
+      .httpPost(
+        `exbody/updateStatus?token=${
+          this.service.localStorage.get('userLogin')['token']
+        }`,
+        JSON.stringify(dataDelbody)
+      )
+      .then((value: any) => {
+        if (value.success) {
+          this.getExamSet();
+          this.service.showAlert('', 'ลบสำเร็จ', 'success');
+        } else {
+          this.service.showAlert('', value.massage, 'error');
+        }
+      });
+  };
 }

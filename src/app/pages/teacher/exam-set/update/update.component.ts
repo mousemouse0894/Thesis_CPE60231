@@ -22,6 +22,7 @@ export class UpdateComponent implements OnInit {
       isRandom: ['0', Validators.required],
       status: ['on', Validators.required],
       examstoreID_fk: ['', Validators.required],
+      text: ['', Validators.required],
     });
     this.getUnittable();
   }

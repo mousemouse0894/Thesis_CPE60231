@@ -6,6 +6,7 @@ import { EventsExamComponent } from './events-exam.component';
 import { AddEventsComponent } from './add-events/add-events.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { SharedModule } from 'src/app/shared/shared-module';
+import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 @NgModule({
   declarations: [EventsExamComponent, AddEventsComponent],
   imports: [
@@ -13,6 +14,7 @@ import { SharedModule } from 'src/app/shared/shared-module';
     EventsExamRoutingModule,
     NgxPaginationModule,
     SharedModule,
+    NgxMaterialTimepickerModule,
   ],
 })
 export class EventsExamModule {}

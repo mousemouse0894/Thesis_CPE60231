@@ -12,6 +12,7 @@ export class AddEventsComponent implements OnInit {
   public listExamSet: Array<any> = [];
   public examView: Array<any> = [];
   public paginationPage: number = 1;
+  public examTopic: any = null;
 
   constructor(public service: AppService, private formBuilder: FormBuilder) {}
 
@@ -20,7 +21,9 @@ export class AddEventsComponent implements OnInit {
       groupID_fk: ['', Validators.required],
       exambodyID_fk: ['', Validators.required],
       topicPassword: ['', Validators.required],
+      dateStart: ['', Validators.required],
       timeStart: ['', Validators.required],
+      dateEnd: ['', Validators.required],
       timeEnd: ['', Validators.required],
       topicText: ['', Validators.required],
       owner: this.service.localStorage.get('userLogin')['uid'],
@@ -28,11 +31,11 @@ export class AddEventsComponent implements OnInit {
 
     this.getExamSet();
     this.onGetgroupstudent();
+    this.onGetexamtopic();
   }
 
   public selectExamView = (list: Array<any>) => {
     this.examView = list;
-    console.log(list);
   };
 
   public getExamSet = () => {
@@ -61,6 +64,7 @@ export class AddEventsComponent implements OnInit {
       )
       .then((value: any) => {
         if (value.success) {
+          this.onGetexamtopic();
           this.service.showAlert('', 'สำเร็จ', 'success');
         } else {
           this.service.showAlert('', value.message, 'error');
@@ -87,8 +91,24 @@ export class AddEventsComponent implements OnInit {
 
   public onSelectExam = (x: any) => {
     this.formInserttest.patchValue({
-      exambodyID_fk: x.exambodyID_fk,
+      exambodyID_fk: x.exambodyID,
     });
     this.service.showAlert('', 'เลือกข้อสอบ' + x.topic, 'success');
+  };
+
+  public onGetexamtopic = () => {
+    this.service
+      .httpGet(
+        `/extopic/get/${
+          this.service.localStorage.get('userLogin')['uid']
+        }?token=${this.service.localStorage.get('userLogin')['token']}`
+      )
+      .then((value: any) => {
+        if (value.success) {
+          this.examTopic = value.result;
+        } else {
+          this.service.showAlert('', value.massage, 'error');
+        }
+      });
   };
 }

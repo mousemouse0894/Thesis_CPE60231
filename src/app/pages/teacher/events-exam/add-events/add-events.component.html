@@ -1,3 +1,33 @@
+<table class="table table-sm table-borderless table-hover">
+  <thead>
+    <tr>
+      <th></th>
+      <th>createAt</th>
+      <th>exambodyTopic</th>
+      <th>groupName</th>
+      <th>owner</th>
+      <th>timeStart</th>
+      <th>timeEnd</th>
+      <th>topicPassword</th>
+      <th>topicText</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let x of examTopic; let i = index">
+      <td style="vertical-align: middle">{{ i + 1 }}</td>
+      <td style="vertical-align: middle">{{ x.createAt }}</td>
+      <td style="vertical-align: middle">{{ x.exambodyTopic }}</td>
+      <td style="vertical-align: middle">{{ x.groupName }}</td>
+      <td style="vertical-align: middle">{{ x.owner }}</td>
+      <td style="vertical-align: middle">{{ x.timeStart }}</td>
+      <td style="vertical-align: middle">{{ x.timeEnd }}</td>
+      <td style="vertical-align: middle">{{ x.topicPassword }}</td>
+      <td style="vertical-align: middle">{{ x.topicText }}</td>
+    </tr>
+  </tbody>
+</table>
+
+<h1>สร้างข้อสอบ</h1>
 <div class="card">
   <div class="card-body">
     <table
@@ -94,28 +124,75 @@
         />
       </mat-form-field>
     </div>
+
     <div class="mb-3">
-      <mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Choose a date</mat-label>
         <input
           matInput
-          placeholder="เวลาเริ่ม (timeStart)"
-          type="time"
+          [matDatepicker]="pickerStart"
           required
-          formControlName="timeStart"
+          formControlName="dateStart"
         />
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="pickerStart"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #pickerStart></mat-datepicker>
       </mat-form-field>
     </div>
     <div class="mb-3">
       <mat-form-field>
-        <input
-          matInput
-          placeholder="เวลาสิ้นสุด (timeEnd)"
-          type="time"
-          required
-          formControlName="timeEnd"
-        />
+        <div class="24hr-example">
+          <input
+            matInput
+            placeholder="24hr format"
+            aria-label="24hr format"
+            [ngxTimepicker]="ngxtimeStart"
+            [format]="24"
+            readonly
+            required
+            formControlName="timeStart"
+          />
+          <ngx-material-timepicker #ngxtimeStart></ngx-material-timepicker>
+        </div>
       </mat-form-field>
     </div>
+
+    <div class="mb-3">
+      <mat-form-field appearance="fill">
+        <mat-label>Choose a date</mat-label>
+        <input
+          matInput
+          [matDatepicker]="pickerEnd"
+          required
+          formControlName="dateEnd"
+        />
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="pickerEnd"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #pickerEnd></mat-datepicker>
+      </mat-form-field>
+    </div>
+    <div class="mb-3">
+      <mat-form-field>
+        <div class="24hr-example">
+          <input
+            matInput
+            placeholder="24hr format"
+            aria-label="24hr format"
+            [ngxTimepicker]="ngxtimeEnd"
+            [format]="24"
+            readonly
+            required
+            formControlName="timeEnd"
+          />
+          <ngx-material-timepicker #ngxtimeEnd></ngx-material-timepicker>
+        </div>
+      </mat-form-field>
+    </div>
+
     <div class="mb-3">
       <mat-form-field>
         <input

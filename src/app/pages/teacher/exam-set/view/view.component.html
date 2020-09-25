@@ -25,7 +25,9 @@
         <tr>
           <th></th>
           <th>ชื่อชุดข้อสอบ</th>
+          <th>คำอธิบายชุดข้อสอบ</th>
           <th>คะแนนรวม</th>
+          <th></th>
           <th></th>
           <th></th>
           <th></th>
@@ -48,6 +50,7 @@
             {{ 10 * paginationPage - 10 + i + 1 }}
           </td>
           <td style="vertical-align: middle">{{ x.topic }}</td>
+          <td style="vertical-align: middle">{{ x.text }}</td>
           <td style="vertical-align: middle">{{ x.exambodyScore }}</td>
           <td style="vertical-align: middle">
             <button
@@ -58,6 +61,15 @@
               (click)="examView = []; selectExamView(x)"
             >
               ดูข้อสอบ
+            </button>
+          </td>
+          <td style="vertical-align: middle">
+            <button
+              type="button"
+              class="btn btn-primary btn-sm"
+              (click)="onDeletebody(x.exambodyID)"
+            >
+              ลบ
             </button>
           </td>
           <td style="vertical-align: middle"></td>

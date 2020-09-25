@@ -111,6 +111,14 @@ const routes: Routes = [
               ),
           },
           {
+            path: 'events',
+            canActivate: [StudentGuard],
+            loadChildren: () =>
+              import('./pages/student/events-exam/events-exam.module').then(
+                (m) => m.EventsExamModule
+              ),
+          },
+          {
             path: '',
             redirectTo: '/home',
             pathMatch: 'full',

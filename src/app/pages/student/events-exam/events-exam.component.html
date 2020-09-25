@@ -1,0 +1,38 @@
+<table class="table table-sm table-borderless table-hover">
+  <thead>
+    <tr>
+      <th></th>
+      <th>exbody_head</th>
+      <th>topicText</th>
+      <th>timeStart</th>
+      <th>timeEnd</th>
+      <th>exbody_text</th>
+      <th>group_name</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let x of Topictestresult; let i = index">
+      <td style="vertical-align: middle">
+        {{ i + 1 }}
+      </td>
+      <td style="vertical-align: middle">{{ x.exbody_head }}</td>
+      <td style="vertical-align: middle">{{ x.topicText }}</td>
+      <td style="vertical-align: middle">{{ x.timeStart }}</td>
+      <td style="vertical-align: middle">
+        {{ x.timeEnd }}
+      </td>
+      <td style="vertical-align: middle">{{ x.exbody_text }}</td>
+      <td style="vertical-align: middle">{{ x.group_name }}</td>
+      <td style="vertical-align: middle">
+        <button
+          type="button"
+          class="btn btn-primary btn-sm"
+          (click)="openNewtab(x.examtopicID)"
+        >
+          เข้าสอบ
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>

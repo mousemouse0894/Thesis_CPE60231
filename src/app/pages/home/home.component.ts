@@ -1,3 +1,4 @@
+import { AppService } from 'src/app/services/app.service';
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { map } from 'rxjs/operators';
@@ -39,6 +40,7 @@ function getTimezoneOffsetString(date: Date): string {
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
+  public Topictestresult: any = null;
   view: CalendarView = CalendarView.Month;
 
   viewDate: Date = new Date();
@@ -47,10 +49,11 @@ export class HomeComponent implements OnInit {
 
   activeDayIsOpen: boolean = false;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, public service: AppService) {}
 
   ngOnInit(): void {
     this.fetchEvents();
+    this.getTopictest();
   }
 
   fetchEvents(): void {
@@ -127,4 +130,22 @@ export class HomeComponent implements OnInit {
       '_blank'
     );
   }
+
+  public getTopictest = () => {
+    this.service
+      .httpGet(
+        `/extopic/getMyEventTopic/${
+          this.service.localStorage.get('userLogin')['groupid_fk']
+        }?token=${this.service.localStorage.get('userLogin')['token']}
+    `
+      )
+      .then((value: any) => {
+        if (value.success) {
+          this.Topictestresult = value.result;
+          console.log(value);
+        } else {
+          this.service.showAlert('', value.massage, 'error');
+        }
+      });
+  };
 }

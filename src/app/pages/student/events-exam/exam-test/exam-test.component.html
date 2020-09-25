@@ -1,0 +1,33 @@
+<div *ngIf="checkPassword">
+  <div class="mb-3">
+    <input
+      matInput
+      placeholder="รหัสผ่าน (password)"
+      type="text"
+      #password
+      required
+    />
+  </div>
+
+  <button
+    type="button"
+    class="btn btn-primary btn-sm"
+    (click)="checkTopicpassword(password.value)"
+  >
+    ตกลง
+  </button>
+</div>
+<!--ข้อสอบบบ-->
+<div *ngIf="checkPassword == false">
+  <div *ngFor="let x of Getexamtopicdata.topicData">
+    <div>{{ x.text }}</div>
+    <div>{{ x.keyword }}</div>
+    <div>{{ x.databaseName }}</div>
+    <div>{{ x.score }}</div>
+    <div class="mb-3">
+      <input matInput placeholder="คำตอบ" type="text" required />
+    </div>
+
+    <button type="button" class="btn btn-primary btn-sm">ตกลง</button>
+  </div>
+</div>

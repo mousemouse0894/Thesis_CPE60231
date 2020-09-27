@@ -35,6 +35,7 @@
                 <th></th>
                 <th></th>
                 <th></th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -52,6 +53,15 @@
                     (click)="getStudentingroup(x)"
                   >
                     รายชื่อ
+                  </button>
+                </td>
+                <td style="vertical-align: middle">
+                  <button
+                    type="button"
+                    class="btn btn-primary btn-sm"
+                    (click)="historyTopic(x)"
+                  >
+                    ประวัติการสอบ
                   </button>
                 </td>
                 <td style="vertical-align: middle">
@@ -154,7 +164,7 @@
                   <button
                     type="button"
                     class="btn btn-danger btn-sm"
-                    (click)="onDeletestudent(x.uid, x.groupid_fk)"
+                    (click)="onDeletestudent(x)"
                   >
                     ลบจากกลุ่มเรียน
                   </button>
@@ -256,6 +266,130 @@
       </div>
     </form>
   </div>
+</div>
+
+<div>
+  <table
+    class="table table-sm table-borderless table-hover"
+    *ngIf="historyTopicResult != null"
+  >
+    <thead>
+      <tr>
+        <th></th>
+        <th>exbody_Topic</th>
+        <th>owner</th>
+        <th>topicText</th>
+        <th>timeStart</th>
+        <th>timeEnd</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let x of historyTopicResult; let i = index">
+        <td style="vertical-align: middle">
+          {{ i + 1 }}
+        </td>
+        <td style="vertical-align: middle">{{ x.exbody_Topic }}</td>
+        <td style="vertical-align: middle">{{ x.owner }}</td>
+        <td style="vertical-align: middle">{{ x.topicText }}</td>
+        <td style="vertical-align: middle">{{ x.timeStart }}</td>
+        <td style="vertical-align: middle">{{ x.timeEnd }}</td>
+        <td style="vertical-align: middle">
+          <button
+            type="button"
+            class="btn btn-primary btn-sm"
+            (click)="historyTest(x)"
+          >
+            ดูจุดประสงค์
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div>
+  <table
+    class="table table-sm table-borderless table-hover"
+    *ngIf="historyTestResult != null"
+  >
+    <thead>
+      <tr>
+        <th></th>
+        <th>prename</th>
+        <th>firstNameThai</th>
+        <th>lastNameThai</th>
+        <th>studentId</th>
+        <th>sumstudentScore</th>
+        <th>sumteacherScore</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let x of historyTestResult; let i = index">
+        <td style="vertical-align: middle">
+          {{ i + 1 }}
+        </td>
+        <td style="vertical-align: middle">{{ x.prename }}</td>
+        <td style="vertical-align: middle">{{ x.firstNameThai }}</td>
+        <td style="vertical-align: middle">{{ x.lastNameThai }}</td>
+        <td style="vertical-align: middle">{{ x.studentId }}</td>
+        <td style="vertical-align: middle">{{ x.sumstudentScore }}</td>
+        <td style="vertical-align: middle">{{ x.sumteacherScore }}</td>
+        <td style="vertical-align: middle">
+          <button
+            type="button"
+            class="btn btn-primary btn-sm"
+            (click)="getStdDatatest(x)"
+          >
+            ดูประวัติการสอบ
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div>
+  <table
+    class="table table-sm table-borderless table-hover"
+    *ngIf="TestResult != null"
+  >
+    <thead>
+      <tr>
+        <th></th>
+        <th>answer</th>
+        <th>text</th>
+        <th>studentScore</th>
+        <th>teacherScore</th>
+        <th></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let x of TestResult; let i = index">
+        <td style="vertical-align: middle">
+          {{ i + 1 }}
+        </td>
+        <td style="vertical-align: middle">{{ x.answer }}</td>
+        <td style="vertical-align: middle">{{ x.text }}</td>
+        <td style="vertical-align: middle">{{ x.studentScore }}</td>
+        <td style="vertical-align: middle">{{ x.teacherScore }}</td>
+        <td style="vertical-align: middle">
+          <input matInput placeholder="คะแนน" type="number" required #score />
+        </td>
+        <td style="vertical-align: middle">
+          <button
+            type="button"
+            class="btn btn-primary btn-sm"
+            (click)="updateScore(x, score.value)"
+          >
+            ปรับคะเเนน
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>
 
 <!-- <div class="card">

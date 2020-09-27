@@ -24,10 +24,18 @@
     <div>{{ x.keyword }}</div>
     <div>{{ x.databaseName }}</div>
     <div>{{ x.score }}</div>
+    <div>{{ x.storeID }}</div>
     <div class="mb-3">
-      <input matInput placeholder="คำตอบ" type="text" required />
+      <input matInput placeholder="คำตอบ" type="text" required #studentAnswer />
     </div>
-
-    <button type="button" class="btn btn-primary btn-sm">ตกลง</button>
+    <button
+      type="button"
+      class="btn btn-primary btn-sm"
+      (click)="onSumitTest(x, studentAnswer.value)"
+    >
+      ตกลง
+    </button>
   </div>
+
+  <button type="button" class="btn btn-primary btn-sm">ตกลง</button>
 </div>

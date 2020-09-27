@@ -25,7 +25,9 @@ export class ExamTestComponent implements OnInit {
       .httpGet(
         `/extopic/getTopicData/${this.activeRoute.snapshot.paramMap.get(
           'topicId'
-        )}?token=${this.service.localStorage.get('userLogin')['token']}
+        )}/${this.service.localStorage.get('userLogin')['uid']}?token=${
+          this.service.localStorage.get('userLogin')['token']
+        }
   `
       )
       .then((value: any) => {
@@ -46,5 +48,31 @@ export class ExamTestComponent implements OnInit {
     } else {
       this.service.showAlert('', 'รหัสผิด', 'error');
     }
+  };
+
+  public onSumitTest = (x: any, studentAnswer: any) => {
+    console.log(x);
+    let data = {
+      stID_fk: this.service.localStorage.get('userLogin')['uid'],
+      topicID_fk: x.examtopicID,
+      storeID_fk: x.storeID,
+      groupID_fk: this.service.localStorage.get('userLogin')['groupid_fk'],
+      studentAnswer: studentAnswer,
+      studentScore: null,
+      teacherScore: null,
+    };
+
+    console.log(this.service.localStorage.get('userLogin'));
+    this.service
+      .httpPost(
+        `stTesting/insertAns?token=${
+          this.service.localStorage.get('userLogin')['token']
+        }`,
+        JSON.stringify(data)
+      )
+      .then((value: any) => {
+        if (value.success) {
+        } else this.service.showAlert('', value.massage, 'error');
+      });
   };
 }

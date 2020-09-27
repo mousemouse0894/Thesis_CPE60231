@@ -39,38 +39,44 @@
 </div>
 <br />
 
-<h1>ตารางอาจารย์</h1>
-<div class="text-center mb-3">
-  <table class="table table-sm table-borderless table-striped table-hover">
-    <thead>
-      <tr>
-        <th></th>
-        <th>gidNumber</th>
-        <th>firstNameThai</th>
-        <th>lastNameThai</th>
-        <th>mail</th>
-        <th>prename</th>
-        <th>studentId</th>
-        <th>uid</th>
-        <th>select</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let x of teacherResult; let i = index">
-        <td>{{ i + 1 }}</td>
-        <td>{{ x.gidNumber }}</td>
-        <td>{{ x.firstNameThai }}</td>
-        <td>{{ x.lastNameThai }}</td>
-        <td>{{ x.mail }}</td>
-        <td>{{ x.prename }}</td>
-        <td>{{ x.studentId }}</td>
-        <td>{{ x.uid }}</td>
-        <td>
-          <button type="button" class="btn btn-primary" (click)="shareExam(x)">
-            เลือก
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+<div *ngIf="checkSelectexam">
+  <h1>ตารางอาจารย์</h1>
+  <div class="text-center mb-3">
+    <table class="table table-sm table-borderless table-striped table-hover">
+      <thead>
+        <tr>
+          <th></th>
+          <th>gidNumber</th>
+          <th>firstNameThai</th>
+          <th>lastNameThai</th>
+          <th>mail</th>
+          <th>prename</th>
+          <th>studentId</th>
+          <th>uid</th>
+          <th>select</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let x of teacherResult; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{ x.gidNumber }}</td>
+          <td>{{ x.firstNameThai }}</td>
+          <td>{{ x.lastNameThai }}</td>
+          <td>{{ x.mail }}</td>
+          <td>{{ x.prename }}</td>
+          <td>{{ x.studentId }}</td>
+          <td>{{ x.uid }}</td>
+          <td>
+            <button
+              type="button"
+              class="btn btn-primary"
+              (click)="shareExam(x)"
+            >
+              เลือก
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>

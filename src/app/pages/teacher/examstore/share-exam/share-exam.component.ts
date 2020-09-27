@@ -10,6 +10,7 @@ export class ShareExamComponent implements OnInit {
   public examResult: any = null;
   public teacherResult: any = null;
   public resultSelectExam: any = null;
+  public checkSelectexam: boolean = false;
   constructor(public service: AppService) {}
 
   ngOnInit() {
@@ -51,6 +52,7 @@ export class ShareExamComponent implements OnInit {
 
   public selectExam = (selectExam: any) => {
     this.resultSelectExam = selectExam;
+    this.checkSelectexam = true;
   };
 
   public shareExam = (selectTeacher: any) => {
@@ -62,6 +64,7 @@ export class ShareExamComponent implements OnInit {
       newOwner: selectTeacher.uid,
       owner: this.service.localStorage.get('userLogin')['uid'],
       storeID: this.resultSelectExam.storeID,
+      score: this.resultSelectExam.score,
     };
 
     console.log(data);
@@ -75,6 +78,7 @@ export class ShareExamComponent implements OnInit {
       .then((value: any) => {
         if (value.success) {
           this.service.showAlert('', 'แชร์สำเร็จ', 'success');
+          this.checkSelectexam = false;
         } else {
           this.service.showAlert('', value.message, 'error');
         }

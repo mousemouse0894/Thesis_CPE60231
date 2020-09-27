@@ -17,7 +17,9 @@ export class GroupStudentComponent implements OnInit {
   public logResult: any = null;
   public groupSelectName: string = '';
   public pagiShowstudent: number = 1;
-
+  public historyTopicResult: any = null;
+  public historyTestResult: any = null;
+  public TestResult: any = null;
   constructor(public service: AppService, private formBuilder: FormBuilder) {}
 
   ngOnInit() {
@@ -151,6 +153,7 @@ export class GroupStudentComponent implements OnInit {
   public getStudentingroup = (data: any) => {
     this.studentingroup = null;
     this.groupSelectName = data.name;
+    console.log(this.groupSelectName);
 
     this.service
       .httpGet(
@@ -168,13 +171,14 @@ export class GroupStudentComponent implements OnInit {
       });
   };
 
-  public onDeletestudent = (uid: any, groupid_fk: any) => {
+  public onDeletestudent = (x: any) => {
+    console.log(x);
     this.service
       .showConfirm('ยืนยันการลบรายชื่อจากกลุ่มเรียน', '', 'warning')
       .then((val: boolean) => {
         if (val) {
           let data = {
-            username: uid,
+            username: x.uid,
           };
           console.log(data);
           this.service
@@ -186,7 +190,7 @@ export class GroupStudentComponent implements OnInit {
             .then((value: any) => {
               if (value.success) {
                 this.service.showAlert('', 'ลบสำเร็จ', 'success');
-                this.getStudentingroup(groupid_fk);
+                this.getStudentingroup(x);
               } else {
                 this.service.showAlert('', value.message, 'error');
               }
@@ -206,6 +210,68 @@ export class GroupStudentComponent implements OnInit {
         if (value.success) {
           this.logResult = value.result;
           console.log(value);
+        } else {
+          this.service.showAlert('', value.message, 'error');
+        }
+      });
+  };
+
+  public historyTopic = (x: any) => {
+    this.service
+      .httpGet(
+        `stTesting/teacherGetTopic/${x.groupID}?token=${
+          this.service.localStorage.get('userLogin')['token']
+        }`
+      )
+      .then((value: any) => {
+        if (value.success) {
+          this.historyTopicResult = value.result;
+        } else {
+          this.service.showAlert(``, value.massage, `error`);
+        }
+      });
+  };
+
+  public historyTest = (x: any) => {
+    this.service
+      .httpGet(
+        `stTesting/teacherGetHistory/${x.examtopicID}?token=${
+          this.service.localStorage.get('userLogin')['token']
+        }`
+      )
+      .then((value: any) => {
+        if (value.success) {
+          this.historyTestResult = value.result;
+        } else {
+          this.service.showAlert(``, value.massage, `error`);
+        }
+      });
+  };
+
+  public getStdDatatest = (x) => {
+    this.TestResult = x.testData;
+    console.log(x);
+  };
+
+  public updateScore = (x: any, score: any) => {
+    let data = {
+      teacherScore: score,
+      stID_fk: x.stID_fk,
+      topicID_fk: x.topicID_fk,
+      storeID_fk: x.storeID,
+    };
+
+    this.service
+      .httpPost(
+        `stTesting/teacherUpdateScore?token=${
+          this.service.localStorage.get('userLogin')['token']
+        }
+  `,
+        JSON.stringify(data)
+      )
+      .then((value: any) => {
+        if (value.success) {
+          this.service.showAlert('', 'สำเร็จ', 'success');
         } else {
           this.service.showAlert('', value.message, 'error');
         }

@@ -13,6 +13,7 @@ export class AddEventsComponent implements OnInit {
   public examView: Array<any> = [];
   public paginationPage: number = 1;
   public examTopic: any = null;
+  public onCheckSelectexam: boolean = false;
 
   constructor(public service: AppService, private formBuilder: FormBuilder) {}
 
@@ -27,11 +28,14 @@ export class AddEventsComponent implements OnInit {
       timeEnd: ['', Validators.required],
       topicText: ['', Validators.required],
       owner: this.service.localStorage.get('userLogin')['uid'],
+      limitIP: ['false'],
+      statusHistory: ['0'],
     });
 
     this.getExamSet();
     this.onGetgroupstudent();
     this.onGetexamtopic();
+    console.log(this.service.localStorage.get('userLogin'));
   }
 
   public selectExamView = (list: Array<any>) => {
@@ -64,7 +68,9 @@ export class AddEventsComponent implements OnInit {
       )
       .then((value: any) => {
         if (value.success) {
+          console.log(this.formInserttest.value);
           this.onGetexamtopic();
+          this.onCheckSelectexam = false;
           this.service.showAlert('', 'สำเร็จ', 'success');
         } else {
           this.service.showAlert('', value.message, 'error');
@@ -93,6 +99,7 @@ export class AddEventsComponent implements OnInit {
     this.formInserttest.patchValue({
       exambodyID_fk: x.exambodyID,
     });
+    this.onCheckSelectexam = true;
     this.service.showAlert('', 'เลือกข้อสอบ' + x.topic, 'success');
   };
 
@@ -107,7 +114,7 @@ export class AddEventsComponent implements OnInit {
         if (value.success) {
           this.examTopic = value.result;
         } else {
-          this.service.showAlert('', value.massage, 'error');
+          this.service.showAlert('', value.message, 'error');
         }
       });
   };

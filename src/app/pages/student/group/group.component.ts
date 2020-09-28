@@ -52,4 +52,32 @@ export class GroupComponent implements OnInit {
         }
       });
   };
+
+  public leaveGroup = () => {
+    this.service
+      .showConfirm('', 'ยืนยันการออกจากกลุ่ม', 'warning')
+      .then((value) => {
+        if (value) {
+          let data = {
+            username: this.service.localStorage.get('userLogin')['uid'],
+          };
+
+          this.service
+            .httpPost(
+              `groupst/clearmember?token=${
+                this.service.localStorage.get('userLogin')['token']
+              }`,
+              JSON.stringify(data)
+            )
+            .then((value: any) => {
+              if (value.success) {
+                this.service.showAlert('', 'ออกจากกลุ่มสำเร็จ', 'success');
+                window.location.reload();
+              } else {
+                this.service.showAlert('', value.message, 'error');
+              }
+            });
+        }
+      });
+  };
 }

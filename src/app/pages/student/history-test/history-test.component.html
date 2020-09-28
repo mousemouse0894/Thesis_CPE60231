@@ -1,0 +1,74 @@
+<div>
+  <table
+    class="table table-sm table-borderless table-hover"
+    *ngIf="getTopictestResult != null"
+  >
+    <thead>
+      <tr>
+        <th></th>
+        <th>exbody_Topic</th>
+        <th>owner</th>
+        <th>topicText</th>
+        <th>timeStart</th>
+        <th>timeEnd</th>
+        <th>ดูคะเเนน</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let x of getTopictestResult; let i = index">
+        <td style="vertical-align: middle">
+          {{ i + 1 }}
+        </td>
+        <td style="vertical-align: middle">{{ x.exbody_Topic }}</td>
+        <td style="vertical-align: middle">{{ x.owner }}</td>
+        <td style="vertical-align: middle">{{ x.topicText }}</td>
+        <td style="vertical-align: middle">{{ x.timeStart }}</td>
+        <td style="vertical-align: middle">{{ x.timeEnd }}</td>
+        <td style="vertical-align: middle">
+          <button
+            type="button"
+            class="btn btn-primary btn-sm"
+            (click)="getStudenttest(x)"
+          >
+            ดูจุดประสงค์
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div>
+  <table
+    class="table table-sm table-borderless table-hover"
+    *ngIf="getStudenttestResult != null"
+  >
+    <thead>
+      <tr>
+        <th></th>
+        <th>examstore_text</th>
+        <th>examstore_keyword</th>
+        <th>examstore_databaseName</th>
+        <th>studentAnswer</th>
+        <th>studentScore</th>
+        <th>teacherScore</th>
+        <th>examstore_score</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let x of getStudenttestResult; let i = index">
+        <td style="vertical-align: middle">
+          {{ i + 1 }}
+        </td>
+        <td style="vertical-align: middle">{{ x.examstore_text }}</td>
+        <td style="vertical-align: middle">{{ x.examstore_keyword }}</td>
+        <td style="vertical-align: middle">{{ x.examstore_databaseName }}</td>
+        <td style="vertical-align: middle">{{ x.studentAnswer }}</td>
+        <td style="vertical-align: middle">{{ x.studentScore }}</td>
+        <td style="vertical-align: middle">{{ x.teacherScore }}</td>
+        <td style="vertical-align: middle">{{ x.examstore_score }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

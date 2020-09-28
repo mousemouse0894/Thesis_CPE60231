@@ -277,4 +277,26 @@ export class GroupStudentComponent implements OnInit {
         }
       });
   };
+
+  public onToggle = (x: any) => {
+    let data = {
+      statusHistory: x.statusHistory == 1 ? 0 : 1,
+      examtopicID: x.examtopicID,
+      owner: x.owner,
+    };
+    this.service
+      .httpPost(
+        `extopic/setHistoryTesting?token=${
+          this.service.localStorage.get('userLogin')['token']
+        }`,
+        JSON.stringify(data)
+      )
+      .then((value: any) => {
+        if (value.success) {
+          this.service.showAlert('', 'สำเร็จ', 'success');
+        } else {
+          this.service.showAlert('', value.message, 'error');
+        }
+      });
+  };
 }

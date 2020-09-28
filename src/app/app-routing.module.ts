@@ -119,6 +119,14 @@ const routes: Routes = [
               ),
           },
           {
+            path: 'history-test',
+            canActivate: [StudentGuard],
+            loadChildren: () =>
+              import('./pages/student/history-test/history-test.module').then(
+                (m) => m.HistoryTestModule
+              ),
+          },
+          {
             path: '',
             redirectTo: '/home',
             pathMatch: 'full',

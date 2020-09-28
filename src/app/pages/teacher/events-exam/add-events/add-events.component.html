@@ -99,7 +99,7 @@
   </div>
 </div>
 
-<div class="text-center mb-3">
+<div class="text-center mb-3" *ngIf="onCheckSelectexam">
   <form
     [formGroup]="formInserttest"
     (ngSubmit)="formInserttest.valid ? insertTopic() : ''"
@@ -204,6 +204,30 @@
         />
       </mat-form-field>
     </div>
+
+    <div class="mb-3">
+      <mat-radio-group aria-label="Select an option" formControlName="limitIP">
+        <mat-radio-button value="true">จำกัดIP</mat-radio-button>
+        <mat-radio-button value="false" style="margin-left: 20px"
+          >ไม่จำกัด</mat-radio-button
+        >
+      </mat-radio-group>
+    </div>
+
+    <div class="mb-3">
+      <mat-radio-group
+        aria-label="Select an option"
+        formControlName="statusHistory"
+      >
+        <mat-radio-button value="1"
+          >อนุณาติให้นักศึกษาดูประวัติ</mat-radio-button
+        >
+        <mat-radio-button value="0" style="margin-left: 20px"
+          >ไม่อนุณาติให้นักศึกษาดูประวัติ</mat-radio-button
+        >
+      </mat-radio-group>
+    </div>
+
     <div style="margin-top: 20px" class="text-center mb-1">
       <button type="submit" class="btn btn-primary">ตกลง</button>
     </div>

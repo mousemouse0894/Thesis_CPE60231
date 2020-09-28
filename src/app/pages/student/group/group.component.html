@@ -25,11 +25,11 @@
         </thead>
         <tbody>
           <tr *ngFor="let x of Allgroupstudent; let i = index">
-            <td style="vertical-align: middle;">{{ x.name }}</td>
-            <td style="vertical-align: middle;">
+            <td style="vertical-align: middle">{{ x.name }}</td>
+            <td style="vertical-align: middle">
               อาจารย์{{ x.firstNameThai }}&nbsp;{{ x.lastNameThai }}
             </td>
-            <td style="vertical-align: middle;">
+            <td style="vertical-align: middle">
               <button
                 type="button"
                 class="btn btn-primary btn-sm"
@@ -60,6 +60,11 @@
         {{ service.localStorage.get("userLogin")["lastNameThai"] }}
       </p>
     </div>
+  </div>
+  <div *ngIf="service.localStorage.get('userLogin')['groupid_fk']">
+    <button type="button" class="btn btn-primary btn-sm" (click)="leaveGroup()">
+      ออกกลุ่มเรียน
+    </button>
   </div>
 </div>
 

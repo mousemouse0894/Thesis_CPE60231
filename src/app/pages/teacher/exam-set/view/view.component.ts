@@ -55,7 +55,7 @@ export class ViewComponent implements OnInit {
           this.getExamSet();
           this.service.showAlert('', 'ลบสำเร็จ', 'success');
         } else {
-          this.service.showAlert('', value.massage, 'error');
+          this.service.showAlert('', value.message, 'error');
         }
       });
   };

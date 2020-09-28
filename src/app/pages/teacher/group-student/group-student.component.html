@@ -281,6 +281,7 @@
         <th>topicText</th>
         <th>timeStart</th>
         <th>timeEnd</th>
+        <th>กำหนดสถานะการดูประวัติสอบ</th>
         <th></th>
       </tr>
     </thead>
@@ -294,6 +295,12 @@
         <td style="vertical-align: middle">{{ x.topicText }}</td>
         <td style="vertical-align: middle">{{ x.timeStart }}</td>
         <td style="vertical-align: middle">{{ x.timeEnd }}</td>
+        <td style="vertical-align: middle">
+          <mat-slide-toggle
+            [checked]="x.statusHistory == 1"
+            (toggleChange)="onToggle(x)"
+          ></mat-slide-toggle>
+        </td>
         <td style="vertical-align: middle">
           <button
             type="button"
@@ -359,6 +366,7 @@
       <tr>
         <th></th>
         <th>answer</th>
+        <th>studentAnswer</th>
         <th>text</th>
         <th>studentScore</th>
         <th>teacherScore</th>
@@ -372,6 +380,7 @@
           {{ i + 1 }}
         </td>
         <td style="vertical-align: middle">{{ x.answer }}</td>
+        <td style="vertical-align: middle">{{ x.studentAnswer }}</td>
         <td style="vertical-align: middle">{{ x.text }}</td>
         <td style="vertical-align: middle">{{ x.studentScore }}</td>
         <td style="vertical-align: middle">{{ x.teacherScore }}</td>

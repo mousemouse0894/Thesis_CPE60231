@@ -51,7 +51,6 @@ export class ExamTestComponent implements OnInit {
   };
 
   public onSumitTest = (x: any, studentAnswer: any) => {
-    console.log(x);
     let data = {
       stID_fk: this.service.localStorage.get('userLogin')['uid'],
       topicID_fk: x.examtopicID,
@@ -62,7 +61,7 @@ export class ExamTestComponent implements OnInit {
       teacherScore: null,
     };
 
-    console.log(this.service.localStorage.get('userLogin'));
+    console.log(data);
     this.service
       .httpPost(
         `stTesting/insertAns?token=${
@@ -72,7 +71,7 @@ export class ExamTestComponent implements OnInit {
       )
       .then((value: any) => {
         if (value.success) {
-        } else this.service.showAlert('', value.massage, 'error');
+        } else this.service.showAlert('', value.message, 'error');
       });
   };
 }

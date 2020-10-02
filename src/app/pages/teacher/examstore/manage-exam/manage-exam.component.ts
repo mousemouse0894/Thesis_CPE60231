@@ -5,8 +5,10 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import Compressor from 'compressorjs';
+import FroalaEditor from 'froala-editor';
 
 const _window: any = window;
+let self = null;
 
 @Component({
   selector: 'app-manage-exam',
@@ -21,13 +23,48 @@ export class ManageExamComponent implements OnInit {
   public examResult: any = null;
   public checkEditexam: boolean = false;
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
-  public froalaEditor: any = null;
 
   allKeyword: string[] = ['Apple', 'Lemon', 'Lime', 'Orange', 'Strawberry'];
   keyword: any[] = [];
   @ViewChild('keywordInput') keywordInput: ElementRef<HTMLInputElement>;
 
-  constructor(public service: AppService, private formBuilder: FormBuilder) {}
+  public options: Object = {
+    placeholderText: 'โจทย์',
+    charCounterCount: false,
+    events: {
+      'image.beforePasteUpload': function (img) {
+        if (img.src) {
+          let data = {
+            img: img.src,
+            imgType: 'png',
+          };
+
+          self.service
+            .httpPost(
+              `/upload?token=${
+                self.service.localStorage.get('userLogin')['token']
+              }`,
+              JSON.stringify(data)
+            )
+            .then((val: any) => {
+              img.src = `${self.service.rootFile}${val.path}`;
+            });
+
+          return false;
+        }
+        return false;
+      },
+      'image.beforeUpload': function (img) {
+        console.log(img);
+
+        return false;
+      },
+    },
+  };
+
+  constructor(public service: AppService, private formBuilder: FormBuilder) {
+    self = this;
+  }
 
   ngOnInit() {
     this.formInsertexam = this.formBuilder.group({
@@ -44,63 +81,6 @@ export class ManageExamComponent implements OnInit {
     this.getUnittable();
     this.onGetdatabse();
     this.onGetexam();
-
-    _window.$('#exampleModalCreactExam').on('hide.bs.modal', async (e) => {
-      let self = this;
-      this.froalaEditor.destroy();
-    });
-
-    _window.$('#exampleModalCreactExam').on('show.bs.modal', async (e) => {
-      let self = this;
-      this.froalaEditor = new _window.FroalaEditor('#textFroala', {
-        placeholderText: 'โจทย์',
-        charCounterCount: false,
-        events: {
-          'image.beforeUpload': function (images) {
-            let that = this;
-            new Compressor(images[0], {
-              quality: 0.75,
-              success(result) {
-                let reader = new FileReader();
-                let imgA: any = result;
-                reader.onload = function (img) {
-                  let data = {
-                    img: img.target.result,
-                    imgType: imgA.name.split('.')[
-                      imgA.name.split('.').length - 1
-                    ],
-                  };
-
-                  self.service
-                    .httpPost(
-                      `/upload?token=${
-                        self.service.localStorage.get('userLogin')['token']
-                      }`,
-                      JSON.stringify(data)
-                    )
-                    .then((val: any) => {
-                      that.image.insert(
-                        `${self.service.rootFile}${val.path}`,
-                        null,
-                        null,
-                        that.image.get()
-                      );
-                    });
-                };
-                reader.readAsDataURL(result);
-              },
-              error(err) {
-                self.service.showAlert('ไม่รองรับไฟล์นี้', '', 'error');
-                console.log(err.message);
-              },
-            });
-
-            this.popups.hideAll();
-            return false;
-          },
-        },
-      });
-    });
   }
 
   public getUnittable = () => {
@@ -170,9 +150,9 @@ export class ManageExamComponent implements OnInit {
   };
 
   public onInsartexam = () => {
-    this.formInsertexam.patchValue({
-      text: this.froalaEditor.html.get(),
-    });
+    // this.formInsertexam.patchValue({
+    //   text: this.froalaEditor.html.get(),
+    // });
     if (this.checkEditexam) {
       console.log(this.formInsertexam.value);
       this.service

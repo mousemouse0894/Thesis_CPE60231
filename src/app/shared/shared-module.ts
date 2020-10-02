@@ -9,6 +9,7 @@ import dayGridPlugin from '@fullcalendar/daygrid'; // a plugin
 import interactionPlugin from '@fullcalendar/interaction'; // a plugin
 import { CalendarHeaderComponent } from './calendar-header.component';
 import { ToastrModule } from 'ngx-toastr';
+import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
 
 FullCalendarModule.registerPlugins([
   // register FullCalendar plugins
@@ -27,6 +28,8 @@ FullCalendarModule.registerPlugins([
     FullCalendarModule,
     CalendarModule,
     ToastrModule,
+    FroalaEditorModule,
+    FroalaViewModule,
   ],
   exports: [
     CommonModule,
@@ -38,6 +41,8 @@ FullCalendarModule.registerPlugins([
     CalendarModule,
     CalendarHeaderComponent,
     ToastrModule,
+    FroalaEditorModule,
+    FroalaViewModule,
   ],
 })
 export class SharedModule {}

@@ -26,6 +26,7 @@
     "@fullcalendar/interaction": "^5.1.0",
     "ace-builds": "^1.4.12",
     "angular-calendar": "^0.28.16",
+    "angular-froala-wysiwyg": "^3.2.2",
     "bootstrap": "^4.5.0",
     "compressorjs": "^1.0.6",
     "date-fns": "^2.14.0",

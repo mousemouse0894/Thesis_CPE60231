@@ -241,8 +241,11 @@
             </mat-select>
           </mat-form-field>
 
-          <div class="mb-3" style="position: relative">
-            <div id="textFroala" [innerHTML]="formInsertexam.value.text"></div>
+          <div class="mb-3">
+            <textarea
+              [froalaEditor]="options"
+              formControlName="text"
+            ></textarea>
           </div>
 
           <div class="mb-3">

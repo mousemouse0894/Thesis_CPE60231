@@ -22,6 +22,10 @@ import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { ToastrModule } from 'ngx-toastr';
 import { NgxLoadingModule, ngxLoadingAnimationTypes } from 'ngx-loading';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
+
+import 'froala-editor/js/plugins.pkgd.min.js';
+import 'froala-editor/js/third_party/font_awesome.min';
 
 @NgModule({
   declarations: [AppComponent, DefaultComponent, PrivateComponent],
@@ -42,6 +46,8 @@ import { NgxPaginationModule } from 'ngx-pagination';
       useFactory: adapterFactory,
     }),
     ToastrModule.forRoot(),
+    FroalaEditorModule.forRoot(),
+    FroalaViewModule.forRoot(),
     NgxLoadingModule.forRoot({
       animationType: ngxLoadingAnimationTypes.circle,
       backdropBackgroundColour: 'rgba(0,0,0,0.5)',

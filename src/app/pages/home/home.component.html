@@ -8,6 +8,7 @@
             [(viewDate)]="viewDate"
             (viewDateChange)="fetchEvents()"
             (viewChange)="fetchEvents()"
+            [locale]="'th'"
           >
           </mwl-demo-utils-calendar-header>
 
@@ -24,6 +25,7 @@
                 *ngSwitchCase="'month'"
                 [viewDate]="viewDate"
                 [events]="events"
+                [locale]="'th'"
                 [activeDayIsOpen]="activeDayIsOpen"
                 (dayClicked)="dayClicked($event.day)"
                 (eventClicked)="eventClicked($event.event)"
@@ -33,6 +35,7 @@
                 *ngSwitchCase="'week'"
                 [viewDate]="viewDate"
                 [events]="events"
+                [locale]="'th'"
                 (eventClicked)="eventClicked($event.event)"
               >
               </mwl-calendar-week-view>
@@ -40,6 +43,7 @@
                 *ngSwitchCase="'day'"
                 [viewDate]="viewDate"
                 [events]="events"
+                [locale]="'th'"
                 (eventClicked)="eventClicked($event.event)"
               >
               </mwl-calendar-day-view>
@@ -50,9 +54,7 @@
     </div>
     <div class="col-md-4">
       <div class="card">
-        <div class="card-body">
-          Hello
-        </div>
+        <div class="card-body">Hello</div>
       </div>
     </div>
   </div>

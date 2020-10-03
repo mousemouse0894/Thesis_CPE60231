@@ -19,9 +19,6 @@ export class ViewComponent implements OnInit {
   ngOnInit() {
     this.onGetdatabse();
   }
-  asd = (as) => {
-    console.log(as);
-  };
 
   public onGetdatabse = () => {
     this.databaseResult = null;

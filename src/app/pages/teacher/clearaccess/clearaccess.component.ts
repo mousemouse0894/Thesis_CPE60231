@@ -71,7 +71,8 @@ export class ClearaccessComponent implements OnInit {
   };
 
   public readTimeEnd = (data: string) => {
-    let dt = new Date(parseInt(data) * 1000);
+    let time = parseInt(data) * 1000;
+    let dt = new Date(time + 1000 * 60 * 60 * 7);
     return `${dt.toISOString().replace('T', ' ').replace('.000Z', '')}`;
   };
 }

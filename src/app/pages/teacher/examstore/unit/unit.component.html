@@ -1,171 +1,314 @@
-<p>เพิ่มunit</p>
-<!--เพิ่ม&เเก้ไขกลุ่มหน่วยเรียน-->
-<div class="text-center mb-3">
-  <form
-    [formGroup]="formInsertUnit"
-    (ngSubmit)="formInsertUnit.valid ? insertUnit() : ''"
-  >
-    <div class="mb-3">
-      <mat-form-field>
-        <input
-          matInput
-          placeholder="ชื่่อหน่วยการเรียนรู้ (unitname)"
-          type="text"
-          required
-          formControlName="name"
-        />
-      </mat-form-field>
+<div class="row">
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-7 mb-3">
+            <h2>หน่วยการเรียนรู้</h2>
+          </div>
+          <div class="col-md-5 mb-3">
+            <div class="text-right">
+              <button
+                type="button"
+                class="btn btn-primary btn-sm"
+                data-toggle="modal"
+                data-target="#exampleModalUnit"
+              >
+                เพิ่มหน่วยการเรียนรู้
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <table class="table table-sm table-borderless table-hover">
+            <thead>
+              <tr>
+                <th></th>
+                <th>รายการ</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                *ngFor="let x of getunit; let i = index"
+                [ngStyle]="{
+                  'background-color': x == unitSelected ? '#fafafa' : '',
+                  'border-right': x == unitSelected ? '3px solid #0b7bff' : ''
+                }"
+              >
+                <td style="vertical-align: middle">{{ i + 1 }}</td>
+                <td style="vertical-align: middle">{{ x.name }}</td>
+                <td style="vertical-align: middle">
+                  <button
+                    type="button"
+                    class="btn btn-primary btn-sm mr-2"
+                    (click)="getPurpose(x)"
+                  >
+                    แสดงจุดประสงค์
+                  </button>
+
+                  <button
+                    type="button"
+                    class="btn btn-warning btn-sm ml-2 mr-2"
+                    (click)="onUpdateUnit(x.name, x.examUnitID)"
+                    data-toggle="modal"
+                    data-target="#exampleModalUnit"
+                  >
+                    แก้ไข
+                  </button>
+
+                  <button
+                    type="button"
+                    class="btn btn-danger btn-sm ml-2"
+                    (click)="onDelunit(x.examUnitID)"
+                  >
+                    ลบ
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
-    <div style="margin-top: 20px;" class="text-center mb-1">
-      <button type="submit" class="btn btn-primary">
-        ตกลง
-      </button>
-    </div>
-  </form>
-</div>
-<!--เเสดงกลุ่มหน่วยเรียน-->
-<table class="table table-sm table-borderless table-striped table-hover">
-  <thead>
-    <tr>
-      <th></th>
-      <th>Unit</th>
-            <th>เเสดงจุดประสงค์</th>
-      <th>เเก้ไข</th>
-      <th>ลบ</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let x of getunit; let i = index">
-      <td>{{ x.examUnitID }}</td>
-      <td>{{ x.name }}</td>
-      <td>
-        <button
-          type="button"
-          class="btn btn-primary"
-          (click)="getPurpose(x.examUnitID)"
-        >
-          เเสดงจุดประสงค์
-        </button>
-      </td>
-      <td>
-        <button
-          type="button"
-          class="btn btn-primary"
-          (click)="onUpdateUnit(x.name, x.examUnitID)"
-        >
-          เเก้ไข
-        </button>
-      </td>
-      <td>
-        <button
-          type="button"
-          class="btn btn-primary"
-          (click)="onDelunit(x.examUnitID)"
-        >
-          ลบ
-        </button>
-      </td>
-    </tr>
-  </tbody>
-</table>
-<!--เพิ่มจุดประสงค์-->
-<div *ngIf="getpurposeTable != null">
-<p>เพิ่มจุดประสงค์:{{ examUnitIDPurpose }}</p>
-<div class="text-center mb-3">
-  <form
-    [formGroup]="formInsertPurpose"
-    (ngSubmit)="formInsertPurpose.valid ? onInertPurpose() : ''"
-  >
-  <div class="mb-3">
-    <mat-form-field>
-      <input
-        matInput
-        placeholder="ชื่อจุดประสงค์ (namepurpose)"
-        type="text"
-        required
-        formControlName="name"
-      />
-    </mat-form-field>
   </div>
-    <div style="margin-top: 20px;" class="text-center mb-1">
-      <button type="submit" class="btn btn-primary">
-        ตกลง
-      </button>
+
+  <div class="col-md-6" *ngIf="unitSelected != null">
+    <div class="card">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <h2>{{ "จุดประสงค์" }}</h2>
+            <h4>{{ unitSelected.name }}</h4>
+          </div>
+          <div class="col-md-6 mb-3">
+            <div class="text-right">
+              <button
+                type="button"
+                class="btn btn-primary btn-sm mr-2"
+                data-toggle="modal"
+                data-target="#exampleModalPurpose"
+                (click)="checkupdate = false"
+              >
+                เพิ่มจุดประสงค์
+              </button>
+
+              <button
+                type="button"
+                class="btn btn-danger btn-sm"
+                (click)="unitSelected = null"
+              >
+                X
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <table
+          class="table table-sm table-borderless table-hover"
+          *ngIf="getpurposeTable != null"
+        >
+          <thead>
+            <tr>
+              <th></th>
+              <th>รายการ</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let x of getpurposeTable; let i = index">
+              <td style="vertical-align: middle">{{ i + 1 }}</td>
+              <td style="vertical-align: middle">{{ x.name }}</td>
+              <td style="vertical-align: middle">
+                <button
+                  type="button"
+                  class="btn btn-warning mr-2 btn-sm"
+                  data-toggle="modal"
+                  data-target="#exampleModalPurpose"
+                  (click)="onUpdatePurpose(x.name, x.exampurposeID)"
+                >
+                  แก้ไข
+                </button>
+
+                <button
+                  type="button"
+                  class="btn btn-danger ml-2 mr-2 btn-sm"
+                  (click)="onDeletePurpose(x.exampurposeID)"
+                >
+                  ลบ
+                </button>
+
+                <button
+                  type="button"
+                  class="btn btn-primary ml-2 btn-sm"
+                  (click)="onCkeckChange(x.exampurposeID)"
+                  data-toggle="modal"
+                  data-target="#exampleModalCkeckChange"
+                >
+                  ย้ายหน่วยการเรียนรู้
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
-  </form>
-</div>
+  </div>
 </div>
 
-<!--เเสดงจุดประสงค์-->
-<div *ngIf="getpurposeTable != null">
-  <table class="table table-sm table-borderless table-striped table-hover">
-    <thead>
-      <tr>
-        <th></th>
-        <th>purpose</th>
-        <th>edit</th>
-        <th>delete</th>
-        <th>ย้ายจุดประสงค์</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let x of getpurposeTable; let i = index">
-        <td>{{ x.exampurposeID}}</td>
-        <td>{{ x.name }}</td>
-        <td>
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="exampleModalUnit"
+  tabindex="-1"
+  aria-labelledby="exampleModalUnitLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <form
+      [formGroup]="formInsertUnit"
+      (ngSubmit)="formInsertUnit.valid ? insertUnit() : ''"
+    >
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title" id="exampleModalUnitLabel">
+            หน่วยการเรียนรู้
+          </h2>
           <button
             type="button"
-            class="btn btn-primary"
-            (click)="onUpdatePurpose(x.name,x.exampurposeID)"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
           >
-            เเก้ไข
+            <span aria-hidden="true">&times;</span>
           </button>
-        </td>
-        <td>
+        </div>
+        <div class="modal-body">
+          <mat-form-field>
+            <input
+              matInput
+              placeholder="ชื่อหน่วยการเรียนรู้"
+              type="text"
+              required
+              formControlName="name"
+            />
+          </mat-form-field>
+        </div>
+        <div class="modal-footer">
           <button
             type="button"
-            class="btn btn-primary"
-            (click)="onDeletePurpose(x.exampurposeID)"
+            class="btn btn-secondary btn-sm"
+            data-dismiss="modal"
           >
-            ลบ
+            ปิด
           </button>
-        </td>
-        <td>
-          <button
-            type="button"
-            class="btn btn-primary"
-            (click)="onCkeckChange(x.exampurposeID)"
-          >
-            ย้ายจุดประสงค์
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+          <button type="submit" class="btn btn-primary btn-sm">บันทึก</button>
+        </div>
+      </div>
+    </form>
+  </div>
 </div>
-<!--ย้ายpurpose-->
-<div *ngIf="CkeckChange">
-  <table class="table table-sm table-borderless table-striped table-hover">
-    <thead>
-      <tr>
-        <th></th>
-        <th>Unit</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let x of getunit; let i = index">
-        <td>{{ x.examUnitID }}</td>
-        <td>{{ x.name }}</td>
-        <td>
+
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="exampleModalPurpose"
+  tabindex="-1"
+  aria-labelledby="exampleModalPurposeLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <form
+      [formGroup]="formInsertPurpose"
+      (ngSubmit)="formInsertPurpose.valid ? onInertPurpose() : ''"
+    >
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title" id="exampleModalPurposeLabel">จุดประสงค์</h2>
           <button
             type="button"
-            class="btn btn-primary"
-            (click)="onChangepurpose(x.examUnitID)"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
           >
-            ย้าย
+            <span aria-hidden="true">&times;</span>
           </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+        </div>
+        <div class="modal-body">
+          <mat-form-field>
+            <input
+              matInput
+              placeholder="ชื่อจุดประสงค์"
+              type="text"
+              required
+              formControlName="name"
+            />
+          </mat-form-field>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary btn-sm"
+            data-dismiss="modal"
+          >
+            ปิด
+          </button>
+          <button type="submit" class="btn btn-primary btn-sm">บันทึก</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="exampleModalCkeckChange"
+  tabindex="-1"
+  aria-labelledby="exampleModalCkeckChangeLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" id="exampleModalCkeckChangeLabel">
+          เลือกหน่วยการเรียนรู้ใหม่
+        </h2>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-sm table-borderless table-hover">
+          <thead>
+            <tr>
+              <th></th>
+              <th>รายการ</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let x of subUnit(getunit); let i = index">
+              <td style="vertical-align: middle">{{ i + 1 }}</td>
+              <td style="vertical-align: middle">{{ x.name }}</td>
+              <td style="vertical-align: middle">
+                <button
+                  type="button"
+                  class="btn btn-primary btn-sm"
+                  (click)="onChangepurpose(x.examUnitID)"
+                >
+                  เลือก
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </div>

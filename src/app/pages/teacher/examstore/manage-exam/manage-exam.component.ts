@@ -54,9 +54,44 @@ export class ManageExamComponent implements OnInit {
         }
         return false;
       },
-      'image.beforeUpload': function (img) {
-        console.log(img);
+      'image.beforeUpload': function (images) {
+        let that = this;
+        new Compressor(images[0], {
+          quality: 0.75,
+          success(result) {
+            let reader = new FileReader();
+            let imgA: any = result;
+            reader.onload = function (img) {
+              let data = {
+                img: img.target.result,
+                imgType: imgA.name.split('.')[imgA.name.split('.').length - 1],
+              };
 
+              self.service
+                .httpPost(
+                  `/upload?token=${
+                    self.service.localStorage.get('userLogin')['token']
+                  }`,
+                  JSON.stringify(data)
+                )
+                .then((val: any) => {
+                  that.image.insert(
+                    `${self.service.rootFile}${val.path}`,
+                    null,
+                    null,
+                    that.image.get()
+                  );
+                });
+            };
+            reader.readAsDataURL(result);
+          },
+          error(err) {
+            self.service.showAlert('ไม่รองรับไฟล์นี้', '', 'error');
+            console.log(err.message);
+          },
+        });
+
+        this.popups.hideAll();
         return false;
       },
     },

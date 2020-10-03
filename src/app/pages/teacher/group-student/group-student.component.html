@@ -39,7 +39,14 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let x of groupStudent; let i = index">
+              <tr
+                *ngFor="let x of groupStudent; let i = index"
+                [ngStyle]="{
+                  'background-color': x == groupSelectName ? '#fafafa' : '',
+                  'border-right':
+                    x == groupSelectName ? '3px solid #0b7bff' : ''
+                }"
+              >
                 <td style="vertical-align: middle">{{ i + 1 }}</td>
                 <td style="vertical-align: middle">{{ x.name }}</td>
                 <td style="vertical-align: middle">{{ x.password }}</td>
@@ -97,22 +104,23 @@
 
     <div
       class="col-md-6 mb-3"
-      *ngIf="groupSelectName.length > 0 && studentingroup != null"
+      *ngIf="groupSelectName != null && studentingroup != null"
     >
       <div class="card">
         <div class="card-body">
           <div class="row">
             <div class="col-md-8 mb-3">
-              <h2>กลุ่มเรียน&nbsp;{{ groupSelectName }}</h2>
+              <h2>รายชื่อนักศึกษา</h2>
+              <h4>กลุ่มเรียน&nbsp;{{ groupSelectName.name }}</h4>
             </div>
             <div class="col-md-4">
               <div class="text-right">
                 <button
                   type="button"
                   class="btn btn-danger btn-sm"
-                  (click)="groupSelectName = ''"
+                  (click)="groupSelectName = null"
                 >
-                  <span aria-hidden="true">&times;</span>
+                  X
                 </button>
               </div>
             </div>
@@ -166,7 +174,7 @@
                     class="btn btn-danger btn-sm"
                     (click)="onDeletestudent(x)"
                   >
-                    ลบจากกลุ่มเรียน
+                    ลบ
                   </button>
                 </td>
               </tr>

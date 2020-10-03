@@ -3,6 +3,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { environment } from 'src/environments/environment';
 
+const _window: any = window;
+
 @Component({
   selector: 'app-unit',
   templateUrl: './unit.component.html',
@@ -14,9 +16,9 @@ export class UnitComponent implements OnInit {
   public getunit: any = null;
   public checkupdate: boolean = false;
   public getpurposeTable: any = null;
-  public examUnitIDPurpose: any = null;
   public CkeckChange: boolean = false;
   public selectPurpose: any = null;
+  public unitSelected: any = null;
 
   constructor(public service: AppService, private formBuilder: FormBuilder) {}
 
@@ -61,8 +63,9 @@ export class UnitComponent implements OnInit {
           if (value.success) {
             console.log(value);
             this.checkupdate = false;
-            this.service.showAlert('', 'เเก้ไขสำเร็จ', 'success');
+            this.service.showAlert('', 'บันทึกสำเรีจ', 'success');
             this.getUnittable();
+            _window.$(`#exampleModalUnit`).modal('hide');
           } else {
             this.checkupdate = false;
             this.service.showAlert('', value.message, 'error');
@@ -80,7 +83,8 @@ export class UnitComponent implements OnInit {
         .then((value: any) => {
           if (value.success) {
             this.getUnittable();
-            this.service.showAlert('', 'เพิ่มสำเร็จ', 'success');
+            this.service.showAlert('', 'บันทึกสำเรีจ', 'success');
+            _window.$(`#exampleModalUnit`).modal('hide');
           } else {
             this.service.showAlert('', value.message, 'error');
           }
@@ -119,13 +123,12 @@ export class UnitComponent implements OnInit {
   };
 
   //-------------------------------------------------------------------------------------
-  public getPurpose = (examUnitID: any) => {
-    this.examUnitIDPurpose = examUnitID;
-    console.log(examUnitID);
+  public getPurpose = (data: any) => {
+    this.unitSelected = data;
     this.service
       .httpGet(
         `/exampurpose/get/` +
-          examUnitID +
+          data.examUnitID +
           `?token=` +
           this.service.localStorage.get('userLogin')['token']
       )
@@ -151,8 +154,9 @@ export class UnitComponent implements OnInit {
         .then((value: any) => {
           if (value.success) {
             this.checkupdate = false;
-            this.getPurpose(this.examUnitIDPurpose);
-            this.service.showAlert('', 'แก้ไขสำเร็จ', 'success');
+            this.getPurpose(this.unitSelected);
+            this.service.showAlert('', 'บันทึกสำเร็จ', 'success');
+            _window.$(`#exampleModalPurpose`).modal('hide');
           } else {
             this.checkupdate = false;
             this.service.showAlert('', value.message, 'error');
@@ -162,7 +166,7 @@ export class UnitComponent implements OnInit {
       //เพิ่มจุดประสงค์
       let dataPurpost = {
         name: this.formInsertPurpose.value.name,
-        examunitID_fk: this.examUnitIDPurpose,
+        examunitID_fk: this.unitSelected.examUnitID,
       };
       this.service
         .httpPost(
@@ -173,8 +177,9 @@ export class UnitComponent implements OnInit {
         )
         .then((value: any) => {
           if (value.success) {
-            this.getPurpose(this.examUnitIDPurpose);
-            this.service.showAlert('', 'เพิ่มสำเร็จ', 'success');
+            this.getPurpose(this.unitSelected);
+            this.service.showAlert('', 'บันทึกสำเร็จ', 'success');
+            _window.$(`#exampleModalPurpose`).modal('hide');
           } else {
             this.service.showAlert('', value.message, 'error');
           }
@@ -203,6 +208,7 @@ export class UnitComponent implements OnInit {
       )
       .then((value: any) => {
         if (value.success) {
+          this.getPurpose(this.unitSelected);
           this.service.showAlert('', 'ลบสำเร็จ', 'success');
         } else {
           this.service.showAlert('', value.message, 'error');
@@ -215,6 +221,7 @@ export class UnitComponent implements OnInit {
     this.selectPurpose = exampurposeID;
     this.CkeckChange = true;
   };
+
   public onChangepurpose = (examUnitID: any) => {
     let changedata = {
       exampurposeID: this.selectPurpose,
@@ -230,10 +237,21 @@ export class UnitComponent implements OnInit {
       .then((value: any) => {
         if (value.success) {
           this.CkeckChange = false;
-          this.service.showAlert('', 'ย้ายสำเร็จ', 'success');
+          this.getPurpose(this.unitSelected);
+          this.service.showAlert('', 'บันทึกสำเร็จ', 'success');
+          _window.$(`#exampleModalCkeckChange`).modal('hide');
         } else {
           this.service.showAlert('', value.message, 'error');
         }
       });
+  };
+
+  subUnit = (list) => {
+    if (list)
+      return list.filter((e) => {
+        return e != this.unitSelected;
+      });
+
+    return [];
   };
 }

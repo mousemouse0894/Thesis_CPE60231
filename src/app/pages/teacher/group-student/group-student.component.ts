@@ -15,7 +15,7 @@ export class GroupStudentComponent implements OnInit {
   public formInsertgroup: FormGroup;
   public checkedit: boolean = false;
   public logResult: any = null;
-  public groupSelectName: string = '';
+  public groupSelectName: any = null;
   public pagiShowstudent: number = 1;
   public historyTopicResult: any = null;
   public historyTestResult: any = null;
@@ -152,8 +152,7 @@ export class GroupStudentComponent implements OnInit {
 
   public getStudentingroup = (data: any) => {
     this.studentingroup = null;
-    this.groupSelectName = data.name;
-    console.log(this.groupSelectName);
+    this.groupSelectName = data;
 
     this.service
       .httpGet(

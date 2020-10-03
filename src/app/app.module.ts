@@ -19,13 +19,17 @@ import { CheckLoginGuard } from './guards/check-login.guard';
 import { SharedModule } from './shared/shared-module';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import localeTh from '@angular/common/locales/th';
 import { ToastrModule } from 'ngx-toastr';
 import { NgxLoadingModule, ngxLoadingAnimationTypes } from 'ngx-loading';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
+import { registerLocaleData } from '@angular/common';
 
 import 'froala-editor/js/plugins.pkgd.min.js';
 import 'froala-editor/js/third_party/font_awesome.min';
+
+registerLocaleData(localeTh);
 
 @NgModule({
   declarations: [AppComponent, DefaultComponent, PrivateComponent],

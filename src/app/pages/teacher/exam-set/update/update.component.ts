@@ -12,6 +12,7 @@ export class UpdateComponent implements OnInit {
   public examList: Array<any> = [];
   public purposeList: Array<any> = [];
   public formTopic: FormGroup;
+  public checkRandom: boolean = false;
 
   constructor(public service: AppService, private formBuilder: FormBuilder) {}
 
@@ -23,6 +24,7 @@ export class UpdateComponent implements OnInit {
       status: ['on', Validators.required],
       examstoreID_fk: ['', Validators.required],
       text: ['', Validators.required],
+      random: ['', Validators.required],
     });
     this.getUnittable();
   }
@@ -107,5 +109,9 @@ export class UpdateComponent implements OnInit {
     if (this.examList.indexOf(data) !== -1) {
       this.examList.splice(this.examList.indexOf(data), 1);
     }
+  };
+
+  public onCheckRandom = (x) => {
+    this.checkRandom = x == true ? false : true;
   };
 }

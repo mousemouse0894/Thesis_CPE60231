@@ -13,8 +13,10 @@ export class AddEventsComponent implements OnInit {
   public examView: Array<any> = [];
   public paginationPage: number = 1;
   public examTopic: any = null;
-  public onCheckSelectexam: boolean = false;
-
+  public CheckSelectexam: boolean = false;
+  public CheckCreateexam: boolean = false;
+  public historyTestResult: any = null;
+  public TestResult: any = null;
   constructor(public service: AppService, private formBuilder: FormBuilder) {}
 
   ngOnInit() {
@@ -70,7 +72,8 @@ export class AddEventsComponent implements OnInit {
         if (value.success) {
           console.log(this.formInserttest.value);
           this.onGetexamtopic();
-          this.onCheckSelectexam = false;
+          this.CheckSelectexam = false;
+          this.CheckSelectexam = false;
           this.service.showAlert('', 'สำเร็จ', 'success');
         } else {
           this.service.showAlert('', value.message, 'error');
@@ -99,8 +102,12 @@ export class AddEventsComponent implements OnInit {
     this.formInserttest.patchValue({
       exambodyID_fk: x.exambodyID,
     });
-    this.onCheckSelectexam = true;
+    this.CheckSelectexam = true;
     this.service.showAlert('', 'เลือกข้อสอบ' + x.topic, 'success');
+  };
+
+  public onCreateExam = () => {
+    this.CheckCreateexam = true;
   };
 
   public onGetexamtopic = () => {
@@ -113,6 +120,74 @@ export class AddEventsComponent implements OnInit {
       .then((value: any) => {
         if (value.success) {
           this.examTopic = value.result;
+        } else {
+          this.service.showAlert('', value.message, 'error');
+        }
+      });
+  };
+
+  public onToggle = (x: any) => {
+    let data = {
+      statusHistory: x.statusHistory == 1 ? 0 : 1,
+      examtopicID: x.examtopicID,
+      owner: x.owner,
+    };
+    this.service
+      .httpPost(
+        `extopic/setHistoryTesting?token=${
+          this.service.localStorage.get('userLogin')['token']
+        }`,
+        JSON.stringify(data)
+      )
+      .then((value: any) => {
+        if (value.success) {
+          this.service.showAlert('', 'สำเร็จ', 'success');
+        } else {
+          this.service.showAlert('', value.message, 'error');
+        }
+      });
+  };
+
+  public historyTest = (x: any) => {
+    console.log(x);
+    this.service
+      .httpGet(
+        `stTesting/teacherGetHistory/${x.examtopicID}/${x.groupID_fk}?token=${
+          this.service.localStorage.get('userLogin')['token']
+        }`
+      )
+      .then((value: any) => {
+        if (value.success) {
+          this.historyTestResult = value.result;
+        } else {
+          this.service.showAlert(``, value.massage, `error`);
+        }
+      });
+  };
+
+  public getStdDatatest = (x) => {
+    this.TestResult = x.testData;
+  };
+
+  public updateScore = (x: any, score: any) => {
+    let data = {
+      teacherScore: score,
+      stID_fk: x.stID_fk,
+      topicID_fk: x.topicID_fk,
+      storeID_fk: x.storeID,
+    };
+
+    this.service
+      .httpPost(
+        `stTesting/teacherUpdateScore?token=${
+          this.service.localStorage.get('userLogin')['token']
+        }
+  `,
+        JSON.stringify(data)
+      )
+      .then((value: any) => {
+        if (value.success) {
+          this.service.showAlert('', 'สำเร็จ', 'success');
         } else {
           this.service.showAlert('', value.message, 'error');
         }

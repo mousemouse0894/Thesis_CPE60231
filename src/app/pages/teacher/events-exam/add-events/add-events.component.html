@@ -10,6 +10,8 @@
       <th>timeEnd</th>
       <th>topicPassword</th>
       <th>topicText</th>
+      <th>กำหนดสถานะการดูประวัติสอบ</th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
@@ -23,215 +25,325 @@
       <td style="vertical-align: middle">{{ x.timeEnd }}</td>
       <td style="vertical-align: middle">{{ x.topicPassword }}</td>
       <td style="vertical-align: middle">{{ x.topicText }}</td>
+      <td style="vertical-align: middle">
+        <mat-slide-toggle
+          [checked]="x.statusHistory == 1"
+          (toggleChange)="onToggle(x)"
+        ></mat-slide-toggle>
+      </td>
+      <td style="vertical-align: middle">
+        <button
+          type="button"
+          class="btn btn-primary btn-sm"
+          (click)="historyTest(x)"
+        >
+          ประวัติการสอบ
+        </button>
+      </td>
     </tr>
   </tbody>
 </table>
 
-<h1>สร้างข้อสอบ</h1>
-<div class="card">
-  <div class="card-body">
-    <table
-      class="table table-sm table-borderless table-hover"
-      *ngIf="listExamSet.length > 0"
-    >
-      <thead>
-        <tr>
-          <th></th>
-          <th>ชื่อชุดข้อสอบ</th>
-          <th>คะแนนรวม</th>
-          <th></th>
-          <th></th>
-          <th></th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          *ngFor="
-            let x of listExamSet
-              | paginate
-                : {
-                    id: 'listExamSet',
-                    itemsPerPage: 10,
-                    currentPage: paginationPage
-                  };
-            let i = index
-          "
-        >
-          <td style="vertical-align: middle">
-            {{ 10 * paginationPage - 10 + i + 1 }}
-          </td>
-          <td style="vertical-align: middle">{{ x.topic }}</td>
-          <td style="vertical-align: middle">{{ x.exambodyScore }}</td>
-          <td style="vertical-align: middle">
-            <button
-              type="button"
-              class="btn btn-primary btn-sm"
-              data-toggle="modal"
-              data-target="#exampleModalShowExam"
-              (click)="examView = []; selectExamView(x)"
-            >
-              ดูข้อสอบ
-            </button>
-          </td>
-          <td style="vertical-align: middle">
-            <button
-              type="button"
-              (click)="onSelectExam(x)"
-              class="btn btn-primary btn-sm"
-            >
-              เลือกข้อสอบ
-            </button>
-          </td>
-          <td style="vertical-align: middle"></td>
-          <td style="vertical-align: middle"></td>
-        </tr>
-      </tbody>
-    </table>
-    <pagination-controls
-      id="listExamSet"
-      *ngIf="listExamSet.length > 10"
-      responsive="true"
-      previousLabel="ย้อนกลับ"
-      nextLabel="ถัดไป"
-      (pageChange)="paginationPage = $event"
-    ></pagination-controls>
-  </div>
+<div>
+  <table
+    class="table table-sm table-borderless table-hover"
+    *ngIf="historyTestResult != null"
+  >
+    <thead>
+      <tr>
+        <th></th>
+        <th>prename</th>
+        <th>firstNameThai</th>
+        <th>lastNameThai</th>
+        <th>studentId</th>
+        <th>sumstudentScore</th>
+        <th>sumteacherScore</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let x of historyTestResult; let i = index">
+        <td style="vertical-align: middle">
+          {{ i + 1 }}
+        </td>
+        <td style="vertical-align: middle">{{ x.prename }}</td>
+        <td style="vertical-align: middle">{{ x.firstNameThai }}</td>
+        <td style="vertical-align: middle">{{ x.lastNameThai }}</td>
+        <td style="vertical-align: middle">{{ x.studentId }}</td>
+        <td style="vertical-align: middle">{{ x.sumstudentScore }}</td>
+        <td style="vertical-align: middle">{{ x.sumteacherScore }}</td>
+        <td style="vertical-align: middle">
+          <button
+            type="button"
+            class="btn btn-primary btn-sm"
+            (click)="getStdDatatest(x)"
+          >
+            ดูคะแนน
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>
 
-<div class="text-center mb-3" *ngIf="onCheckSelectexam">
-  <form
-    [formGroup]="formInserttest"
-    (ngSubmit)="formInserttest.valid ? insertTopic() : ''"
+<div>
+  <table
+    class="table table-sm table-borderless table-hover"
+    *ngIf="TestResult != null"
   >
-    <mat-form-field>
-      <mat-label>กลุ่มเรียน</mat-label>
-      <mat-select #groupID formControlName="groupID_fk">
-        <mat-option [value]="x.groupID" *ngFor="let x of groupStudent">{{
-          x.name
-        }}</mat-option>
-      </mat-select>
-    </mat-form-field>
+    <thead>
+      <tr>
+        <th></th>
+        <th>answer</th>
+        <th>studentAnswer</th>
+        <th>text</th>
+        <th>studentScore</th>
+        <th>teacherScore</th>
+        <th></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let x of TestResult; let i = index">
+        <td style="vertical-align: middle">
+          {{ i + 1 }}
+        </td>
+        <td style="vertical-align: middle">{{ x.answer }}</td>
+        <td style="vertical-align: middle">{{ x.studentAnswer }}</td>
+        <td style="vertical-align: middle">{{ x.text }}</td>
+        <td style="vertical-align: middle">{{ x.studentScore }}</td>
+        <td style="vertical-align: middle">{{ x.teacherScore }}</td>
+        <td style="vertical-align: middle">
+          <input matInput placeholder="คะแนน" type="number" required #score />
+        </td>
+        <td style="vertical-align: middle">
+          <button
+            type="button"
+            class="btn btn-primary btn-sm"
+            (click)="updateScore(x, score.value)"
+          >
+            ปรับคะเเนน
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
-    <div class="mb-3">
-      <mat-form-field>
-        <input
-          matInput
-          placeholder="รหัสผ่าน (password)"
-          type="text"
-          required
-          formControlName="topicPassword"
-        />
-      </mat-form-field>
-    </div>
+<button type="submit" class="btn btn-primary" (click)="onCreateExam()">
+  สร้างข้อสอบ
+</button>
 
-    <div class="mb-3">
-      <mat-form-field appearance="fill">
-        <mat-label>Choose a date</mat-label>
-        <input
-          matInput
-          [matDatepicker]="pickerStart"
-          required
-          formControlName="dateStart"
-        />
-        <mat-datepicker-toggle
-          matSuffix
-          [for]="pickerStart"
-        ></mat-datepicker-toggle>
-        <mat-datepicker #pickerStart></mat-datepicker>
-      </mat-form-field>
-    </div>
-    <div class="mb-3">
-      <mat-form-field>
-        <div class="24hr-example">
-          <input
-            matInput
-            placeholder="24hr format"
-            aria-label="24hr format"
-            [ngxTimepicker]="ngxtimeStart"
-            [format]="24"
-            readonly
-            required
-            formControlName="timeStart"
-          />
-          <ngx-material-timepicker #ngxtimeStart></ngx-material-timepicker>
-        </div>
-      </mat-form-field>
-    </div>
-
-    <div class="mb-3">
-      <mat-form-field appearance="fill">
-        <mat-label>Choose a date</mat-label>
-        <input
-          matInput
-          [matDatepicker]="pickerEnd"
-          required
-          formControlName="dateEnd"
-        />
-        <mat-datepicker-toggle
-          matSuffix
-          [for]="pickerEnd"
-        ></mat-datepicker-toggle>
-        <mat-datepicker #pickerEnd></mat-datepicker>
-      </mat-form-field>
-    </div>
-    <div class="mb-3">
-      <mat-form-field>
-        <div class="24hr-example">
-          <input
-            matInput
-            placeholder="24hr format"
-            aria-label="24hr format"
-            [ngxTimepicker]="ngxtimeEnd"
-            [format]="24"
-            readonly
-            required
-            formControlName="timeEnd"
-          />
-          <ngx-material-timepicker #ngxtimeEnd></ngx-material-timepicker>
-        </div>
-      </mat-form-field>
-    </div>
-
-    <div class="mb-3">
-      <mat-form-field>
-        <input
-          matInput
-          placeholder="topicText (topicText)"
-          type="text"
-          required
-          formControlName="topicText"
-        />
-      </mat-form-field>
-    </div>
-
-    <div class="mb-3">
-      <mat-radio-group aria-label="Select an option" formControlName="limitIP">
-        <mat-radio-button value="true">จำกัดIP</mat-radio-button>
-        <mat-radio-button value="false" style="margin-left: 20px"
-          >ไม่จำกัด</mat-radio-button
-        >
-      </mat-radio-group>
-    </div>
-
-    <div class="mb-3">
-      <mat-radio-group
-        aria-label="Select an option"
-        formControlName="statusHistory"
+<div *ngIf="CheckCreateexam">
+  <h1>สร้างข้อสอบ</h1>
+  <div class="card">
+    <div class="card-body">
+      <table
+        class="table table-sm table-borderless table-hover"
+        *ngIf="listExamSet.length > 0"
       >
-        <mat-radio-button value="1"
-          >อนุณาติให้นักศึกษาดูประวัติ</mat-radio-button
-        >
-        <mat-radio-button value="0" style="margin-left: 20px"
-          >ไม่อนุณาติให้นักศึกษาดูประวัติ</mat-radio-button
-        >
-      </mat-radio-group>
+        <thead>
+          <tr>
+            <th></th>
+            <th>ชื่อชุดข้อสอบ</th>
+            <th>คะแนนรวม</th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="
+              let x of listExamSet
+                | paginate
+                  : {
+                      id: 'listExamSet',
+                      itemsPerPage: 10,
+                      currentPage: paginationPage
+                    };
+              let i = index
+            "
+          >
+            <td style="vertical-align: middle">
+              {{ 10 * paginationPage - 10 + i + 1 }}
+            </td>
+            <td style="vertical-align: middle">{{ x.topic }}</td>
+            <td style="vertical-align: middle">{{ x.exambodyScore }}</td>
+            <td style="vertical-align: middle">
+              <button
+                type="button"
+                class="btn btn-primary btn-sm"
+                data-toggle="modal"
+                data-target="#exampleModalShowExam"
+                (click)="examView = []; selectExamView(x)"
+              >
+                ดูข้อสอบ
+              </button>
+            </td>
+            <td style="vertical-align: middle">
+              <button
+                type="button"
+                (click)="onSelectExam(x)"
+                class="btn btn-primary btn-sm"
+              >
+                เลือกข้อสอบ
+              </button>
+            </td>
+            <td style="vertical-align: middle"></td>
+            <td style="vertical-align: middle"></td>
+          </tr>
+        </tbody>
+      </table>
+      <pagination-controls
+        id="listExamSet"
+        *ngIf="listExamSet.length > 10"
+        responsive="true"
+        previousLabel="ย้อนกลับ"
+        nextLabel="ถัดไป"
+        (pageChange)="paginationPage = $event"
+      ></pagination-controls>
     </div>
+  </div>
 
-    <div style="margin-top: 20px" class="text-center mb-1">
-      <button type="submit" class="btn btn-primary">ตกลง</button>
-    </div>
-  </form>
+  <div class="text-center mb-3" *ngIf="CheckSelectexam">
+    <form
+      [formGroup]="formInserttest"
+      (ngSubmit)="formInserttest.valid ? insertTopic() : ''"
+    >
+      <mat-form-field>
+        <mat-label>กลุ่มเรียน</mat-label>
+        <mat-select #groupID formControlName="groupID_fk">
+          <mat-option [value]="x.groupID" *ngFor="let x of groupStudent">{{
+            x.name
+          }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <div class="mb-3">
+        <mat-form-field>
+          <input
+            matInput
+            placeholder="รหัสผ่าน (password)"
+            type="text"
+            required
+            formControlName="topicPassword"
+          />
+        </mat-form-field>
+      </div>
+
+      <div class="mb-3">
+        <mat-form-field appearance="fill">
+          <mat-label>Choose a date</mat-label>
+          <input
+            matInput
+            [matDatepicker]="pickerStart"
+            required
+            formControlName="dateStart"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="pickerStart"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #pickerStart></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <div class="mb-3">
+        <mat-form-field>
+          <div class="24hr-example">
+            <input
+              matInput
+              placeholder="24hr format"
+              aria-label="24hr format"
+              [ngxTimepicker]="ngxtimeStart"
+              [format]="24"
+              readonly
+              required
+              formControlName="timeStart"
+            />
+            <ngx-material-timepicker #ngxtimeStart></ngx-material-timepicker>
+          </div>
+        </mat-form-field>
+      </div>
+
+      <div class="mb-3">
+        <mat-form-field appearance="fill">
+          <mat-label>Choose a date</mat-label>
+          <input
+            matInput
+            [matDatepicker]="pickerEnd"
+            required
+            formControlName="dateEnd"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="pickerEnd"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #pickerEnd></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <div class="mb-3">
+        <mat-form-field>
+          <div class="24hr-example">
+            <input
+              matInput
+              placeholder="24hr format"
+              aria-label="24hr format"
+              [ngxTimepicker]="ngxtimeEnd"
+              [format]="24"
+              readonly
+              required
+              formControlName="timeEnd"
+            />
+            <ngx-material-timepicker #ngxtimeEnd></ngx-material-timepicker>
+          </div>
+        </mat-form-field>
+      </div>
+
+      <div class="mb-3">
+        <mat-form-field>
+          <input
+            matInput
+            placeholder="topicText (topicText)"
+            type="text"
+            required
+            formControlName="topicText"
+          />
+        </mat-form-field>
+      </div>
+
+      <div class="mb-3">
+        <mat-radio-group
+          aria-label="Select an option"
+          formControlName="limitIP"
+        >
+          <mat-radio-button value="true">จำกัดIP</mat-radio-button>
+          <mat-radio-button value="false" style="margin-left: 20px"
+            >ไม่จำกัด</mat-radio-button
+          >
+        </mat-radio-group>
+      </div>
+
+      <div class="mb-3">
+        <mat-radio-group
+          aria-label="Select an option"
+          formControlName="statusHistory"
+        >
+          <mat-radio-button value="1"
+            >อนุณาติให้นักศึกษาดูประวัติ</mat-radio-button
+          >
+          <mat-radio-button value="0" style="margin-left: 20px"
+            >ไม่อนุณาติให้นักศึกษาดูประวัติ</mat-radio-button
+          >
+        </mat-radio-group>
+      </div>
+
+      <div style="margin-top: 20px" class="text-center mb-1">
+        <button type="submit" class="btn btn-primary">ตกลง</button>
+      </div>
+    </form>
+  </div>
 </div>
 
 <!-- Modal -->

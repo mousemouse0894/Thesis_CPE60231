@@ -19,15 +19,33 @@
           formControlName="text"
         />
       </mat-form-field>
+      <mat-form-field class="example-full-width" *ngIf="checkRandom">
+        <mat-label>จำนวนข้อที่สุ่ม</mat-label>
+        <input
+          matInput
+          placeholder="จำนวนข้อที่สุ่ม"
+          value=""
+          formControlName="random"
+        />
+      </mat-form-field>
 
-      <button
-        type="button"
-        class="btn btn-primary btn-sm"
-        data-toggle="modal"
-        data-target="#exampleModalSelectExam"
-      >
-        เลือกข้อสอบ
-      </button>
+      สุ่มข้อสอบ:&nbsp;&nbsp;
+      <mat-slide-toggle
+        [checked]="checkRandom"
+        (toggleChange)="onCheckRandom(checkRandom)"
+      ></mat-slide-toggle>
+
+      <div>
+        <button
+          [disabled]="checkRandom"
+          type="button"
+          class="btn btn-primary btn-sm"
+          data-toggle="modal"
+          data-target="#exampleModalSelectExam"
+        >
+          เลือกข้อสอบ
+        </button>
+      </div>
 
       <div class="mb-3 mt-3" *ngIf="examList.length > 0">
         <table class="table table-sm table-borderless table-hover">

@@ -1,82 +1,159 @@
-<!--ตารางข้อสอบบ-->
-<div class="text-center mb-3">
-  <table class="table table-sm table-borderless table-striped table-hover">
-    <thead>
-      <tr>
-        <th></th>
-        <th>answer</th>
-        <th>createAt</th>
-        <th>databaseName</th>
-        <th>keyword</th>
-        <th>owner</th>
-        <th>purposeID_fk</th>
-        <th>score</th>
-        <th>storeID</th>
-        <th>text</th>
-        <th>edit</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let x of examResult; let i = index">
-        <td>{{ i + 1 }}</td>
-        <td>{{ x.answer }}</td>
-        <td>{{ x.createAt }}</td>
-        <td>{{ x.databaseName }}</td>
-        <td>{{ x.keyword }}</td>
-        <td>{{ x.owner }}</td>
-        <td>{{ x.purposeID_fk }}</td>
-        <td>{{ x.score }}</td>
-        <td>{{ x.storeID }}</td>
-        <td>{{ x.text }}</td>
-        <td>
-          <button type="button" class="btn btn-primary" (click)="selectExam(x)">
-            เเชร์ข้อสอบ
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-<br />
+<div class="row">
+  <div class="col-md-6 mb-3">
+    <div class="card">
+      <div class="card-body" style="overflow: auto">
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <h2>ข้อสอบที่แบ่งปัน</h2>
+          </div>
+          <div class="col-md-6 mb-3">
+            <div class="text-right"></div>
+          </div>
+        </div>
 
-<div *ngIf="checkSelectexam">
-  <h1>ตารางอาจารย์</h1>
-  <div class="text-center mb-3">
-    <table class="table table-sm table-borderless table-striped table-hover">
-      <thead>
-        <tr>
-          <th></th>
-          <th>gidNumber</th>
-          <th>firstNameThai</th>
-          <th>lastNameThai</th>
-          <th>mail</th>
-          <th>prename</th>
-          <th>studentId</th>
-          <th>uid</th>
-          <th>select</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let x of teacherResult; let i = index">
-          <td>{{ i + 1 }}</td>
-          <td>{{ x.gidNumber }}</td>
-          <td>{{ x.firstNameThai }}</td>
-          <td>{{ x.lastNameThai }}</td>
-          <td>{{ x.mail }}</td>
-          <td>{{ x.prename }}</td>
-          <td>{{ x.studentId }}</td>
-          <td>{{ x.uid }}</td>
-          <td>
-            <button
-              type="button"
-              class="btn btn-primary"
-              (click)="shareExam(x)"
-            >
-              เลือก
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+        <div class="mb-3">
+          <table class="table table-sm table-borderless table-hover">
+            <thead>
+              <tr class="text-center">
+                <th>รหัส</th>
+                <th>โจทย์</th>
+                <th>ฐานข้อมูล</th>
+                <th>คะแนน</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let x of filterShare(); let i = index">
+                <td style="vertical-align: middle; text-align: center">
+                  {{ service.zeroPad(x.storeID, 1000) }}
+                </td>
+                <td style="vertical-align: middle">
+                  {{ replaceText(x.text) }}
+                </td>
+                <td style="vertical-align: middle; text-align: center">
+                  {{ x.databaseName }}
+                </td>
+                <td style="vertical-align: middle; text-align: center">
+                  {{ x.score }}
+                </td>
+                <td>
+                  <button
+                    type="button"
+                    class="btn btn-primary btn-sm mr-2"
+                    data-toggle="modal"
+                    data-target="#exampleModalPreviewExam"
+                    (click)="examSelected = x"
+                  >
+                    แสดง
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6 mb-3">
+    <div class="card">
+      <div class="card-body" style="overflow: auto">
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <h2>ข้อสอบที่ได้รับ</h2>
+          </div>
+          <div class="col-md-6 mb-3">
+            <div class="text-right"></div>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <table class="table table-sm table-borderless table-hover">
+            <thead>
+              <tr class="text-center">
+                <th>รหัส</th>
+                <th>โจทย์</th>
+                <th>ฐานข้อมูล</th>
+                <th>คะแนน</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let x of filterReceive(); let i = index">
+                <td style="vertical-align: middle; text-align: center">
+                  {{ service.zeroPad(x.storeID, 1000) }}
+                </td>
+                <td style="vertical-align: middle">
+                  {{ replaceText(x.text) }}
+                </td>
+                <td style="vertical-align: middle; text-align: center">
+                  {{ x.databaseName }}
+                </td>
+                <td style="vertical-align: middle; text-align: center">
+                  {{ x.score }}
+                </td>
+                <td>
+                  <button
+                    type="button"
+                    class="btn btn-primary btn-sm mr-2"
+                    data-toggle="modal"
+                    data-target="#exampleModalPreviewExam"
+                    (click)="examSelected = x"
+                  >
+                    แสดง
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Preview Exam -->
+<div
+  class="modal fade"
+  id="exampleModalPreviewExam"
+  tabindex="-1"
+  aria-labelledby="exampleModalPreviewExamLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg" *ngIf="examSelected">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title" id="exampleModalPreviewExamLabel">
+          <h2>ข้อมูลข้อสอบ</h2>
+          <h4>รหัสข้อสอบ {{ examSelected.storeID }}</h4>
+        </div>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h4 class="mb-2">
+          <b>หน่วยการเรียนรู้ : </b>{{ examSelected.unit_name }}
+        </h4>
+        <h4 class="mb-2">
+          <b>จุดประสงค์ : </b>{{ examSelected.purpose_name }}
+        </h4>
+        <h4 class="mb-2"><b>ฐานข้อมูล : </b>{{ examSelected.databaseName }}</h4>
+        <h4 class="mb-2">
+          <b>โจทย์ : </b>
+        </h4>
+        <div [froalaView]="examSelected.text" class="mb-2"></div>
+        <h4 class="mb-2"><b>คำตอบ : </b>{{ examSelected.answer }}</h4>
+        <h4 class="mb-2">
+          <b>Keyword : </b>{{ readKeyword(examSelected.keyword) }}
+        </h4>
+        <h4 class="mb-2"><b>คะแนน : </b>{{ examSelected.score }}</h4>
+      </div>
+    </div>
   </div>
 </div>

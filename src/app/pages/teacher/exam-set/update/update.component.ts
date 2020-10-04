@@ -59,9 +59,25 @@ export class UpdateComponent implements OnInit {
   };
 
   public examFilter = (data: Array<any>) => {
-    return data.filter((e) => {
-      return this.examList.indexOf(e) === -1;
-    });
+    let filter = [];
+
+    data
+      .map((map, i) => {
+        return map.storeID;
+      })
+      .forEach((loop, index) => {
+        if (
+          this.examList
+            .map((e) => {
+              return e.storeID;
+            })
+            .indexOf(loop) === -1
+        ) {
+          filter.push(data[index]);
+        }
+      });
+
+    return filter;
   };
 
   private getUnittable = () => {
@@ -98,8 +114,14 @@ export class UpdateComponent implements OnInit {
   };
 
   public pushExam = (data: any) => {
-    if (this.examList.indexOf(data) === -1) {
-      this.examList.push(data);
+    if (
+      this.examList
+        .map((e) => {
+          return e.storeID;
+        })
+        .indexOf(data.storeID) === -1
+    ) {
+      this.examList.push({ ...data });
     }
 
     console.log(this.examList);

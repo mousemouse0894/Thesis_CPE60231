@@ -7,15 +7,13 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./share-exam.component.scss'],
 })
 export class ShareExamComponent implements OnInit {
-  public examResult: any = null;
-  public teacherResult: any = null;
-  public resultSelectExam: any = null;
-  public checkSelectexam: boolean = false;
+  public examResult: Array<any> = [];
+  public examSelected: any = null;
+
   constructor(public service: AppService) {}
 
   ngOnInit() {
     this.onGetexam();
-    this.getTeacher();
   }
 
   public onGetexam = () => {
@@ -34,54 +32,34 @@ export class ShareExamComponent implements OnInit {
       });
   };
 
-  public getTeacher = () => {
-    this.service
-      .httpGet(
-        `/exstore/getTeacher/${
-          this.service.localStorage.get('userLogin')['uid']
-        }?token=${this.service.localStorage.get('userLogin')['token']}`
-      )
-      .then((value: any) => {
-        if (value.success) {
-          this.teacherResult = value.result;
-        } else {
-          this.service.showAlert('', value.message, 'error');
-        }
-      });
+  public filterShare = () => {
+    return this.examResult.filter((e) => {
+      return (
+        e.owner != this.service.localStorage.get('userLogin')['uid'] &&
+        e.oldOwner == this.service.localStorage.get('userLogin')['uid']
+      );
+    });
   };
 
-  public selectExam = (selectExam: any) => {
-    this.resultSelectExam = selectExam;
-    this.checkSelectexam = true;
+  public filterReceive = () => {
+    return this.examResult.filter((e) => {
+      return (
+        e.owner == this.service.localStorage.get('userLogin')['uid'] &&
+        e.oldOwner != this.service.localStorage.get('userLogin')['uid']
+      );
+    });
   };
 
-  public shareExam = (selectTeacher: any) => {
-    let data = {
-      text: this.resultSelectExam.text,
-      answer: this.resultSelectExam.answer,
-      keyword: this.resultSelectExam.keyword,
-      databaseName: this.resultSelectExam.databaseName,
-      newOwner: selectTeacher.uid,
-      owner: this.service.localStorage.get('userLogin')['uid'],
-      storeID: this.resultSelectExam.storeID,
-      score: this.resultSelectExam.score,
-    };
+  replaceText = (data: string) => {
+    let div = document.createElement('div');
+    div.innerHTML = data;
+    let text: string = div.textContent || div.innerText || '';
+    return text.length > 30 ? text.substring(0, 30) + '...' : text;
+  };
 
-    console.log(data);
-    this.service
-      .httpPost(
-        `/exstore/shareExam?token=${
-          this.service.localStorage.get('userLogin')['token']
-        }`,
-        JSON.stringify(data)
-      )
-      .then((value: any) => {
-        if (value.success) {
-          this.service.showAlert('', 'แชร์สำเร็จ', 'success');
-          this.checkSelectexam = false;
-        } else {
-          this.service.showAlert('', value.message, 'error');
-        }
-      });
+  readKeyword = (data) => {
+    return JSON.parse(data)
+      .map((e) => e.name)
+      .join();
   };
 }

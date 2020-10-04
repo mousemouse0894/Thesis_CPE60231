@@ -33,9 +33,6 @@
                 <th>รหัสผ่าน</th>
                 <th>สถานะ</th>
                 <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -56,36 +53,25 @@
                 <td style="vertical-align: middle">
                   <button
                     type="button"
-                    class="btn btn-primary btn-sm"
+                    class="btn btn-primary btn-sm mr-2"
                     (click)="getStudentingroup(x)"
                   >
                     รายชื่อ
                   </button>
-                </td>
-                <td style="vertical-align: middle">
+
                   <button
                     type="button"
-                    class="btn btn-primary btn-sm"
-                    (click)="historyTopic(x)"
-                  >
-                    ประวัติการสอบ
-                  </button>
-                </td>
-                <td style="vertical-align: middle">
-                  <button
-                    type="button"
-                    class="btn btn-warning btn-sm"
+                    class="btn btn-warning btn-sm ml-2 mr-2"
                     data-toggle="modal"
                     data-target="#exampleModalEditGroup"
                     (click)="onEditgroup(x)"
                   >
                     แก้ไข
                   </button>
-                </td>
-                <td style="vertical-align: middle">
+
                   <button
                     type="button"
-                    class="btn btn-danger btn-sm"
+                    class="btn btn-danger btn-sm ml-2"
                     (click)="onDeleteGroup(x)"
                   >
                     ลบ
@@ -137,7 +123,6 @@
                 <th>นามสกุล</th>
                 <th>รหัสนักศึกษา</th>
                 <th></th>
-                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -152,6 +137,11 @@
                         };
                   let i = index
                 "
+                [ngStyle]="{
+                  'background-color': x == studentSelected ? '#fafafa' : '',
+                  'border-right':
+                    x == studentSelected ? '3px solid #0b7bff' : ''
+                }"
               >
                 <td style="vertical-align: middle">
                   {{ 10 * pagiShowstudent - 10 + i + 1 }}
@@ -162,16 +152,17 @@
                 <td style="vertical-align: middle">
                   <button
                     type="button"
-                    class="btn btn-primary btn-sm"
-                    (click)="onGetlogstudent(x.uid)"
+                    class="btn btn-primary btn-sm mr-2"
+                    (click)="onGetlogstudent(x)"
+                    data-toggle="modal"
+                    data-target="#exampleModalLogStudent"
                   >
                     ประวัติการเข้าใช้งาน
                   </button>
-                </td>
-                <td style="vertical-align: middle">
+
                   <button
                     type="button"
-                    class="btn btn-danger btn-sm"
+                    class="btn btn-danger btn-sm ml-2"
                     (click)="onDeletestudent(x)"
                   >
                     ลบ
@@ -276,226 +267,61 @@
   </div>
 </div>
 
-<div>
-  <table
-    class="table table-sm table-borderless table-hover"
-    *ngIf="historyTopicResult != null"
-  >
-    <thead>
-      <tr>
-        <th></th>
-        <th>exbody_Topic</th>
-        <th>owner</th>
-        <th>topicText</th>
-        <th>timeStart</th>
-        <th>timeEnd</th>
-        <th>กำหนดสถานะการดูประวัติสอบ</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let x of historyTopicResult; let i = index">
-        <td style="vertical-align: middle">
-          {{ i + 1 }}
-        </td>
-        <td style="vertical-align: middle">{{ x.exbody_Topic }}</td>
-        <td style="vertical-align: middle">{{ x.owner }}</td>
-        <td style="vertical-align: middle">{{ x.topicText }}</td>
-        <td style="vertical-align: middle">{{ x.timeStart }}</td>
-        <td style="vertical-align: middle">{{ x.timeEnd }}</td>
-        <td style="vertical-align: middle">
-          <mat-slide-toggle
-            [checked]="x.statusHistory == 1"
-            (toggleChange)="onToggle(x)"
-          ></mat-slide-toggle>
-        </td>
-        <td style="vertical-align: middle">
-          <button
-            type="button"
-            class="btn btn-primary btn-sm"
-            (click)="historyTest(x)"
-          >
-            ดูจุดประสงค์
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
-<div>
-  <table
-    class="table table-sm table-borderless table-hover"
-    *ngIf="historyTestResult != null"
-  >
-    <thead>
-      <tr>
-        <th></th>
-        <th>prename</th>
-        <th>firstNameThai</th>
-        <th>lastNameThai</th>
-        <th>studentId</th>
-        <th>sumstudentScore</th>
-        <th>sumteacherScore</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let x of historyTestResult; let i = index">
-        <td style="vertical-align: middle">
-          {{ i + 1 }}
-        </td>
-        <td style="vertical-align: middle">{{ x.prename }}</td>
-        <td style="vertical-align: middle">{{ x.firstNameThai }}</td>
-        <td style="vertical-align: middle">{{ x.lastNameThai }}</td>
-        <td style="vertical-align: middle">{{ x.studentId }}</td>
-        <td style="vertical-align: middle">{{ x.sumstudentScore }}</td>
-        <td style="vertical-align: middle">{{ x.sumteacherScore }}</td>
-        <td style="vertical-align: middle">
-          <button
-            type="button"
-            class="btn btn-primary btn-sm"
-            (click)="getStdDatatest(x)"
-          >
-            ดูประวัติการสอบ
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
-<div>
-  <table
-    class="table table-sm table-borderless table-hover"
-    *ngIf="TestResult != null"
-  >
-    <thead>
-      <tr>
-        <th></th>
-        <th>answer</th>
-        <th>studentAnswer</th>
-        <th>text</th>
-        <th>studentScore</th>
-        <th>teacherScore</th>
-        <th></th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let x of TestResult; let i = index">
-        <td style="vertical-align: middle">
-          {{ i + 1 }}
-        </td>
-        <td style="vertical-align: middle">{{ x.answer }}</td>
-        <td style="vertical-align: middle">{{ x.studentAnswer }}</td>
-        <td style="vertical-align: middle">{{ x.text }}</td>
-        <td style="vertical-align: middle">{{ x.studentScore }}</td>
-        <td style="vertical-align: middle">{{ x.teacherScore }}</td>
-        <td style="vertical-align: middle">
-          <input matInput placeholder="คะแนน" type="number" required #score />
-        </td>
-        <td style="vertical-align: middle">
-          <button
-            type="button"
-            class="btn btn-primary btn-sm"
-            (click)="updateScore(x, score.value)"
-          >
-            ปรับคะเเนน
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
-<!-- <div class="card">
-        <div class="card-body">
-          <h2 class="mb-3">เพิ่มกลุ่มเรียน</h2>
-
-          <div class="text-center mb-3">
-
-          </div>
+<!-- Log Student -->
+<div
+  class="modal fade"
+  id="exampleModalLogStudent"
+  tabindex="-1"
+  aria-labelledby="exampleModalLogStudentLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title" id="exampleModalLogStudentLabel">
+          <h2>ประวัติการเข้าใช้งาน</h2>
+          <h4 *ngIf="studentSelected">
+            {{ studentSelected.prename
+            }}{{ studentSelected.firstNameThai }}&nbsp;{{
+              studentSelected.lastNameThai
+            }}
+          </h4>
         </div>
-      </div> -->
 
-<!--เเสดงกลุ่มเรียน-->
-<!-- <div class="box-padding">
-  <div class="card">
-    <div class="card-body">
-      <h2 class="mb-3">รายชื่อกลุ่มเรียน</h2>
-      <table class="table table-sm table-borderless table-hover">
-        <thead>
-          <tr>
-            <th></th>
-            <th>วันที่สร้าง</th>
-            <th>ชื่อกลุ่ม</th>
-            <th>รหัสผ่าน</th>
-            <th>สถานะกลุ่ม</th>
-            <th>เเก้ไขกลุ่มเรียน</th>
-            <th>เเสดงนักศึกษา</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let x of groupStudent; let i = index">
-            <td style="vertical-align: middle;">{{ i + 1 }}</td>
-            <td style="vertical-align: middle;">{{ x.createAt }}</td>
-            <td style="vertical-align: middle;">{{ x.name }}</td>
-            <td style="vertical-align: middle;">{{ x.password }}</td>
-            <td style="vertical-align: middle;">{{ x.status }}</td>
-            <td style="vertical-align: middle;">
-              <button
-                type="button"
-                class="btn btn-primary btn-sm"
-                (click)="onEditgroup(x)"
-              >
-                เเก้ไข
-              </button>
-            </td>
-            <td style="vertical-align: middle;">
-              <button
-                type="button"
-                class="btn btn-primary btn-sm"
-                (click)="getStudentingroup(x.groupID)"
-              >
-                เเสดง
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-
-    <div *ngIf="studentingroup != null">
-      <div *ngIf="studentingroup.length > 0">
-
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <table
+          class="table table-sm table-borderless table-hover"
+          *ngIf="logResult.length > 0"
+        >
+          <thead>
+            <tr>
+              <th></th>
+              <th>เวลา</th>
+              <th>IP Address</th>
+              <th>สถานะ</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let x of logResult; let i = index">
+              <td style="vertical-align: middle">{{ i + 1 }}</td>
+              <td style="vertical-align: middle">{{ x.times }}</td>
+              <td style="vertical-align: middle">{{ x.ip_address }}</td>
+              <td style="vertical-align: middle">
+                {{ x.status }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
-
-    <div class="text-center mb-3" *ngIf="logResult != null">
-      <table class="table table-sm table-borderless table-striped table-hover">
-        <thead>
-          <tr>
-            <th></th>
-            <th>ip_address</th>
-            <th>status</th>
-            <th>times</th>
-            <th>uid</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let x of logResult; let i = index">
-            <td style="vertical-align: middle;">{{ i + 1 }}</td>
-            <td style="vertical-align: middle;">{{ x.ip_address }}</td>
-            <td style="vertical-align: middle;">{{ x.status }}</td>
-            <td style="vertical-align: middle;">{{ x.times }}</td>
-            <td style="vertical-align: middle;">
-              {{ x.uid }}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
   </div>
-</div> -->
+</div>

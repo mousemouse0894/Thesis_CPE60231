@@ -14,12 +14,11 @@ export class GroupStudentComponent implements OnInit {
   public studentingroup: any = null;
   public formInsertgroup: FormGroup;
   public checkedit: boolean = false;
-  public logResult: any = null;
+  public logResult: Array<any> = [];
   public groupSelectName: any = null;
   public pagiShowstudent: number = 1;
-  public historyTopicResult: any = null;
-  public historyTestResult: any = null;
-  public TestResult: any = null;
+  public studentSelected: any = null;
+
   constructor(public service: AppService, private formBuilder: FormBuilder) {}
 
   ngOnInit() {
@@ -32,6 +31,12 @@ export class GroupStudentComponent implements OnInit {
     });
 
     this.onGetgroupstudent();
+
+    _window.$('#exampleModalLogStudent').on('hidden.bs.modal', (e) => {
+      // do something...
+      this.studentSelected = null;
+      this.logResult = [];
+    });
   }
 
   public onInsertGroup = () => {
@@ -179,7 +184,6 @@ export class GroupStudentComponent implements OnInit {
           let data = {
             username: x.uid,
           };
-          console.log(data);
           this.service
             .httpPost(
               '/groupst/clearmember?token=' +
@@ -198,101 +202,17 @@ export class GroupStudentComponent implements OnInit {
       });
   };
 
-  public onGetlogstudent = (studentid: any) => {
+  public onGetlogstudent = (data: any) => {
+    this.studentSelected = data;
     this.service
       .httpGet(
-        `/logmember/${studentid}?token=${
+        `/logmember/${data.uid}?token=${
           this.service.localStorage.get('userLogin')['token']
         }`
       )
       .then((value: any) => {
         if (value.success) {
           this.logResult = value.result;
-          console.log(value);
-        } else {
-          this.service.showAlert('', value.message, 'error');
-        }
-      });
-  };
-
-  public historyTopic = (x: any) => {
-    this.service
-      .httpGet(
-        `stTesting/teacherGetTopic/${x.groupID}?token=${
-          this.service.localStorage.get('userLogin')['token']
-        }`
-      )
-      .then((value: any) => {
-        if (value.success) {
-          this.historyTopicResult = value.result;
-        } else {
-          this.service.showAlert(``, value.massage, `error`);
-        }
-      });
-  };
-
-  public historyTest = (x: any) => {
-    this.service
-      .httpGet(
-        `stTesting/teacherGetHistory/${x.examtopicID}?token=${
-          this.service.localStorage.get('userLogin')['token']
-        }`
-      )
-      .then((value: any) => {
-        if (value.success) {
-          this.historyTestResult = value.result;
-        } else {
-          this.service.showAlert(``, value.massage, `error`);
-        }
-      });
-  };
-
-  public getStdDatatest = (x) => {
-    this.TestResult = x.testData;
-    console.log(x);
-  };
-
-  public updateScore = (x: any, score: any) => {
-    let data = {
-      teacherScore: score,
-      stID_fk: x.stID_fk,
-      topicID_fk: x.topicID_fk,
-      storeID_fk: x.storeID,
-    };
-
-    this.service
-      .httpPost(
-        `stTesting/teacherUpdateScore?token=${
-          this.service.localStorage.get('userLogin')['token']
-        }
-  `,
-        JSON.stringify(data)
-      )
-      .then((value: any) => {
-        if (value.success) {
-          this.service.showAlert('', 'สำเร็จ', 'success');
-        } else {
-          this.service.showAlert('', value.message, 'error');
-        }
-      });
-  };
-
-  public onToggle = (x: any) => {
-    let data = {
-      statusHistory: x.statusHistory == 1 ? 0 : 1,
-      examtopicID: x.examtopicID,
-      owner: x.owner,
-    };
-    this.service
-      .httpPost(
-        `extopic/setHistoryTesting?token=${
-          this.service.localStorage.get('userLogin')['token']
-        }`,
-        JSON.stringify(data)
-      )
-      .then((value: any) => {
-        if (value.success) {
-          this.service.showAlert('', 'สำเร็จ', 'success');
         } else {
           this.service.showAlert('', value.message, 'error');
         }

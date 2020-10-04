@@ -20,9 +20,12 @@ export class ManageExamComponent implements OnInit {
   public getpurposeTable: any = null;
   public formInsertexam: FormGroup;
   public databaseResult: any = null;
-  public examResult: any = null;
+  public examResult: Array<any> = [];
   public checkEditexam: boolean = false;
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
+  public examSelected: any = null;
+  public selectPurpose: any = '';
+  public teacherResult: any = null;
 
   allKeyword: string[] = ['Apple', 'Lemon', 'Lime', 'Orange', 'Strawberry'];
   keyword: any[] = [];
@@ -102,6 +105,75 @@ export class ManageExamComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.formExamInit();
+    this.getTeacher();
+    this.getUnittable();
+    this.onGetdatabse();
+    this.onGetexam();
+
+    _window.$('#exampleModalCreactExam').on('hidden.bs.modal', (e) => {
+      this.formExamInit();
+    });
+  }
+
+  replaceText = (data: string) => {
+    let div = document.createElement('div');
+    div.innerHTML = data;
+    let text: string = div.textContent || div.innerText || '';
+    return text.length > 30 ? text.substring(0, 30) + '...' : text;
+  };
+
+  filterMyExam = () => {
+    if (this.selectPurpose == 'shared') {
+      return this.examResult.filter((e, i) => {
+        return (
+          e.owner == this.service.localStorage.get('userLogin')['uid'] &&
+          e.status == 'on' &&
+          e.purposeID_fk == null
+        );
+      });
+    } else {
+      let filter = this.examResult.filter((e, i) => {
+        return (
+          e.owner == this.service.localStorage.get('userLogin')['uid'] &&
+          e.status == 'on' &&
+          e.purposeID_fk != null
+        );
+      });
+
+      return 'object' == typeof this.selectPurpose
+        ? filter.filter((e) => {
+            return (
+              e.purpose_name == this.selectPurpose.purpose_name &&
+              e.unit_name == this.selectPurpose.unit_name
+            );
+          })
+        : filter;
+    }
+  };
+
+  readPurpose = () => {
+    if (this.examResult.length > 0) {
+      let list = [];
+      this.examResult
+        .filter((e) => {
+          return e.purpose_name != null;
+        })
+        .forEach((e) => {
+          let obj = {};
+          obj['purpose_name'] = e.purpose_name;
+          obj['unit_name'] = e.unit_name;
+
+          list.push(JSON.stringify(obj));
+        });
+
+      return [...new Set(list)];
+    } else {
+      return [];
+    }
+  };
+
+  formExamInit = () => {
     this.formInsertexam = this.formBuilder.group({
       purposeID_fk: ['', Validators.required],
       databaseName: ['', Validators.required],
@@ -113,10 +185,9 @@ export class ManageExamComponent implements OnInit {
       owner: this.service.localStorage.get('userLogin')['uid'],
       oldOwner: this.service.localStorage.get('userLogin')['uid'],
     });
-    this.getUnittable();
-    this.onGetdatabse();
-    this.onGetexam();
-  }
+
+    this.keyword = [];
+  };
 
   public getUnittable = () => {
     this.service
@@ -185,9 +256,6 @@ export class ManageExamComponent implements OnInit {
   };
 
   public onInsartexam = () => {
-    // this.formInsertexam.patchValue({
-    //   text: this.froalaEditor.html.get(),
-    // });
     if (this.checkEditexam) {
       console.log(this.formInsertexam.value);
       this.service
@@ -251,22 +319,28 @@ export class ManageExamComponent implements OnInit {
   };
 
   public onDeleteexam = (x: any) => {
-    let dataDeleteexam = {
-      storeID: x.storeID,
-    };
     this.service
-      .httpPost(
-        `/exstore/delexam?token=${
-          this.service.localStorage.get('userLogin')['token']
-        }`,
-        JSON.stringify(dataDeleteexam)
-      )
-      .then((value: any) => {
-        if (value.success) {
-          this.onGetexam();
-          this.service.showAlert('', 'ลบสำเร็จ', 'success');
-        } else {
-          this.service.showAlert('', value.message, 'error');
+      .showConfirm('ยืนยันการลบข้อสอบ', '', 'warning')
+      .then((val: boolean) => {
+        if (val) {
+          let dataDeleteexam = {
+            storeID: x.storeID,
+          };
+          this.service
+            .httpPost(
+              `/exstore/delexam?token=${
+                this.service.localStorage.get('userLogin')['token']
+              }`,
+              JSON.stringify(dataDeleteexam)
+            )
+            .then((value: any) => {
+              if (value.success) {
+                this.onGetexam();
+                this.service.showAlert('', 'บันทึกสำเร็จ', 'success');
+              } else {
+                this.service.showAlert('', value.message, 'error');
+              }
+            });
         }
       });
   };
@@ -307,4 +381,67 @@ export class ManageExamComponent implements OnInit {
       keyword: this.keyword.length > 0 ? JSON.stringify(this.keyword) : '',
     });
   }
+
+  showKeyword = () => {
+    return this.keyword
+      .map((e) => {
+        return e.name;
+      })
+      .join();
+  };
+
+  public getTeacher = () => {
+    this.service
+      .httpGet(
+        `/exstore/getTeacher/${
+          this.service.localStorage.get('userLogin')['uid']
+        }?token=${this.service.localStorage.get('userLogin')['token']}`
+      )
+      .then((value: any) => {
+        if (value.success) {
+          this.teacherResult = value.result;
+        } else {
+          this.service.showAlert('', value.message, 'error');
+        }
+      });
+  };
+
+  public selectExam = (selectExam: any) => {
+    this.examSelected = selectExam;
+  };
+
+  public shareExam = (selectTeacher: any) => {
+    this.service
+      .showConfirm('ยืนยันการแบ่งปันข้อสอบ', ``, 'warning')
+      .then((val: boolean) => {
+        if (val) {
+          let data = {
+            text: this.examSelected.text,
+            answer: this.examSelected.answer,
+            keyword: this.examSelected.keyword,
+            databaseName: this.examSelected.databaseName,
+            newOwner: selectTeacher.uid,
+            owner: this.service.localStorage.get('userLogin')['uid'],
+            storeID: this.examSelected.storeID,
+            score: this.examSelected.score,
+          };
+
+          this.service
+            .httpPost(
+              `/exstore/shareExam?token=${
+                this.service.localStorage.get('userLogin')['token']
+              }`,
+              JSON.stringify(data)
+            )
+            .then((value: any) => {
+              if (value.success) {
+                _window.$(`#exampleModalTeaher`).modal('hide');
+                this.service.showAlert('', 'บันทึกสำเร็จ', 'success');
+              } else {
+                this.service.showAlert('', value.message, 'error');
+              }
+            });
+        }
+      });
+  };
 }

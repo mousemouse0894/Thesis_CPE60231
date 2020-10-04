@@ -209,4 +209,8 @@ export class AppService {
       windows.$(`#${id}`).modal('hide');
     },
   };
+
+  jsParse = (data) => {
+    return JSON.parse(data);
+  };
 }

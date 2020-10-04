@@ -24,9 +24,9 @@ export class ViewComponent implements OnInit {
     this.databaseResult = null;
     this.service
       .httpGet(
-        `/exdatabase/show?token=${
-          this.service.localStorage.get('userLogin')['token']
-        }`
+        `/exdatabase/show/${
+          this.service.localStorage.get('userLogin')['uid']
+        }?token=${this.service.localStorage.get('userLogin')['token']}`
       )
       .then((value: any) => {
         if (value.success) {
@@ -96,6 +96,7 @@ export class ViewComponent implements OnInit {
     let data = {
       dbName: x.Database,
       status: x.status == 1 ? 0 : 1,
+      owner: this.service.localStorage.get('userLogin')['uid'],
     };
     this.service
       .httpPost(

@@ -30,7 +30,7 @@ export class AddEventsComponent implements OnInit {
       timeEnd: ['', Validators.required],
       topicText: ['', Validators.required],
       owner: this.service.localStorage.get('userLogin')['uid'],
-      limitIP: ['false'],
+      limitIP: ['', Validators.required],
       statusHistory: ['0'],
     });
 

@@ -63,9 +63,9 @@ export class QueryComponent implements OnInit {
   private getDatabase = () => {
     this.service
       .httpGet(
-        `/exdatabase/getall?token=${
-          this.service.localStorage.get('userLogin')['token']
-        }`
+        `/exdatabase/getall/${
+          this.service.localStorage.get('userLogin')['uid']
+        }?token=${this.service.localStorage.get('userLogin')['token']}`
       )
       .then((val: any) => {
         let data = [];

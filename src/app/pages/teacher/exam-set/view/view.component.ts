@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { AppService } from 'src/app/services/app.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
+const _window: any = window;
+
 @Component({
   selector: 'app-view',
   templateUrl: './view.component.html',
@@ -26,23 +28,34 @@ export class ViewComponent implements OnInit {
     this.formTopic = this.formBuilder.group({
       owner: [this.service.localStorage.get('userLogin')['uid']],
       topic: ['', Validators.required],
-      isRandom: [0, Validators.required],
+      isRandom: [0, [Validators.required, Validators.min(1)]],
       status: ['on', Validators.required],
       examstoreID_fk: ['', Validators.required],
       text: ['', Validators.required],
     });
+
     this.formUpdateTopic = this.formBuilder.group({
       topic: ['', Validators.required],
       text: ['', Validators.required],
       exambodyID: ['', Validators.required],
+      examstoreID_fk: [''],
+      owner: [this.service.localStorage.get('userLogin')['uid']],
+      oldID: [''],
+      isRandom: [0, [Validators.required, Validators.min(1)]],
     });
+
     this.getExamSet();
     this.getUnittable();
+
+    _window.$('#exampleModalShowExam').on('hidden.bs.modal', (e) => {
+      this.examView = [];
+    });
   }
 
-  public selectExamView = (list: Array<any>) => {
-    this.examView = list;
-    console.log(list);
+  public filterExamBody = () => {
+    return this.listExamSet.filter((e) => {
+      return e.status != 'off';
+    });
   };
 
   public getExamSet = () => {
@@ -61,30 +74,55 @@ export class ViewComponent implements OnInit {
       });
   };
 
-  public onDeletebody = (exambodyID: any) => {
-    let dataDelbody = {
-      exambodyID: exambodyID,
-      status: 'off',
-    };
+  public onDeletebody = (data: any) => {
     this.service
-      .httpPost(
-        `exbody/updateStatus?token=${
-          this.service.localStorage.get('userLogin')['token']
-        }`,
-        JSON.stringify(dataDelbody)
+      .showConfirm(
+        'ยืนยันการลบชุดข้อสอบ',
+        `รหัส ${this.service.zeroPad(data.exambodyID, 1000)}`,
+        'warning'
       )
-      .then((value: any) => {
-        if (value.success) {
-          this.getExamSet();
-          this.service.showAlert('', 'ลบสำเร็จ', 'success');
-        } else {
-          this.service.showAlert('', value.message, 'error');
+      .then((val) => {
+        if (val) {
+          let dataDelbody = {
+            exambodyID: data.exambodyID,
+            status: 'off',
+          };
+
+          this.service
+            .httpPost(
+              `exbody/updateStatus?token=${
+                this.service.localStorage.get('userLogin')['token']
+              }`,
+              JSON.stringify(dataDelbody)
+            )
+            .then((value: any) => {
+              if (value.success) {
+                this.getExamSet();
+                this.service.showAlert('', 'ลบสำเร็จ', 'success');
+              } else {
+                this.service.showAlert('', value.message, 'error');
+              }
+            });
         }
       });
   };
 
   public updateSubmit = () => {
     if (this.checkUpdateTopic) {
+      if (this.examList.length > 0) {
+        let exam = [];
+        this.examList.forEach((el, i) => {
+          exam.push(el['storeID']);
+        });
+        this.formUpdateTopic.patchValue({
+          examstoreID_fk: exam.join(','),
+        });
+      } else {
+        this.formUpdateTopic.patchValue({
+          examstoreID_fk: 'null',
+        });
+      }
+
       this.service
         .httpPost(
           `exbody/updateExamBody?token=${
@@ -95,6 +133,7 @@ export class ViewComponent implements OnInit {
         .then((value: any) => {
           if (value.success) {
             this.checkUpdateTopic = false;
+            this.checkTnsert = false;
             this.getExamSet();
             this.service.showAlert(``, `สำเร็จ`, `success`);
           } else {
@@ -124,7 +163,16 @@ export class ViewComponent implements OnInit {
             }`,
             JSON.stringify(this.formTopic.value)
           )
-          .then((val: any) => {});
+          .then((val: any) => {
+            if (val.success) {
+              this.checkUpdateTopic = false;
+              this.checkTnsert = false;
+              this.getExamSet();
+              this.service.showAlert(``, `สำเร็จ`, `success`);
+            } else {
+              this.service.showAlert('', val.message, 'error');
+            }
+          });
       } else {
         this.service.showAlert('โปรดกรอกข้อมูลให้ครบถ้วน', '', 'error');
       }
@@ -132,7 +180,7 @@ export class ViewComponent implements OnInit {
   };
 
   public onCheckRandom = (x) => {
-    console.log(x);
+    this.examList = x == true ? [] : this.examList;
     if (!x) {
       this.formTopic.patchValue({
         isRandom: 0,
@@ -143,6 +191,9 @@ export class ViewComponent implements OnInit {
 
   public examFilter = (data: Array<any>) => {
     let filter = [];
+    data = data.filter((e) => {
+      return e.status == 'on';
+    });
 
     data
       .map((map, i) => {
@@ -206,8 +257,6 @@ export class ViewComponent implements OnInit {
     ) {
       this.examList.push({ ...data });
     }
-
-    console.log(this.examList);
   };
 
   public popExam = (data: any) => {
@@ -221,11 +270,22 @@ export class ViewComponent implements OnInit {
   };
 
   public onUpdateTopic = (x) => {
-    this.formUpdateTopic = this.formBuilder.group({
+    this.examList = x.exambodyData;
+
+    this.formUpdateTopic.patchValue({
       topic: x.topic,
       text: x.text,
       exambodyID: x.exambodyID,
+      owner: this.service.localStorage.get('userLogin')['uid'],
+      oldID: x.oldID,
+      isRandom: x.isRandom,
     });
-    this.checkUpdateTopic = true;
+  };
+
+  replaceText = (data: string) => {
+    let div = document.createElement('div');
+    div.innerHTML = data;
+    let text: string = div.textContent || div.innerText || '';
+    return text.length > 30 ? text.substring(0, 30) + '...' : text;
   };
 }

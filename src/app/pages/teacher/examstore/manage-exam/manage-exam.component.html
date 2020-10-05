@@ -174,9 +174,9 @@
             <mat-label>ฐานข้อมูล</mat-label>
             <mat-select formControlName="databaseName">
               <mat-option
-                [value]="x.Database"
+                [value]="x.database_name"
                 *ngFor="let x of databaseResult"
-                >{{ x.Database }}</mat-option
+                >{{ x.database_name }}</mat-option
               >
             </mat-select>
           </mat-form-field>

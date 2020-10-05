@@ -226,9 +226,9 @@ export class ManageExamComponent implements OnInit {
   public onGetdatabse = () => {
     this.service
       .httpGet(
-        `/exdatabase/show?token=${
-          this.service.localStorage.get('userLogin')['token']
-        }`
+        `/exdatabase/getall/${
+          this.service.localStorage.get('userLogin')['uid']
+        }?token=${this.service.localStorage.get('userLogin')['token']}`
       )
       .then((value: any) => {
         if (value.success) {

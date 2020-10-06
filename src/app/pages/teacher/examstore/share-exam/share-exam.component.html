@@ -1,7 +1,7 @@
 <div class="row">
-  <div class="col-md-6 mb-3">
+  <div class="col-xl-6 mb-3">
     <div class="card">
-      <div class="card-body" style="overflow: auto">
+      <div class="card-body">
         <div class="row">
           <div class="col-md-6 mb-3">
             <h2>ข้อสอบที่แบ่งปัน</h2>
@@ -11,7 +11,7 @@
           </div>
         </div>
 
-        <div class="mb-3">
+        <div class="mb-3" style="overflow: auto">
           <table class="table table-sm table-borderless table-hover">
             <thead>
               <tr class="text-center">
@@ -24,16 +24,40 @@
             </thead>
             <tbody>
               <tr *ngFor="let x of filterShare(); let i = index">
-                <td style="vertical-align: middle; text-align: center">
+                <td
+                  style="
+                    vertical-align: middle;
+                    text-align: center;
+                    min-width: 60px;
+                  "
+                >
                   {{ service.zeroPad(x.storeID, 1000) }}
                 </td>
-                <td style="vertical-align: middle">
+                <td
+                  style="
+                    vertical-align: middle;
+                    text-align: left;
+                    min-width: 280px;
+                  "
+                >
                   {{ replaceText(x.text) }}
                 </td>
-                <td style="vertical-align: middle; text-align: center">
+                <td
+                  style="
+                    vertical-align: middle;
+                    text-align: center;
+                    min-width: 120px;
+                  "
+                >
                   {{ x.databaseName }}
                 </td>
-                <td style="vertical-align: middle; text-align: center">
+                <td
+                  style="
+                    vertical-align: middle;
+                    text-align: center;
+                    min-width: 80px;
+                  "
+                >
                   {{ x.score }}
                 </td>
                 <td>
@@ -55,9 +79,9 @@
     </div>
   </div>
 
-  <div class="col-md-6 mb-3">
+  <div class="col-xl-6 mb-3">
     <div class="card">
-      <div class="card-body" style="overflow: auto">
+      <div class="card-body">
         <div class="row">
           <div class="col-md-6 mb-3">
             <h2>ข้อสอบที่ได้รับ</h2>
@@ -67,7 +91,7 @@
           </div>
         </div>
 
-        <div class="mb-3">
+        <div class="mb-3" style="overflow: auto">
           <table class="table table-sm table-borderless table-hover">
             <thead>
               <tr class="text-center">
@@ -80,16 +104,40 @@
             </thead>
             <tbody>
               <tr *ngFor="let x of filterReceive(); let i = index">
-                <td style="vertical-align: middle; text-align: center">
+                <td
+                  style="
+                    vertical-align: middle;
+                    text-align: center;
+                    min-width: 60px;
+                  "
+                >
                   {{ service.zeroPad(x.storeID, 1000) }}
                 </td>
-                <td style="vertical-align: middle">
+                <td
+                  style="
+                    vertical-align: middle;
+                    text-align: left;
+                    min-width: 280px;
+                  "
+                >
                   {{ replaceText(x.text) }}
                 </td>
-                <td style="vertical-align: middle; text-align: center">
+                <td
+                  style="
+                    vertical-align: middle;
+                    text-align: center;
+                    min-width: 120px;
+                  "
+                >
                   {{ x.databaseName }}
                 </td>
-                <td style="vertical-align: middle; text-align: center">
+                <td
+                  style="
+                    vertical-align: middle;
+                    text-align: center;
+                    min-width: 80px;
+                  "
+                >
                   {{ x.score }}
                 </td>
                 <td>

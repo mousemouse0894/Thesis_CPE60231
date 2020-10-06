@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { AppService } from 'src/app/services/app.service';
-import { SelectDatabase } from '../database';
 
 @Component({
   selector: 'app-view',
@@ -34,10 +33,8 @@ export class ViewComponent implements OnInit {
             this.databaseResult = value.result.filter((value) => {
               return value.status == '1';
             });
-            SelectDatabase.setdatabaseResult(this.databaseResult);
           } else {
             this.databaseResult = value.result;
-            SelectDatabase.setdatabaseResult(this.databaseResult);
           }
         } else {
           this.service.showAlert('', value.message, 'error');

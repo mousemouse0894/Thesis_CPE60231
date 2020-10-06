@@ -176,7 +176,6 @@ export class GroupStudentComponent implements OnInit {
   };
 
   public onDeletestudent = (x: any) => {
-    console.log(x);
     this.service
       .showConfirm('ยืนยันการลบรายชื่อจากกลุ่มเรียน', '', 'warning')
       .then((val: boolean) => {

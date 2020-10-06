@@ -1,7 +1,6 @@
 import { ActivatedRoute } from '@angular/router';
 import { AppService } from './../../../../services/app.service';
 import { Component, OnInit } from '@angular/core';
-import { SelectDatabase } from '../database';
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
 
@@ -95,9 +94,6 @@ export class QueryComponent implements OnInit {
     this.tbSelected = tb_name;
     this.dataInTable = null;
 
-    SelectDatabase.setDatabase(this.dbSelected);
-    SelectDatabase.setTbResult(this.tbSelected);
-
     this.service
       .httpGet(
         `/exdatabase/getdata/${db_name}/${tb_name}?token=${
@@ -107,7 +103,6 @@ export class QueryComponent implements OnInit {
       .then((value: any) => {
         if (value.success) {
           this.dataInTable = value.result;
-          SelectDatabase.setdatabaseResult(this.dataInTable);
         } else {
           this.dataInTable = null;
           this.service.showAlert('', value.message, 'error');

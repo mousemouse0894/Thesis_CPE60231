@@ -1,10 +1,10 @@
 <div class="card">
   <div class="card-body" style="overflow: auto">
     <div class="row">
-      <div class="col-md-6 mb-3">
+      <div class="col-7 mb-3">
         <h2>ข้อสอบทั้งหมด</h2>
       </div>
-      <div class="col-md-6 mb-3">
+      <div class="col-5 mb-3">
         <div class="text-right">
           <button
             type="button"
@@ -20,7 +20,7 @@
     </div>
 
     <div class="row">
-      <div class="col-md-4 mb-3">
+      <div class="col-xl-4 mb-3">
         <mat-form-field appearance="outline">
           <mat-label>แสดงตามจุดประสงค์</mat-label>
           <mat-select [(ngModel)]="selectPurpose">
@@ -40,8 +40,8 @@
           </mat-select>
         </mat-form-field>
       </div>
-      <div class="col-md-4"></div>
-      <div class="col-md-4"></div>
+      <div class="col-xl-4"></div>
+      <div class="col-xl-4"></div>
     </div>
 
     <div *ngIf="selectPurpose == 'shared'" class="mb-3 text-danger">
@@ -49,71 +49,99 @@
       หากไม่ทำการจัดหน่วยการเรียนรู้และจุดประสงค์
     </div>
     <div class="mb-3">
-      <table class="table table-sm table-borderless table-hover">
-        <thead>
-          <tr class="text-center">
-            <th>รหัส</th>
-            <th>โจทย์</th>
-            <th>ฐานข้อมูล</th>
-            <th>คะแนน</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let x of filterMyExam(); let i = index">
-            <td style="vertical-align: middle; text-align: center">
-              {{ service.zeroPad(x.storeID, 1000) }}
-            </td>
-            <td style="vertical-align: middle">{{ replaceText(x.text) }}</td>
-            <td style="vertical-align: middle; text-align: center">
-              {{ x.databaseName }}
-            </td>
-            <td style="vertical-align: middle; text-align: center">
-              {{ x.score }}
-            </td>
-            <td>
-              <button
-                type="button"
-                class="btn btn-primary btn-sm mr-2"
-                data-toggle="modal"
-                data-target="#exampleModalPreviewExam"
-                (click)="examSelected = x; onCheckupdateexam(x)"
+      <div style="overflow: auto">
+        <table class="table table-sm table-borderless table-hover">
+          <thead>
+            <tr class="text-center">
+              <th>รหัส</th>
+              <th>โจทย์</th>
+              <th>ฐานข้อมูล</th>
+              <th>คะแนน</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let x of filterMyExam(); let i = index">
+              <td
+                style="
+                  vertical-align: middle;
+                  text-align: center;
+                  min-width: 60px;
+                "
               >
-                แสดง
-              </button>
+                {{ service.zeroPad(x.storeID, 1000) }}
+              </td>
+              <td style="vertical-align: middle; min-width: 200px">
+                {{ replaceText(x.text) }}
+              </td>
+              <td
+                style="
+                  vertical-align: middle;
+                  text-align: center;
+                  min-width: 120px;
+                "
+              >
+                {{ x.databaseName }}
+              </td>
+              <td
+                style="
+                  vertical-align: middle;
+                  text-align: center;
+                  min-width: 120px;
+                "
+              >
+                {{ x.score }}
+              </td>
+              <td
+                style="
+                  vertical-align: middle;
+                  text-align: center;
+                  min-width: 350px;
+                "
+              >
+                <button
+                  type="button"
+                  class="btn btn-primary btn-sm mr-2"
+                  data-toggle="modal"
+                  data-target="#exampleModalPreviewExam"
+                  (click)="examSelected = x; onCheckupdateexam(x)"
+                >
+                  แสดง
+                </button>
 
-              <button
-                type="button"
-                class="btn btn-primary btn-sm ml-2 mr-2"
-                data-toggle="modal"
-                data-target="#exampleModalTeaher"
-                *ngIf="selectPurpose != 'shared'"
-                (click)="selectExam(x)"
-              >
-                แบ่งปันข้อสอบ
-              </button>
+                <button
+                  type="button"
+                  class="btn btn-primary btn-sm ml-2 mr-2"
+                  data-toggle="modal"
+                  data-target="#exampleModalTeaher"
+                  *ngIf="selectPurpose != 'shared'"
+                  (click)="selectExam(x)"
+                >
+                  แบ่งปันข้อสอบ
+                </button>
 
-              <button
-                type="button"
-                class="btn btn-warning btn-sm ml-2 mr-2"
-                (click)="onCheckupdateexam(x)"
-                data-toggle="modal"
-                data-target="#exampleModalCreactExam"
-              >
-                แก้ไข
-              </button>
+                <button
+                  type="button"
+                  class="btn btn-warning btn-sm ml-2 mr-2"
+                  (click)="onCheckupdateexam(x)"
+                  data-toggle="modal"
+                  data-target="#exampleModalCreactExam"
+                >
+                  แก้ไข
+                </button>
 
-              <button
-                type="button"
-                class="btn btn-danger btn-sm ml-2"
-                (click)="onDeleteexam(x)"
-              >
-                ลบ
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+                <button
+                  type="button"
+                  class="btn btn-danger btn-sm ml-2"
+                  (click)="onDeleteexam(x)"
+                >
+                  ลบ
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </div>

@@ -27,13 +27,13 @@
         routerLinkActive="menuActive"
       >
         <span
-          style="display: inline-block; width: 35px;"
+          style="display: inline-block; width: 35px"
           [innerHTML]="x.icon"
         ></span
         >{{ x.text }}
       </a>
       <a mat-list-item (click)="onLogout()" href="javascript:void(0)">
-        <span style="display: inline-block; width: 35px;">
+        <span style="display: inline-block; width: 35px">
           <i class="fas fa-sign-out-alt"></i
         ></span>
         ออกจากระบบ
@@ -51,7 +51,9 @@
       >
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
-      <span>&nbsp;&nbsp;ระบบตรวจสอบการเขียนคำสั่งเอสคิวแอล</span>
+      <span style="overflow: auto"
+        >&nbsp;&nbsp;ระบบตรวจสอบการเขียนคำสั่งเอสคิวแอล</span
+      >
     </mat-toolbar>
     <!-- Add Content Here -->
     <router-outlet></router-outlet>

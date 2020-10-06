@@ -11,7 +11,6 @@ const routes: Routes = [
     children: [
       { path: 'view', component: ViewComponent },
       { path: 'query', component: QueryComponent },
-      { path: 'query/:dbname', component: QueryComponent },
       { path: '', redirectTo: '/database/view', pathMatch: 'full' },
     ],
   },

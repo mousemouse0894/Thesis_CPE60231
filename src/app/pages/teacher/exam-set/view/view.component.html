@@ -3,10 +3,10 @@
     <div class="card">
       <div class="card-body">
         <div class="row">
-          <div class="col-md-6 mb-3">
+          <div class="col-7 mb-3">
             <h2>ชุดข้อสอบทั้งหมด</h2>
           </div>
-          <div class="col-md-6 mb-3">
+          <div class="col-5 mb-3">
             <div class="text-right">
               <button
                 type="button"
@@ -24,82 +24,111 @@
           </div>
         </div>
 
-        <table class="table table-sm table-borderless table-hover">
-          <thead>
-            <tr>
-              <th>รหัส</th>
-              <th>ชื่อชุดข้อสอบ</th>
-              <th>คำอธิบาย</th>
-              <th>คะแนนรวม</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              *ngFor="
-                let x of filterExamBody()
-                  | paginate
-                    : {
-                        id: 'listExamSet',
-                        itemsPerPage: 10,
-                        currentPage: paginationPage
-                      };
-                let i = index
-              "
-            >
-              <td style="vertical-align: middle">
-                <!-- {{ 10 * paginationPage - 10 + i + 1 }} -->
-                {{ service.zeroPad(x.exambodyID, 1000) }}
-              </td>
-              <td style="vertical-align: middle">{{ x.topic }}</td>
-              <td style="vertical-align: middle">{{ x.text }}</td>
-              <td style="vertical-align: middle">{{ x.exambodyScore }}</td>
-              <td style="vertical-align: middle">
-                <button
-                  type="button"
-                  class="btn btn-primary btn-sm mr-2"
-                  data-toggle="modal"
-                  data-target="#exampleModalShowExam"
-                  (click)="examView = x"
-                  [disabled]="x.exambodyScore <= 0"
-                >
-                  ดูข้อสอบ
-                </button>
-
-                <button
-                  type="button"
-                  class="btn btn-warning btn-sm ml-2 mr-2"
-                  data-toggle="modal"
-                  data-target="#editExam"
-                  (click)="
-                    onUpdateTopic(x);
-                    checkTnsert = false;
-                    checkUpdateTopic = true;
-                    examView = x
+        <div style="overflow: auto">
+          <table class="table table-sm table-borderless table-hover">
+            <thead>
+              <tr class="text-center">
+                <th>รหัส</th>
+                <th>ชื่อชุดข้อสอบ</th>
+                <th>คำอธิบาย</th>
+                <th>คะแนนรวม</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                *ngFor="
+                  let x of filterExamBody()
+                    | paginate
+                      : {
+                          id: 'listExamSet',
+                          itemsPerPage: 10,
+                          currentPage: paginationPage
+                        };
+                  let i = index
+                "
+              >
+                <td
+                  style="
+                    vertical-align: middle;
+                    text-align: center;
+                    min-width: 60px;
                   "
                 >
-                  แก้ไข
-                </button>
-
-                <button
-                  type="button"
-                  class="btn btn-danger btn-sm ml-2"
-                  (click)="onDeletebody(x)"
+                  <!-- {{ 10 * paginationPage - 10 + i + 1 }} -->
+                  {{ service.zeroPad(x.exambodyID, 1000) }}
+                </td>
+                <td style="vertical-align: middle">
+                  {{ x.topic }}
+                </td>
+                <td style="vertical-align: middle">
+                  {{ x.text }}
+                </td>
+                <td
+                  style="
+                    vertical-align: middle;
+                    text-align: center;
+                    min-width: 60px;
+                  "
                 >
-                  ลบ
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <pagination-controls
-          id="listExamSet"
-          *ngIf="filterExamBody().length > 10"
-          responsive="true"
-          previousLabel="ย้อนกลับ"
-          nextLabel="ถัดไป"
-          (pageChange)="paginationPage = $event"
-        ></pagination-controls>
+                  {{ x.exambodyScore }}
+                </td>
+                <td
+                  style="
+                    vertical-align: middle;
+                    text-align: center;
+                    min-width: 200px;
+                  "
+                >
+                  <button
+                    type="button"
+                    class="btn btn-primary btn-sm mr-2"
+                    data-toggle="modal"
+                    data-target="#exampleModalShowExam"
+                    (click)="examView = x"
+                    [disabled]="x.exambodyScore <= 0"
+                  >
+                    ดูข้อสอบ
+                  </button>
+
+                  <button
+                    type="button"
+                    class="btn btn-warning btn-sm ml-2 mr-2"
+                    data-toggle="modal"
+                    data-target="#editExam"
+                    (click)="
+                      onUpdateTopic(x);
+                      checkTnsert = false;
+                      checkUpdateTopic = true;
+                      examView = x
+                    "
+                  >
+                    แก้ไข
+                  </button>
+
+                  <button
+                    type="button"
+                    class="btn btn-danger btn-sm ml-2"
+                    (click)="onDeletebody(x)"
+                  >
+                    ลบ
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="text-center">
+            <pagination-controls
+              id="listExamSet"
+              *ngIf="filterExamBody().length > 10"
+              responsive="true"
+              previousLabel="ย้อนกลับ"
+              nextLabel="ถัดไป"
+              (pageChange)="paginationPage = $event"
+            ></pagination-controls>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -108,10 +137,10 @@
     <div class="card">
       <div class="card-body">
         <div class="row">
-          <div class="col-md-6 mb-3">
+          <div class="col-7 mb-3">
             <h2>สร้างชุดข้อสอบ</h2>
           </div>
-          <div class="col-md-6 mb-3">
+          <div class="col-5 mb-3">
             <div class="text-right">
               <button
                 type="button"
@@ -177,21 +206,41 @@
             </button>
           </div>
 
-          <div class="mb-3 mt-3" *ngIf="examList.length > 0">
+          <div
+            class="mb-3 mt-3"
+            *ngIf="examList.length > 0"
+            style="overflow: auto"
+          >
             <table class="table table-sm table-borderless table-hover">
               <thead>
-                <tr>
-                  <td>โจทย์</td>
-                  <td>คะแนน</td>
-                  <td></td>
+                <tr class="text-center">
+                  <th></th>
+                  <th>โจทย์</th>
+                  <th>คะแนน</th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
                 <tr *ngFor="let xx of examList; let j = index">
-                  <td style="vertical-align: middle">
-                    {{ xx.text }}
+                  <td
+                    style="
+                      vertical-align: middle;
+                      min-width: 40px;
+                      text-align: center;
+                    "
+                  >
+                    {{ j + 1 }}
                   </td>
                   <td style="vertical-align: middle">
+                    {{ replaceText(xx.text) }}
+                  </td>
+                  <td
+                    style="
+                      vertical-align: middle;
+                      min-width: 50px;
+                      text-align: center;
+                    "
+                  >
                     {{ xx.score }}
                   </td>
                   <td style="vertical-align: middle">
@@ -200,7 +249,7 @@
                       class="btn btn-danger btn-sm"
                       (click)="popExam(xx)"
                     >
-                      ลบข้อสอบ
+                      ลบ
                     </button>
                   </td>
                 </tr>
@@ -220,14 +269,14 @@
     <div class="card">
       <div class="card-body">
         <div class="row">
-          <div class="col-md-6 mb-3">
+          <div class="col-7 mb-3">
             <h2>แก้ไขชุดข้อสอบ</h2>
             <h4>
               รหัสชุดข้อสอบ :
               {{ service.zeroPad(formUpdateTopic.value.exambodyID, 1000) }}
             </h4>
           </div>
-          <div class="col-md-6 mb-3">
+          <div class="col-5 mb-3">
             <div class="text-right">
               <button
                 type="button"
@@ -293,21 +342,41 @@
             </button>
           </div>
 
-          <div class="mb-3 mt-3" *ngIf="examList.length > 0">
+          <div
+            class="mb-3 mt-3"
+            *ngIf="examList.length > 0"
+            style="overflow: auto"
+          >
             <table class="table table-sm table-borderless table-hover">
               <thead>
-                <tr>
-                  <td>โจทย์</td>
-                  <td>คะแนน</td>
-                  <td></td>
+                <tr class="text-center">
+                  <th></th>
+                  <th>โจทย์</th>
+                  <th>คะแนน</th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
                 <tr *ngFor="let xx of examList; let j = index">
+                  <td
+                    style="
+                      vertical-align: middle;
+                      min-width: 40px;
+                      text-align: center;
+                    "
+                  >
+                    {{ j + 1 }}
+                  </td>
                   <td style="vertical-align: middle">
                     {{ replaceText(xx.text) }}
                   </td>
-                  <td style="vertical-align: middle">
+                  <td
+                    style="
+                      vertical-align: middle;
+                      min-width: 50px;
+                      text-align: center;
+                    "
+                  >
                     {{ xx.score }}
                   </td>
                   <td style="vertical-align: middle">
@@ -316,7 +385,7 @@
                       class="btn btn-danger btn-sm"
                       (click)="popExam(xx)"
                     >
-                      ลบข้อสอบ
+                      ลบ
                     </button>
                   </td>
                 </tr>
@@ -359,24 +428,42 @@
         </button>
       </div>
       <div class="modal-body">
-        <table class="table table-sm table-borderless table-hover">
-          <thead>
-            <tr>
-              <th>โจทย์</th>
-              <th>คะแนน</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let xx of examView['exambodyData']; let j = index">
-              <td style="vertical-align: middle">
-                {{ replaceText(xx.text) }}
-              </td>
-              <td style="vertical-align: middle">
-                {{ xx.score }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <div style="overflow: auto">
+          <table class="table table-sm table-borderless table-hover">
+            <thead>
+              <tr class="text-center">
+                <th></th>
+                <th>โจทย์</th>
+                <th>คะแนน</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let xx of examView['exambodyData']; let j = index">
+                <td
+                  style="
+                    vertical-align: middle;
+                    min-width: 40px;
+                    text-align: center;
+                  "
+                >
+                  {{ j + 1 }}
+                </td>
+                <td style="vertical-align: middle">
+                  {{ replaceText(xx.text) }}
+                </td>
+                <td
+                  style="
+                    vertical-align: middle;
+                    min-width: 50px;
+                    text-align: center;
+                  "
+                >
+                  {{ xx.score }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
@@ -443,15 +530,17 @@
                       <div
                         class="mb-3 ml-2"
                         *ngIf="examFilter(x.examdata).length > 0; else noneExam"
+                        style="overflow: auto"
                       >
                         <table
                           class="table table-sm table-borderless table-hover"
                         >
                           <thead>
-                            <tr>
-                              <td>โจทย์</td>
-                              <td>คะแนน</td>
-                              <td></td>
+                            <tr class="text-center">
+                              <th></th>
+                              <th>โจทย์</th>
+                              <th>คะแนน</th>
+                              <th></th>
                             </tr>
                           </thead>
                           <tbody>
@@ -461,10 +550,25 @@
                                 let j = index
                               "
                             >
+                              <td
+                                style="
+                                  vertical-align: middle;
+                                  min-width: 40px;
+                                  text-align: center;
+                                "
+                              >
+                                {{ j + 1 }}
+                              </td>
                               <td style="vertical-align: middle">
                                 {{ replaceText(xx.text) }}
                               </td>
-                              <td style="vertical-align: middle">
+                              <td
+                                style="
+                                  vertical-align: middle;
+                                  min-width: 50px;
+                                  text-align: center;
+                                "
+                              >
                                 {{ xx.score }}
                               </td>
                               <td style="vertical-align: middle">

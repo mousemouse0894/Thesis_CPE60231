@@ -123,23 +123,27 @@ export class ViewComponent implements OnInit {
         });
       }
 
-      this.service
-        .httpPost(
-          `exbody/updateExamBody?token=${
-            this.service.localStorage.get('userLogin')['token']
-          }`,
-          JSON.stringify(this.formUpdateTopic.value)
-        )
-        .then((value: any) => {
-          if (value.success) {
-            this.checkUpdateTopic = false;
-            this.checkTnsert = false;
-            this.getExamSet();
-            this.service.showAlert(``, `สำเร็จ`, `success`);
-          } else {
-            this.service.showAlert('', value.message, 'error');
-          }
-        });
+      if (this.formUpdateTopic.valid) {
+        this.service
+          .httpPost(
+            `exbody/updateExamBody?token=${
+              this.service.localStorage.get('userLogin')['token']
+            }`,
+            JSON.stringify(this.formUpdateTopic.value)
+          )
+          .then((value: any) => {
+            if (value.success) {
+              this.checkUpdateTopic = false;
+              this.checkTnsert = false;
+              this.getExamSet();
+              this.service.showAlert(``, `สำเร็จ`, `success`);
+            } else {
+              this.service.showAlert('', value.message, 'error');
+            }
+          });
+      } else {
+        this.service.showAlert('โปรดกรอกข้อมูลให้ครบถ้วน', '', 'error');
+      }
     } else {
       if (this.examList.length > 0) {
         let exam = [];
@@ -180,7 +184,7 @@ export class ViewComponent implements OnInit {
   };
 
   public onCheckRandom = (x) => {
-    this.examList = x == true ? [] : this.examList;
+    this.examList = x == false ? [] : this.examList;
     if (!x) {
       this.formTopic.patchValue({
         isRandom: 0,

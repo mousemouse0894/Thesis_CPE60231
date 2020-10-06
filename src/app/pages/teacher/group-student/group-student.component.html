@@ -1,13 +1,13 @@
 <div class="box-padding">
   <div class="row">
-    <div class="col-md-6 mb-3">
+    <div class="col-xl-6 mb-3">
       <div class="card">
         <div class="card-body">
           <div class="row">
-            <div class="col-md-7 mb-3">
+            <div class="col-7 mb-3">
               <h2 class="">กลุ่มเรียนทั้งหมด</h2>
             </div>
-            <div class="col-md-5">
+            <div class="col-5 mb-3">
               <div class="text-right">
                 <button
                   type="button"
@@ -22,64 +22,91 @@
             </div>
           </div>
 
-          <table
-            class="table table-sm table-borderless table-hover"
-            *ngIf="groupStudent.length > 0"
-          >
-            <thead>
-              <tr>
-                <th></th>
-                <th>ชื่อกลุ่ม</th>
-                <th>รหัสผ่าน</th>
-                <th>สถานะ</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr
-                *ngFor="let x of groupStudent; let i = index"
-                [ngStyle]="{
-                  'background-color': x == groupSelectName ? '#fafafa' : '',
-                  'border-right':
-                    x == groupSelectName ? '3px solid #0b7bff' : ''
-                }"
-              >
-                <td style="vertical-align: middle">{{ i + 1 }}</td>
-                <td style="vertical-align: middle">{{ x.name }}</td>
-                <td style="vertical-align: middle">{{ x.password }}</td>
-                <td style="vertical-align: middle">
-                  {{ x.status == "off" ? "ปิด" : "เปิด" }}
-                </td>
-                <td style="vertical-align: middle">
-                  <button
-                    type="button"
-                    class="btn btn-primary btn-sm mr-2"
-                    (click)="getStudentingroup(x)"
+          <div style="overflow: auto">
+            <table
+              class="table table-sm table-borderless table-hover"
+              *ngIf="groupStudent.length > 0"
+            >
+              <thead>
+                <tr class="text-center">
+                  <th></th>
+                  <th>ชื่อกลุ่ม</th>
+                  <th>รหัสผ่าน</th>
+                  <th>สถานะ</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  *ngFor="let x of groupStudent; let i = index"
+                  [ngStyle]="{
+                    'background-color': x == groupSelectName ? '#fafafa' : '',
+                    'border-right':
+                      x == groupSelectName ? '3px solid #0b7bff' : ''
+                  }"
+                  class="text-center"
+                >
+                  <td
+                    style="
+                      vertical-align: middle;
+                      min-width: 30px;
+                      text-align: center;
+                    "
                   >
-                    รายชื่อ
-                  </button>
+                    {{ i + 1 }}
+                  </td>
+                  <td style="vertical-align: middle; min-width: 120px">
+                    {{ x.name }}
+                  </td>
+                  <td style="vertical-align: middle; min-width: 90px">
+                    {{ x.password }}
+                  </td>
+                  <td
+                    style="
+                      vertical-align: middle;
+                      min-width: 50px;
+                      text-align: center;
+                    "
+                  >
+                    {{ x.status == "off" ? "ปิด" : "เปิด" }}
+                  </td>
+                  <td
+                    style="
+                      vertical-align: middle;
+                      min-width: 190px;
+                      text-align: center;
+                    "
+                  >
+                    <button
+                      type="button"
+                      class="btn btn-primary btn-sm mr-2"
+                      (click)="getStudentingroup(x)"
+                    >
+                      รายชื่อ
+                    </button>
 
-                  <button
-                    type="button"
-                    class="btn btn-warning btn-sm ml-2 mr-2"
-                    data-toggle="modal"
-                    data-target="#exampleModalEditGroup"
-                    (click)="onEditgroup(x)"
-                  >
-                    แก้ไข
-                  </button>
+                    <button
+                      type="button"
+                      class="btn btn-warning btn-sm ml-2 mr-2"
+                      data-toggle="modal"
+                      data-target="#exampleModalEditGroup"
+                      (click)="onEditgroup(x)"
+                    >
+                      แก้ไข
+                    </button>
 
-                  <button
-                    type="button"
-                    class="btn btn-danger btn-sm ml-2"
-                    (click)="onDeleteGroup(x)"
-                  >
-                    ลบ
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+                    <button
+                      type="button"
+                      class="btn btn-danger btn-sm ml-2"
+                      (click)="onDeleteGroup(x)"
+                    >
+                      ลบ
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
 
           <div class="text-center" *ngIf="groupStudent.length <= 0">
             <h3>ไม่พบกลุ่มเรียน</h3>
@@ -89,17 +116,17 @@
     </div>
 
     <div
-      class="col-md-6 mb-3"
+      class="col-xl-6 mb-3"
       *ngIf="groupSelectName != null && studentingroup != null"
     >
       <div class="card">
         <div class="card-body">
           <div class="row">
-            <div class="col-md-8 mb-3">
+            <div class="col-9 mb-3">
               <h2>รายชื่อนักศึกษา</h2>
               <h4>กลุ่มเรียน&nbsp;{{ groupSelectName.name }}</h4>
             </div>
-            <div class="col-md-4">
+            <div class="col-3 mb-3">
               <div class="text-right">
                 <button
                   type="button"
@@ -112,73 +139,99 @@
             </div>
           </div>
 
-          <table
-            class="table table-sm table-borderless table-hover"
-            *ngIf="studentingroup != null"
-          >
-            <thead>
-              <tr>
-                <th></th>
-                <th>ชื่อจริง</th>
-                <th>นามสกุล</th>
-                <th>รหัสนักศึกษา</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr
-                *ngFor="
-                  let x of studentingroup
-                    | paginate
-                      : {
-                          id: 'pagiShowstudent',
-                          itemsPerPage: 10,
-                          currentPage: pagiShowstudent
-                        };
-                  let i = index
-                "
-                [ngStyle]="{
-                  'background-color': x == studentSelected ? '#fafafa' : '',
-                  'border-right':
-                    x == studentSelected ? '3px solid #0b7bff' : ''
-                }"
-              >
-                <td style="vertical-align: middle">
-                  {{ 10 * pagiShowstudent - 10 + i + 1 }}
-                </td>
-                <td style="vertical-align: middle">{{ x.firstNameThai }}</td>
-                <td style="vertical-align: middle">{{ x.lastNameThai }}</td>
-                <td style="vertical-align: middle">{{ x.studentId }}</td>
-                <td style="vertical-align: middle">
-                  <button
-                    type="button"
-                    class="btn btn-primary btn-sm mr-2"
-                    (click)="onGetlogstudent(x)"
-                    data-toggle="modal"
-                    data-target="#exampleModalLogStudent"
+          <div style="overflow: auto">
+            <table
+              class="table table-sm table-borderless table-hover"
+              *ngIf="studentingroup != null"
+            >
+              <thead>
+                <tr class="text-center">
+                  <th></th>
+                  <th>ชื่อ - นามสกุล</th>
+                  <th>รหัสนักศึกษา</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  *ngFor="
+                    let x of studentingroup
+                      | paginate
+                        : {
+                            id: 'pagiShowstudent',
+                            itemsPerPage: 10,
+                            currentPage: pagiShowstudent
+                          };
+                    let i = index
+                  "
+                  [ngStyle]="{
+                    'background-color': x == studentSelected ? '#fafafa' : '',
+                    'border-right':
+                      x == studentSelected ? '3px solid #0b7bff' : ''
+                  }"
+                  class="text-center"
+                >
+                  <td
+                    style="
+                      vertical-align: middle;
+                      min-width: 40px;
+                      text-align: center;
+                    "
                   >
-                    ประวัติการเข้าใช้งาน
-                  </button>
+                    {{ 10 * pagiShowstudent - 10 + i + 1 }}
+                  </td>
+                  <td
+                    style="
+                      vertical-align: middle;
+                      min-width: 200px;
+                      text-align: left;
+                    "
+                  >
+                    {{ x.prename }}{{ x.firstNameThai }} {{ x.lastNameThai }}
+                  </td>
+                  <td style="vertical-align: middle; min-width: 120px">
+                    {{ x.studentId }}
+                  </td>
+                  <td
+                    style="
+                      vertical-align: middle;
+                      min-width: 220px;
+                      text-align: center;
+                    "
+                  >
+                    <button
+                      type="button"
+                      class="btn btn-primary btn-sm mr-2"
+                      (click)="onGetlogstudent(x)"
+                      data-toggle="modal"
+                      data-target="#exampleModalLogStudent"
+                    >
+                      ประวัติการเข้าใช้งาน
+                    </button>
 
-                  <button
-                    type="button"
-                    class="btn btn-danger btn-sm ml-2"
-                    (click)="onDeletestudent(x)"
-                  >
-                    ลบ
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <pagination-controls
-            id="pagiShowstudent"
-            *ngIf="studentingroup.length > 10"
-            responsive="true"
-            previousLabel="ย้อนกลับ"
-            nextLabel="ถัดไป"
-            (pageChange)="pagiShowstudent = $event"
-          ></pagination-controls>
+                    <button
+                      type="button"
+                      class="btn btn-danger btn-sm ml-2"
+                      (click)="onDeletestudent(x)"
+                    >
+                      ลบ
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="text-center">
+              <pagination-controls
+                id="pagiShowstudent"
+                *ngIf="studentingroup.length > 10"
+                responsive="true"
+                previousLabel="ย้อนกลับ"
+                nextLabel="ถัดไป"
+                (pageChange)="pagiShowstudent = $event"
+              ></pagination-controls>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -298,29 +351,61 @@
         </button>
       </div>
       <div class="modal-body">
-        <table
-          class="table table-sm table-borderless table-hover"
-          *ngIf="logResult.length > 0"
-        >
-          <thead>
-            <tr>
-              <th></th>
-              <th>เวลา</th>
-              <th>IP Address</th>
-              <th>สถานะ</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let x of logResult; let i = index">
-              <td style="vertical-align: middle">{{ i + 1 }}</td>
-              <td style="vertical-align: middle">{{ x.times }}</td>
-              <td style="vertical-align: middle">{{ x.ip_address }}</td>
-              <td style="vertical-align: middle">
-                {{ x.status }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <div style="overflow: auto">
+          <table
+            class="table table-sm table-borderless table-hover"
+            *ngIf="logResult.length > 0"
+          >
+            <thead>
+              <tr class="text-center">
+                <th></th>
+                <th>เวลา</th>
+                <th>IP Address</th>
+                <th>สถานะ</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let x of logResult; let i = index">
+                <td
+                  style="
+                    vertical-align: middle;
+                    min-width: 30px;
+                    text-align: center;
+                  "
+                >
+                  {{ i + 1 }}
+                </td>
+                <td
+                  style="
+                    vertical-align: middle;
+                    min-width: 180px;
+                    text-align: center;
+                  "
+                >
+                  {{ x.times }}
+                </td>
+                <td
+                  style="
+                    vertical-align: middle;
+                    min-width: 120px;
+                    text-align: center;
+                  "
+                >
+                  {{ x.ip_address }}
+                </td>
+                <td
+                  style="
+                    vertical-align: middle;
+                    min-width: 100px;
+                    text-align: center;
+                  "
+                >
+                  {{ x.status }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>

@@ -76,11 +76,13 @@ export class AppService {
           .get(`${this.rootAPI}${url}`)
           .toPromise()
           .then((value: any) => {
-            resolve({ connect: true, ...value });
             console.log(value);
             if (value.isLogin == false) {
+              resolve(null);
               this.navRouter('/login');
               this.localStorage.clear();
+            } else {
+              resolve({ connect: true, ...value });
             }
             this.stateLoading = false;
           })
@@ -103,11 +105,13 @@ export class AppService {
           .post(`${this.rootAPI}${url}`, data)
           .toPromise()
           .then((value: any) => {
-            resolve({ connect: true, ...value });
             console.log(value);
             if (value.isLogin == false) {
+              resolve(null);
               this.navRouter('/login');
               this.localStorage.clear();
+            } else {
+              resolve({ connect: true, ...value });
             }
             this.stateLoading = false;
           })

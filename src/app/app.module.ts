@@ -1,7 +1,7 @@
 import { TeacherGuard } from './guards/teacher.guard';
 import { StudentGuard } from './guards/student.guard';
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -61,7 +61,13 @@ registerLocaleData(localeTh);
       tertiaryColour: '#ffffff',
     }),
   ],
-  providers: [AppService, CheckLoginGuard, StudentGuard, TeacherGuard],
+  providers: [
+    AppService,
+    CheckLoginGuard,
+    StudentGuard,
+    TeacherGuard,
+    { provide: LOCALE_ID, useValue: 'th-TH' },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

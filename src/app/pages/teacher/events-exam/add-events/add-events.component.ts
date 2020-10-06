@@ -13,10 +13,13 @@ export class AddEventsComponent implements OnInit {
   public examView: Array<any> = [];
   public paginationPage: number = 1;
   public examTopic: any = null;
-  public CheckSelectexam: boolean = false;
+  public selectBody: any = null;
+  public historySelected: any = null;
   public CheckCreateexam: boolean = false;
   public historyTestResult: any = null;
-  public TestResult: any = null;
+  public studentScore: any = null;
+  public currentTime: Date = new Date();
+
   constructor(public service: AppService, private formBuilder: FormBuilder) {}
 
   ngOnInit() {
@@ -24,9 +27,7 @@ export class AddEventsComponent implements OnInit {
       groupID_fk: ['', Validators.required],
       exambodyID_fk: ['', Validators.required],
       topicPassword: ['', Validators.required],
-      dateStart: ['', Validators.required],
       timeStart: ['', Validators.required],
-      dateEnd: ['', Validators.required],
       timeEnd: ['', Validators.required],
       topicText: ['', Validators.required],
       owner: this.service.localStorage.get('userLogin')['uid'],
@@ -37,11 +38,30 @@ export class AddEventsComponent implements OnInit {
     this.getExamSet();
     this.onGetgroupstudent();
     this.onGetexamtopic();
-    console.log(this.service.localStorage.get('userLogin'));
+    this.getCurrentTime();
   }
+
+  public getCurrentTime = () => {
+    this.service
+      .httpGet(
+        `/getDateTime?token=${
+          this.service.localStorage.get('userLogin')['token']
+        }`
+      )
+      .then((val: any) => {
+        this.currentTime = new Date(val.result);
+      });
+  };
 
   public selectExamView = (list: Array<any>) => {
     this.examView = list;
+  };
+
+  timeRemake = (time) => {
+    let dt = new Date(time);
+    return `${
+      dt.toISOString().split('T')[0]
+    } ${dt.getHours()}:${dt.getMinutes()}`;
   };
 
   public getExamSet = () => {
@@ -72,8 +92,7 @@ export class AddEventsComponent implements OnInit {
         if (value.success) {
           console.log(this.formInserttest.value);
           this.onGetexamtopic();
-          this.CheckSelectexam = false;
-          this.CheckSelectexam = false;
+          this.selectBody = null;
           this.service.showAlert('', 'สำเร็จ', 'success');
         } else {
           this.service.showAlert('', value.message, 'error');
@@ -102,12 +121,8 @@ export class AddEventsComponent implements OnInit {
     this.formInserttest.patchValue({
       exambodyID_fk: x.exambodyID,
     });
-    this.CheckSelectexam = true;
-    this.service.showAlert('', 'เลือกข้อสอบ' + x.topic, 'success');
-  };
-
-  public onCreateExam = () => {
-    this.CheckCreateexam = true;
+    this.selectBody = x;
+    this.service.modal.hide('exampleModalSelectBody');
   };
 
   public onGetexamtopic = () => {
@@ -149,7 +164,7 @@ export class AddEventsComponent implements OnInit {
   };
 
   public historyTest = (x: any) => {
-    console.log(x);
+    this.historySelected = x;
     this.service
       .httpGet(
         `stTesting/teacherGetHistory/${x.examtopicID}/${x.groupID_fk}?token=${
@@ -163,10 +178,6 @@ export class AddEventsComponent implements OnInit {
           this.service.showAlert(``, value.massage, `error`);
         }
       });
-  };
-
-  public getStdDatatest = (x) => {
-    this.TestResult = x.testData;
   };
 
   public updateScore = (x: any, score: any) => {

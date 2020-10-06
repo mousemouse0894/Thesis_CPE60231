@@ -59,12 +59,17 @@
         {{ service.localStorage.get("userLogin")["firstNameThai"] }}
         {{ service.localStorage.get("userLogin")["lastNameThai"] }}
       </p>
+
+      <div *ngIf="service.localStorage.get('userLogin')['groupid_fk']">
+        <button
+          type="button"
+          class="btn btn-primary btn-sm"
+          (click)="leaveGroup()"
+        >
+          ออกกลุ่มเรียน
+        </button>
+      </div>
     </div>
-  </div>
-  <div *ngIf="service.localStorage.get('userLogin')['groupid_fk']">
-    <button type="button" class="btn btn-primary btn-sm" (click)="leaveGroup()">
-      ออกกลุ่มเรียน
-    </button>
   </div>
 </div>
 
@@ -108,12 +113,16 @@
           </mat-form-field>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-dismiss="modal">
-            ยกเลิก
+          <button
+            type="button"
+            class="btn btn-secondary btn-sm"
+            data-dismiss="modal"
+          >
+            ปิด
           </button>
           <button
             type="submit"
-            class="btn btn-primary"
+            class="btn btn-primary btn-sm"
             [disabled]="formJoingroup.invalid"
           >
             ตกลง

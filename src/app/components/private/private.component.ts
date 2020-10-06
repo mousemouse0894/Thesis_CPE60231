@@ -132,7 +132,6 @@ export class PrivateComponent implements OnInit {
   public getGroup = () => {
     let data = {
       username: this.service.localStorage.get('userLogin')['uid'],
-      personalId: this.service.localStorage.get('userLogin')['personalId'],
     };
     this.service
       .httpPost(
@@ -145,7 +144,6 @@ export class PrivateComponent implements OnInit {
             ...this.service.localStorage.get('userLogin'),
             ...value.result,
           });
-          console.log(this.service.localStorage.get('userLogin'));
         } else {
           this.service.showAlert('', value.message, 'error');
         }

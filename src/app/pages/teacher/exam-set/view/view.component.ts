@@ -28,7 +28,7 @@ export class ViewComponent implements OnInit {
     this.formTopic = this.formBuilder.group({
       owner: [this.service.localStorage.get('userLogin')['uid']],
       topic: ['', Validators.required],
-      isRandom: [0, [Validators.required, Validators.min(1)]],
+      isRandom: [0, [Validators.required]],
       status: ['on', Validators.required],
       examstoreID_fk: ['', Validators.required],
       text: ['', Validators.required],
@@ -41,7 +41,7 @@ export class ViewComponent implements OnInit {
       examstoreID_fk: [''],
       owner: [this.service.localStorage.get('userLogin')['uid']],
       oldID: [''],
-      isRandom: [0, [Validators.required, Validators.min(1)]],
+      isRandom: [0, [Validators.required]],
     });
 
     this.getExamSet();

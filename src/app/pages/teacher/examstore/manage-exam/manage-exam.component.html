@@ -216,7 +216,7 @@
             ></textarea>
           </div>
 
-          <div class="mb-3">
+          <div>
             <mat-form-field>
               <input
                 matInput
@@ -228,41 +228,46 @@
             </mat-form-field>
           </div>
 
-          <mat-form-field>
-            <mat-chip-list
-              #chipList
-              aria-label="Fruit selection"
-              required
-              formControlName="keyword"
-            >
-              <mat-chip
-                *ngFor="let fruit of keyword"
-                [selectable]="'true'"
-                [removable]="'true'"
-                (removed)="remove(fruit)"
+          <div>
+            <mat-form-field>
+              <mat-chip-list
+                #chipList
+                aria-label="Fruit selection"
+                required
+                formControlName="keyword"
               >
-                {{ fruit.name }}
-                <mat-icon matChipRemove>cancel</mat-icon>
-              </mat-chip>
-              <input
-                placeholder="Keyword"
-                #keywordInput
-                [matChipInputFor]="chipList"
-                [matAutocomplete]="auto"
-                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                [matChipInputAddOnBlur]="'true'"
-                (matChipInputTokenEnd)="add($event)"
-              />
-            </mat-chip-list>
-            <mat-autocomplete
-              #auto="matAutocomplete"
-              (optionSelected)="selected($event)"
-            >
-              <mat-option *ngFor="let keyword of allKeyword" [value]="keyword">
-                {{ keyword }}
-              </mat-option>
-            </mat-autocomplete>
-          </mat-form-field>
+                <mat-chip
+                  *ngFor="let fruit of keyword"
+                  [selectable]="'true'"
+                  [removable]="'true'"
+                  (removed)="remove(fruit)"
+                >
+                  {{ fruit.name }}
+                  <mat-icon matChipRemove>cancel</mat-icon>
+                </mat-chip>
+                <input
+                  placeholder="คำสำคัญ"
+                  #keywordInput
+                  [matChipInputFor]="chipList"
+                  [matAutocomplete]="auto"
+                  [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                  [matChipInputAddOnBlur]="'true'"
+                  (matChipInputTokenEnd)="add($event)"
+                />
+              </mat-chip-list>
+              <mat-autocomplete
+                #auto="matAutocomplete"
+                (optionSelected)="selected($event)"
+              >
+                <mat-option
+                  *ngFor="let keyword of allKeyword"
+                  [value]="keyword"
+                >
+                  {{ keyword }}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </div>
 
           <div class="mb-3">
             <mat-form-field>
@@ -328,7 +333,7 @@
         </h4>
         <div [froalaView]="examSelected.text" class="mb-2"></div>
         <h4 class="mb-2"><b>คำตอบ : </b>{{ examSelected.answer }}</h4>
-        <h4 class="mb-2"><b>Keyword : </b>{{ showKeyword() }}</h4>
+        <h4 class="mb-2"><b>คำสำคัญ : </b>{{ showKeyword() }}</h4>
         <h4 class="mb-2"><b>คะแนน : </b>{{ examSelected.score }}</h4>
       </div>
     </div>

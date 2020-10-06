@@ -14,5 +14,6 @@
 @media only screen and (max-height: 800px) {
   .display-page {
     display: block;
+    overflow: auto;
   }
 }

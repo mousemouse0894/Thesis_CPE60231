@@ -27,7 +27,7 @@ export class ManageExamComponent implements OnInit {
   public selectPurpose: any = '';
   public teacherResult: any = null;
 
-  allKeyword: string[] = ['Apple', 'Lemon', 'Lime', 'Orange', 'Strawberry'];
+  allKeyword: string[] = ['SELECT', 'INSERT', 'DELETE', 'UPDATE', 'LEFT JOIN'];
   keyword: any[] = [];
   @ViewChild('keywordInput') keywordInput: ElementRef<HTMLInputElement>;
 

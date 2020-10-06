@@ -1,1 +1,13 @@
-<router-outlet></router-outlet>
+<nav mat-tab-nav-bar style="border: unset" class="bg-white box-shadow">
+  <a
+    mat-tab-link
+    [routerLink]="['/events-exam/add']"
+    routerLinkActive="router-active"
+  >
+    {{ "รายการสอบ" }}
+  </a>
+</nav>
+
+<div class="box-padding">
+  <router-outlet></router-outlet>
+</div>

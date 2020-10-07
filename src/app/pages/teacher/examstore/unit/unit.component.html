@@ -25,7 +25,7 @@
             <thead>
               <tr class="text-center">
                 <th></th>
-                <th>ชื่อหน่วยการเรียนรู้</th>
+                <th style="text-align: left">ชื่อหน่วยการเรียนรู้</th>
                 <th></th>
               </tr>
             </thead>
@@ -102,7 +102,7 @@
             <div class="text-right">
               <button
                 type="button"
-                class="btn btn-primary btn-sm mr-2"
+                class="btn btn-primary btn-sm mr-3"
                 data-toggle="modal"
                 data-target="#exampleModalPurpose"
                 (click)="checkupdate = false"
@@ -110,12 +110,8 @@
                 เพิ่มจุดประสงค์
               </button>
 
-              <button
-                type="button"
-                class="btn btn-danger btn-sm"
-                (click)="unitSelected = null"
-              >
-                X
+              <button type="button" class="close" (click)="unitSelected = null">
+                <span aria-hidden="true">&times;</span>
               </button>
             </div>
           </div>

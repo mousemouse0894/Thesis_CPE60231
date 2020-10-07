@@ -1,6 +1,9 @@
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AppService } from 'src/app/services/app.service';
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-exam-test',
@@ -10,15 +13,23 @@ import { Component, OnInit } from '@angular/core';
 export class ExamTestComponent implements OnInit {
   public Getexamtopicdata: any = null;
   public checkPassword: boolean = true;
+  public answerFrom: FormGroup;
+
   constructor(
     public service: AppService,
-    private activeRoute: ActivatedRoute
+    private activeRoute: ActivatedRoute,
+    private formBuilder: FormBuilder,
+    private http: HttpClient,
+    private router: Router
   ) {}
 
   ngOnInit() {
     // console.log(this.activeRoute.snapshot.paramMap.get('topicId'));
     this.onGetexamtopicdata();
     this.service.showSidenav = false;
+    this.answerFrom = this.formBuilder.group({
+      answerList: this.formBuilder.array([]),
+    });
   }
 
   public onGetexamtopicdata = () => {
@@ -33,8 +44,25 @@ export class ExamTestComponent implements OnInit {
       )
       .then((value: any) => {
         if (value.success) {
-          console.log(value);
           this.Getexamtopicdata = value;
+          if (value.topicData.length > 0) {
+            let answerList = this.answerFrom.get('answerList') as FormArray;
+            value.topicData.forEach((element) => {
+              answerList.push(
+                this.formBuilder.group({
+                  stID_fk: this.service.localStorage.get('userLogin')['uid'],
+                  topicID_fk: [element.examtopicID, Validators.required],
+                  storeID_fk: [element.storeID, Validators.required],
+                  groupID_fk: this.service.localStorage.get('userLogin')[
+                    'groupid_fk'
+                  ],
+                  studentAnswer: ['', Validators.required],
+                  studentScore: [null, Validators.required],
+                  teacherScore: [null],
+                })
+              );
+            });
+          }
         } else {
           this.service.showAlert('', value.massage, 'error');
         }
@@ -49,28 +77,48 @@ export class ExamTestComponent implements OnInit {
     }
   };
 
-  public onSumitTest = (x: any, studentAnswer: any) => {
-    let data = {
-      stID_fk: this.service.localStorage.get('userLogin')['uid'],
-      topicID_fk: x.examtopicID,
-      storeID_fk: x.storeID,
-      groupID_fk: this.service.localStorage.get('userLogin')['groupid_fk'],
-      studentAnswer: studentAnswer,
-      studentScore: null,
-      teacherScore: null,
-    };
+  // public onSumitTest = (x: any, studentAnswer: any) => {
+  //   let data = {
+  //     stID_fk: this.service.localStorage.get('userLogin')['uid'],
+  //     topicID_fk: x.examtopicID,
+  //     storeID_fk: x.storeID,
+  //     groupID_fk: this.service.localStorage.get('userLogin')['groupid_fk'],
+  //     studentAnswer: studentAnswer,
+  //     studentScore: null,
+  //     teacherScore: null,
+  //   };
 
-    console.log(data);
-    this.service
-      .httpPost(
-        `stTesting/insertAns?token=${
+  //   console.log(data);
+  //   this.service
+  //     .httpPost(
+  //       `stTesting/insertAns?token=${
+  //         this.service.localStorage.get('userLogin')['token']
+  //       }`,
+  //       JSON.stringify(data)
+  //     )
+  //     .then((value: any) => {
+  //       if (value.success) {
+  //       } else this.service.showAlert('', value.message, 'error');
+  //     });
+  // };
+
+  public onSubmitAllAnswer = () => {
+    this.http
+      .post(
+        `${environment.rootAPI}stTesting/insertAns?token=${
           this.service.localStorage.get('userLogin')['token']
         }`,
-        JSON.stringify(data)
+        JSON.stringify(this.answerFrom.value.answerList)
       )
+      .toPromise()
       .then((value: any) => {
-        if (value.success) {
-        } else this.service.showAlert('', value.message, 'error');
+        console.log(value);
+        if (value.isLogin == false) {
+          window.close();
+        }
+      })
+      .catch((reason) => {
+        console.log(reason);
       });
   };
 }

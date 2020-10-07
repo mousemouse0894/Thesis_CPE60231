@@ -84,7 +84,6 @@ export class QueryComponent implements OnInit {
           });
 
           this.dataSource.data = data;
-          console.log(this.dataSource);
         }
       });
   };

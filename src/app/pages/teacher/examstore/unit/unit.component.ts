@@ -61,7 +61,6 @@ export class UnitComponent implements OnInit {
         )
         .then((value: any) => {
           if (value.success) {
-            console.log(value);
             this.checkupdate = false;
             this.service.showAlert('', 'บันทึกสำเรีจ', 'success');
             this.getUnittable();

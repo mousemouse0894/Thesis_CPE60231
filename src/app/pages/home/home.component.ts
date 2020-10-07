@@ -142,7 +142,6 @@ export class HomeComponent implements OnInit {
       .then((value: any) => {
         if (value.success) {
           this.Topictestresult = value.result;
-          console.log(value);
         } else {
           this.service.showAlert('', value.massage, 'error');
         }

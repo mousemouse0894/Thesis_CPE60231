@@ -11,7 +11,7 @@
             <thead>
               <tr>
                 <th></th>
-                <th>ชื่อฐานข้อมูล</th>
+                <th style="text-align: left">ชื่อฐานข้อมูล</th>
 
                 <th
                   *ngIf="
@@ -27,7 +27,9 @@
             <tbody>
               <tr *ngFor="let x of databaseResult; let i = index">
                 <td style="vertical-align: middle">{{ i + 1 }}</td>
-                <td style="vertical-align: middle">{{ x.Database }}</td>
+                <td style="vertical-align: middle; text-align: left">
+                  {{ x.Database }}
+                </td>
 
                 <td
                   *ngIf="
@@ -65,8 +67,15 @@
     <div class="card">
       <div class="card-body">
         <div class="row">
-          <div class="col-md-9 mb-3">
+          <div class="col-11 mb-3">
             <h2 class="">รายชื่อตารางของฐานข้อมูล {{ selectDatabase }}</h2>
+          </div>
+          <div class="col-1">
+            <div class="text-right">
+              <button type="button" class="close" (click)="tableResult = null">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
           </div>
         </div>
 

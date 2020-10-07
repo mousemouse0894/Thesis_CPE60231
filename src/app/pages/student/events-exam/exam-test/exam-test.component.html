@@ -32,74 +32,60 @@
 
   <!--ข้อสอบบบ-->
   <div *ngIf="checkPassword == false">
-    <div class="row">
-      <div class="col-lg-3 mb-3">
-        <div class="card">
-          <div class="card-body">This is some text within a card body.</div>
+    <form [formGroup]="answerFrom" onsubmit="onSubmitAnswer()">
+      <div class="row">
+        <div class="col-lg-3 mb-3">
+          <div class="card">
+            <div class="card-body">This is some text within a card body.</div>
+          </div>
         </div>
-      </div>
-      <div class="col-lg-9 mb-3">
-        <div class="accordion" id="accordionExample">
-          <div
-            class="card mb-2"
-            *ngFor="let x of Getexamtopicdata.topicData; let i = index"
-          >
-            <div class="card-header" id="headingOne{{ i }}">
-              <h2 class="mb-0">
-                <button
-                  class="btn btn-link btn-block text-left"
-                  type="button"
-                  data-toggle="collapse"
-                  [attr.data-target]="'#collapseOne' + i"
-                  aria-expanded="true"
-                  [attr.aria-controls]="'collapseOne' + i"
-                >
-                  ข้อที่ {{ i + 1 }} ( DB : {{ x.databaseName }} )
-                </button>
-              </h2>
-            </div>
-
+        <div class="col-lg-9 mb-3">
+          <div class="accordion" id="accordionExample">
             <div
-              id="collapseOne{{ i }}"
-              class="collapse"
-              aria-labelledby="headingOne"
-              data-parent="#accordionExample"
+              class="card mb-2"
+              *ngFor="let x of Getexamtopicdata.topicData; let i = index"
+              formArrayName="answerList"
             >
-              <div class="card-body">
-                <div [froalaView]="x.text" class="mb-2"></div>
+              <div [formGroupName]="i">
+                <div class="card-header" id="headingOne{{ i }}">
+                  <h2 class="mb-0">
+                    <button
+                      class="btn btn-link btn-block text-left"
+                      type="button"
+                      data-toggle="collapse"
+                      [attr.data-target]="'#collapseOne' + i"
+                      aria-expanded="true"
+                      [attr.aria-controls]="'collapseOne' + i"
+                    >
+                      ข้อที่ {{ i + 1 }} ( DB : {{ x.databaseName }} )
+                    </button>
+                  </h2>
+                </div>
+
+                <div
+                  id="collapseOne{{ i }}"
+                  class="collapse"
+                  aria-labelledby="headingOne"
+                  data-parent="#accordionExample"
+                >
+                  <div class="card-body">
+                    <div [froalaView]="x.text" class="mb-3 mt-3"></div>
+
+                    <input
+                      matInput
+                      placeholder="คำตอบ"
+                      type="text"
+                      required
+                      formControlName="studentAnswer"
+                      (blur)="onSubmitAllAnswer()"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
-
-        <!-- <div class="card">
-          <div class="card-body">
-            <div *ngFor="let x of Getexamtopicdata.topicData">
-              <div>{{ x.text }}</div>
-              <div>{{ x.keyword }}</div>
-              <div>{{ x.databaseName }}</div>
-              <div>{{ x.score }}</div>
-              <div>{{ x.storeID }}</div>
-              <div class="mb-3">
-                <input
-                  matInput
-                  placeholder="คำตอบ"
-                  type="text"
-                  required
-                  #studentAnswer
-                />
-              </div>
-              <button
-                type="button"
-                class="btn btn-primary btn-sm"
-                (click)="onSumitTest(x, studentAnswer.value)"
-              >
-                ตกลง
-              </button>
-            </div>
-          </div>
-        </div> -->
       </div>
-    </div>
+    </form>
   </div>
 </div>

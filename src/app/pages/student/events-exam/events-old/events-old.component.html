@@ -1,0 +1,99 @@
+<div class="row">
+  <div class="col-xl-6 mb-3">
+    <div class="card">
+      <div class="card-body" style="padding: unset">
+        <div style="padding: 20px">
+          <div class="row">
+            <div class="col-7">
+              <h2>ประวัติการสอบ</h2>
+            </div>
+            <div class="col-5">
+              <div class="text-right"></div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="list-examTopic-box"
+          *ngFor="let x of filterTopicList(Topictestresult); let i = index"
+        >
+          <h3 class="mb-2">
+            <b>รายการที่ : {{ i + 1 }} ({{ x.exbody_head }})</b>
+          </h3>
+          <div class="row">
+            <div class="col-6">
+              <h4><b>กลุ่มเรียน : </b>{{ x.group_name }}</h4>
+              <h4><b>คำสั่ง : </b>{{ x.topicText }}</h4>
+            </div>
+            <div class="col-6">
+              <h4><b>เริ่มการสอบ : </b>{{ timeRemake(x.timeStart) }}</h4>
+              <h4><b>สิ้นสุดการสอบ : </b>{{ timeRemake(x.timeEnd) }}</h4>
+            </div>
+          </div>
+
+          <div class="mt-3 text-right">
+            <button
+              type="button"
+              class="btn btn-primary btn-sm"
+              (click)="historyTest(x)"
+              [disabled]="x.statusHistory == '0'"
+            >
+              ผลการสอบ
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-xl-6 mb-3" *ngIf="historySelected">
+    <div class="card">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-7 mb-3">
+            <h2>ผลการสอบ</h2>
+            <h4>({{ historySelected.exbody_head }})</h4>
+          </div>
+          <div class="col-5 mb-3">
+            <div class="text-right">
+              <button
+                type="button"
+                class="close"
+                (click)="historySelected = null"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="historyTestResult.length > 0">
+          <h4>
+            <b>ผลการตรวจจากระบบ : </b
+            >{{
+              historySelected.sumstudentScore
+                ? historySelected.sumstudentScore
+                : 0
+            }}
+            / {{ historyTestResult[0]["exambodyScore"] }}
+          </h4>
+          <h4>
+            <b>ผลการตรวจจากอาจารย์ : </b
+            >{{
+              historySelected.sumteacherScore
+                ? historySelected.sumteacherScore
+                : 0
+            }}
+            / {{ historyTestResult[0]["exambodyScore"] }}
+          </h4>
+        </div>
+
+        <div class="text-right">
+          <button type="button" class="btn btn-primary btn-sm">
+            รายละเอียดการให้คะแนน
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -73,7 +73,9 @@ export class AddEventsComponent implements OnInit {
       )
       .then((val: any) => {
         if (val.result.length > 0) {
-          this.listExamSet = val.result;
+          this.listExamSet = val.result.filter((e) => {
+            return e.status != 'off';
+          });
         } else {
           this.listExamSet = [];
         }
@@ -90,7 +92,6 @@ export class AddEventsComponent implements OnInit {
       )
       .then((value: any) => {
         if (value.success) {
-          console.log(this.formInserttest.value);
           this.onGetexamtopic();
           this.selectBody = null;
           this.service.showAlert('', 'สำเร็จ', 'success');

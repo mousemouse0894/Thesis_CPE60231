@@ -144,10 +144,10 @@
             <div class="text-right">
               <button
                 type="button"
-                class="btn btn-danger btn-sm"
+                class="close"
                 (click)="checkTnsert = false; examView = []"
               >
-                X
+                <span aria-hidden="true">&times;</span>
               </button>
             </div>
           </div>
@@ -280,10 +280,10 @@
             <div class="text-right">
               <button
                 type="button"
-                class="btn btn-danger btn-sm"
+                class="close"
                 (click)="checkUpdateTopic = false; examView = []"
               >
-                X
+                <span aria-hidden="true">&times;</span>
               </button>
             </div>
           </div>
@@ -434,7 +434,7 @@
               <tr>
                 <th></th>
                 <th>โจทย์</th>
-                <th style="text-align: center;">คะแนน</th>
+                <th style="text-align: center">คะแนน</th>
               </tr>
             </thead>
             <tbody>
@@ -494,7 +494,7 @@
       <div class="modal-body">
         <div *ngIf="listUnit.length > 0">
           <div class="accordion" id="listUnit">
-            <div class="card" *ngFor="let x of listUnit; let i = index">
+            <div class="card mb-2" *ngFor="let x of listUnit; let i = index">
               <div
                 class="card-header"
                 id="headingOne{{ i }}"
@@ -538,7 +538,7 @@
                           <thead>
                             <tr class="text-center">
                               <th></th>
-                              <th>โจทย์</th>
+                              <th style="text-align: left">โจทย์</th>
                               <th>คะแนน</th>
                               <th></th>
                             </tr>
@@ -559,7 +559,9 @@
                               >
                                 {{ j + 1 }}
                               </td>
-                              <td style="vertical-align: middle">
+                              <td
+                                style="vertical-align: middle; min-width: 150px"
+                              >
                                 {{ replaceText(xx.text) }}
                               </td>
                               <td
@@ -571,7 +573,9 @@
                               >
                                 {{ xx.score }}
                               </td>
-                              <td style="vertical-align: middle">
+                              <td
+                                style="vertical-align: middle; min-width: 50px"
+                              >
                                 <button
                                   type="button"
                                   class="btn btn-primary btn-sm"

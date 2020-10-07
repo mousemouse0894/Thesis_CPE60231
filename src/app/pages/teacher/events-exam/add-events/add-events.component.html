@@ -76,12 +76,8 @@
           </div>
           <div class="col-5 mb-3">
             <div class="text-right">
-              <button
-                type="button"
-                class="btn btn-danger btn-sm"
-                (click)="selectBody = null"
-              >
-                X
+              <button type="button" class="close" (click)="selectBody = null">
+                <span aria-hidden="true">&times;</span>
               </button>
             </div>
           </div>
@@ -212,10 +208,10 @@
             <div class="text-right">
               <button
                 type="button"
-                class="btn btn-danger btn-sm"
+                class="close"
                 (click)="historySelected = null"
               >
-                X
+                <span aria-hidden="true">&times;</span>
               </button>
             </div>
           </div>
@@ -371,7 +367,7 @@
         >
           <thead>
             <tr>
-              <th></th>
+              <th>รหัสชุดข้อสอบ</th>
               <th>ชื่อชุดข้อสอบ</th>
               <th>คะแนนรวม</th>
               <th></th>
@@ -394,7 +390,8 @@
               "
             >
               <td style="vertical-align: middle">
-                {{ 10 * paginationPage - 10 + i + 1 }}
+                {{ service.zeroPad(x.exambodyID, 1000) }}
+                <!-- {{ 10 * paginationPage - 10 + i + 1 }} -->
               </td>
               <td style="vertical-align: middle">{{ x.topic }}</td>
               <td style="vertical-align: middle">{{ x.exambodyScore }}</td>
@@ -415,7 +412,7 @@
                   (click)="onSelectExam(x)"
                   class="btn btn-primary btn-sm"
                 >
-                  เลือกข้อสอบ
+                  เลือกชุดข้อสอบนี้
                 </button>
               </td>
               <td style="vertical-align: middle"></td>

@@ -3,13 +3,12 @@ import { HttpClient } from '@angular/common/http';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AppService {
-  private rootAPI: string =
-    'http://www.cpe.rmuti.ac.th/project/sqlchecking/api/index.php/';
   public rootFile: string =
     'http://www.cpe.rmuti.ac.th/project/sqlchecking/api/';
   public month: Array<string> = [
@@ -74,7 +73,7 @@ export class AppService {
     return new Promise((resolve) => {
       setTimeout(() => {
         this.http
-          .get(`${this.rootAPI}${url}`)
+          .get(`${environment.rootAPI}${url}`)
           .toPromise()
           .then((value: any) => {
             console.log(value);
@@ -103,7 +102,7 @@ export class AppService {
     return new Promise((resolve) => {
       setTimeout(() => {
         this.http
-          .post(`${this.rootAPI}${url}`, data)
+          .post(`${environment.rootAPI}${url}`, data)
           .toPromise()
           .then((value: any) => {
             console.log(value);

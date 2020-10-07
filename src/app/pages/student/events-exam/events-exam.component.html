@@ -1,38 +1,20 @@
-<table class="table table-sm table-borderless table-hover">
-  <thead>
-    <tr>
-      <th></th>
-      <th>exbody_head</th>
-      <th>topicText</th>
-      <th>timeStart</th>
-      <th>timeEnd</th>
-      <th>exbody_text</th>
-      <th>group_name</th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let x of Topictestresult; let i = index">
-      <td style="vertical-align: middle">
-        {{ i + 1 }}
-      </td>
-      <td style="vertical-align: middle">{{ x.exbody_head }}</td>
-      <td style="vertical-align: middle">{{ x.topicText }}</td>
-      <td style="vertical-align: middle">{{ x.timeStart }}</td>
-      <td style="vertical-align: middle">
-        {{ x.timeEnd }}
-      </td>
-      <td style="vertical-align: middle">{{ x.exbody_text }}</td>
-      <td style="vertical-align: middle">{{ x.group_name }}</td>
-      <td style="vertical-align: middle">
-        <button
-          type="button"
-          class="btn btn-primary btn-sm"
-          (click)="openNewtab(x.examtopicID)"
-        >
-          เข้าสอบ
-        </button>
-      </td>
-    </tr>
-  </tbody>
-</table>
+<nav mat-tab-nav-bar style="border: unset" class="bg-white box-shadow">
+  <a
+    mat-tab-link
+    [routerLink]="['/events/list']"
+    routerLinkActive="router-active"
+  >
+    {{ "รายการสอบ" }}
+  </a>
+  <a
+    mat-tab-link
+    [routerLink]="['/events/old']"
+    routerLinkActive="router-active"
+  >
+    {{ "ประวัติการสอบ" }}
+  </a>
+</nav>
+
+<div class="box-padding">
+  <router-outlet></router-outlet>
+</div>

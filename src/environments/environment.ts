@@ -10,6 +10,7 @@ export const environment = {
     'http://cpe.rmuti.ac.th/project/QR_Student/sso/?slo&redirect=http://localhost:4200/login',
   baseHref: '/',
   url: 'http://localhost:4200/',
+  rootAPI: 'http://www.cpe.rmuti.ac.th/project/sqlchecking/api/index.php/',
 };
 
 /*

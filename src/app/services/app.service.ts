@@ -37,6 +37,7 @@ export class AppService {
   ];
 
   public stateLoading: boolean = false;
+  public showSidenav: boolean = true;
 
   constructor(
     private http: HttpClient,

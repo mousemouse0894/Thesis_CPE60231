@@ -1,41 +1,105 @@
-<div *ngIf="checkPassword">
-  <div class="mb-3">
-    <input
-      matInput
-      placeholder="รหัสผ่าน (password)"
-      type="text"
-      #password
-      required
-    />
-  </div>
+<div class="box-padding">
+  <div class="row" *ngIf="checkPassword">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-body">
+          <h2 class="mb-2">โปรดระบุรหัสเข้าสอบ</h2>
+          <form
+            #cPass="ngForm"
+            (ngSubmit)="checkTopicpassword(cPass.value.password)"
+          >
+            <mat-form-field class="example-full-width">
+              <mat-label>รหัสเข้าสอบ</mat-label>
+              <input
+                matInput
+                placeholder="รหัสเข้าสอบ"
+                type="text"
+                name="password"
+                ngModel
+              />
+            </mat-form-field>
 
-  <button
-    type="button"
-    class="btn btn-primary btn-sm"
-    (click)="checkTopicpassword(password.value)"
-  >
-    ตกลง
-  </button>
-</div>
-<!--ข้อสอบบบ-->
-<div *ngIf="checkPassword == false">
-  <div *ngFor="let x of Getexamtopicdata.topicData">
-    <div>{{ x.text }}</div>
-    <div>{{ x.keyword }}</div>
-    <div>{{ x.databaseName }}</div>
-    <div>{{ x.score }}</div>
-    <div>{{ x.storeID }}</div>
-    <div class="mb-3">
-      <input matInput placeholder="คำตอบ" type="text" required #studentAnswer />
+            <div class="text-center">
+              <button type="submit" class="btn btn-primary btn-sm">ตกลง</button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
-    <button
-      type="button"
-      class="btn btn-primary btn-sm"
-      (click)="onSumitTest(x, studentAnswer.value)"
-    >
-      ตกลง
-    </button>
+    <div class="col-md-4"></div>
   </div>
 
-  <button type="button" class="btn btn-primary btn-sm">ตกลง</button>
+  <!--ข้อสอบบบ-->
+  <div *ngIf="checkPassword == false">
+    <div class="row">
+      <div class="col-lg-3 mb-3">
+        <div class="card">
+          <div class="card-body">This is some text within a card body.</div>
+        </div>
+      </div>
+      <div class="col-lg-9 mb-3">
+        <div class="accordion" id="accordionExample">
+          <div
+            class="card mb-2"
+            *ngFor="let x of Getexamtopicdata.topicData; let i = index"
+          >
+            <div class="card-header" id="headingOne{{ i }}">
+              <h2 class="mb-0">
+                <button
+                  class="btn btn-link btn-block text-left"
+                  type="button"
+                  data-toggle="collapse"
+                  [attr.data-target]="'#collapseOne' + i"
+                  aria-expanded="true"
+                  [attr.aria-controls]="'collapseOne' + i"
+                >
+                  ข้อที่ {{ i + 1 }} ( DB : {{ x.databaseName }} )
+                </button>
+              </h2>
+            </div>
+
+            <div
+              id="collapseOne{{ i }}"
+              class="collapse"
+              aria-labelledby="headingOne"
+              data-parent="#accordionExample"
+            >
+              <div class="card-body">
+                <div [froalaView]="x.text" class="mb-2"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- <div class="card">
+          <div class="card-body">
+            <div *ngFor="let x of Getexamtopicdata.topicData">
+              <div>{{ x.text }}</div>
+              <div>{{ x.keyword }}</div>
+              <div>{{ x.databaseName }}</div>
+              <div>{{ x.score }}</div>
+              <div>{{ x.storeID }}</div>
+              <div class="mb-3">
+                <input
+                  matInput
+                  placeholder="คำตอบ"
+                  type="text"
+                  required
+                  #studentAnswer
+                />
+              </div>
+              <button
+                type="button"
+                class="btn btn-primary btn-sm"
+                (click)="onSumitTest(x, studentAnswer.value)"
+              >
+                ตกลง
+              </button>
+            </div>
+          </div>
+        </div> -->
+      </div>
+    </div>
+  </div>
 </div>

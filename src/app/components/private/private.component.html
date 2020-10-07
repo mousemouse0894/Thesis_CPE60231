@@ -1,5 +1,6 @@
 <mat-sidenav-container class="sidenav-container">
   <mat-sidenav
+    *ngIf="service.showSidenav"
     #drawer
     class="sidenav box-shadow"
     fixedInViewport
@@ -48,6 +49,7 @@
         aria-label="Toggle sidenav"
         mat-icon-button
         (click)="drawer.toggle()"
+        *ngIf="service.showSidenav"
       >
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>

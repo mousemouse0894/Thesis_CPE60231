@@ -18,6 +18,7 @@ export class ExamTestComponent implements OnInit {
   ngOnInit() {
     // console.log(this.activeRoute.snapshot.paramMap.get('topicId'));
     this.onGetexamtopicdata();
+    this.service.showSidenav = false;
   }
 
   public onGetexamtopicdata = () => {
@@ -39,14 +40,12 @@ export class ExamTestComponent implements OnInit {
         }
       });
   };
+
   public checkTopicpassword = (password) => {
-    console.log(password);
-    console.log(this.Getexamtopicdata.result[0].topicPassword);
     if (password == this.Getexamtopicdata.result[0].topicPassword) {
       this.checkPassword = false;
-      this.service.showAlert('', 'รหัสถูกต้อง', 'success');
     } else {
-      this.service.showAlert('', 'รหัสผิด', 'error');
+      this.service.showAlert('รหัสผ่านไม่ถูกต้อง', '', 'error');
     }
   };
 

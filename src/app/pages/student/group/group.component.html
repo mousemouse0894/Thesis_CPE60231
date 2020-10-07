@@ -1,73 +1,130 @@
 <div class="box-padding">
-  <div
-    class="card"
-    *ngIf="!service.localStorage.get('userLogin')['groupid_fk']"
-  >
-    <div class="card-body">
-      <div class="mb-3">
-        <h2>เข้ากลุ่มเรียน</h2>
-      </div>
-
-      <div *ngIf="Allgroupstudent.length <= 0">
-        <h3>ไม่พบข้อมูลกลุ่มเรียน</h3>
-      </div>
-
-      <table
-        class="table table-sm table-borderless table-hover"
-        *ngIf="Allgroupstudent.length > 0"
+  <div class="row">
+    <div class="col-xl-6">
+      <div
+        class="card"
+        *ngIf="!service.localStorage.get('userLogin')['groupid_fk']"
       >
-        <thead>
-          <tr>
-            <th>ชื่อกลุ่มเรียน</th>
-            <th>ผู้ดูแลกลุ่ม</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let x of Allgroupstudent; let i = index">
-            <td style="vertical-align: middle">{{ x.name }}</td>
-            <td style="vertical-align: middle">
-              อาจารย์{{ x.firstNameThai }}&nbsp;{{ x.lastNameThai }}
-            </td>
-            <td style="vertical-align: middle">
-              <button
-                type="button"
-                class="btn btn-primary btn-sm"
-                (click)="
-                  service.modal.show('modalJoinGroup');
-                  formJoingroup.patchValue({
-                    groupName: x.name,
-                    groupID: x.groupID
-                  })
-                "
+        <div class="card-body">
+          <div class="mb-3">
+            <h2>เข้ากลุ่มเรียน</h2>
+          </div>
+
+          <div *ngIf="Allgroupstudent.length <= 0">
+            <h3>ไม่พบข้อมูลกลุ่มเรียน</h3>
+          </div>
+
+          <table
+            class="table table-sm table-borderless table-hover"
+            *ngIf="Allgroupstudent.length > 0"
+          >
+            <thead>
+              <tr>
+                <th>ชื่อกลุ่มเรียน</th>
+                <th>ผู้ดูแลกลุ่ม</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let x of Allgroupstudent; let i = index">
+                <td style="vertical-align: middle">{{ x.name }}</td>
+                <td style="vertical-align: middle">
+                  อาจารย์{{ x.firstNameThai }}&nbsp;{{ x.lastNameThai }}
+                </td>
+                <td style="vertical-align: middle">
+                  <button
+                    type="button"
+                    class="btn btn-primary btn-sm"
+                    (click)="
+                      service.modal.show('modalJoinGroup');
+                      formJoingroup.patchValue({
+                        groupName: x.name,
+                        groupID: x.groupID
+                      })
+                    "
+                  >
+                    เข้ากลุ่มเรียน
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div
+        class="card"
+        *ngIf="service.localStorage.get('userLogin')['groupid_fk']"
+      >
+        <div class="card-body">
+          <div class="row">
+            <div class="col-7 mb-3">
+              <h2>
+                กลุ่มเรียน&nbsp;{{
+                  service.localStorage.get("userLogin")["groupname"]
+                }}
+              </h2>
+              <h4>
+                อาจารย์ประจำกลุ่ม :
+                {{ "อาจารย์"
+                }}{{
+                  service.localStorage.get("userLogin")["teacher_firstNameThai"]
+                }}
+                {{
+                  service.localStorage.get("userLogin")["teacher_lastNameThai"]
+                }}
+              </h4>
+            </div>
+            <div class="col-5 mb-3">
+              <div
+                class="text-right"
+                *ngIf="service.localStorage.get('userLogin')['groupid_fk']"
               >
-                เข้ากลุ่มเรียน
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
+                <button
+                  type="button"
+                  class="btn btn-danger btn-sm"
+                  (click)="leaveGroup()"
+                >
+                  ออกกลุ่มเรียน
+                </button>
+              </div>
+            </div>
+          </div>
 
-  <div class="card" *ngIf="service.localStorage.get('userLogin')['groupid_fk']">
-    <div class="card-body">
-      <h2>
-        กลุ่มเรียน&nbsp;{{ service.localStorage.get("userLogin")["groupname"] }}
-      </h2>
-      <p>
-        {{ service.localStorage.get("userLogin")["firstNameThai"] }}
-        {{ service.localStorage.get("userLogin")["lastNameThai"] }}
-      </p>
-
-      <div *ngIf="service.localStorage.get('userLogin')['groupid_fk']">
-        <button
-          type="button"
-          class="btn btn-primary btn-sm"
-          (click)="leaveGroup()"
-        >
-          ออกกลุ่มเรียน
-        </button>
+          <div style="overflow: auto">
+            <table
+              class="table table-sm table-borderless table-hover"
+              *ngIf="
+                this.service.localStorage.get('resultGroupMember').length > 0
+              "
+            >
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>รหัสนักศึกษา</th>
+                  <th>ชื่อ - สกุล</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  *ngFor="
+                    let x of this.service.localStorage.get('resultGroupMember');
+                    let i = index
+                  "
+                >
+                  <td style="vertical-align: middle">{{ i + 1 }}</td>
+                  <td style="vertical-align: middle">
+                    {{ x.student_studentId }}
+                  </td>
+                  <td>
+                    {{ x.student_prename }}{{ x.student_firstNameThai }}
+                    {{ x.student_lastNameThai }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
   </div>

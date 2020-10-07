@@ -45,6 +45,11 @@ export class PrivateComponent implements OnInit {
           icon: '<i class="fas fa-database"></i>',
         },
         {
+          path: '/events',
+          text: 'ระบบสอบ',
+          icon: '<i class="fas fa-pen-square"></i>',
+        },
+        {
           path: '/log',
           text: 'ประวัติการเข้าใช้งานระบบ',
           icon: '<i class="fas fa-clipboard-list"></i>',
@@ -144,6 +149,13 @@ export class PrivateComponent implements OnInit {
             ...this.service.localStorage.get('userLogin'),
             ...value.result,
           });
+
+          if (value.resultGroupMember) {
+            this.service.localStorage.set(
+              'resultGroupMember',
+              value.resultGroupMember
+            );
+          }
         } else {
           this.service.showAlert('', value.message, 'error');
         }

@@ -32,6 +32,7 @@
     "bootstrap": "^4.5.0",
     "compressorjs": "^1.0.6",
     "date-fns": "^2.14.0",
+    "diff": "^4.0.2",
     "froala-editor": "^3.2.2",
     "jquery": "^3.5.1",
     "moment": "^2.29.1",

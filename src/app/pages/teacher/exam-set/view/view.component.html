@@ -173,11 +173,10 @@
             />
           </mat-form-field>
           <mat-form-field class="example-full-width" *ngIf="checkRandom">
-            <mat-label>จำนวนข้อที่สุ่ม</mat-label>
+            <mat-label>จำนวนข้อที่สุ่ม (จำนวนข้อสอบทั้งหมด : {{countExamStore}})</mat-label>
             <input
               matInput
               placeholder="จำนวนข้อที่สุ่ม"
-              value=""
               type="number"
               formControlName="isRandom"
             />
@@ -309,7 +308,7 @@
             />
           </mat-form-field>
           <mat-form-field class="example-full-width" *ngIf="checkRandom">
-            <mat-label>จำนวนข้อที่สุ่ม</mat-label>
+            <mat-label>จำนวนข้อที่สุ่ม (จำนวนข้อสอบทั้งหมด : {{countExamStore}})</mat-label>
             <input
               matInput
               placeholder="จำนวนข้อที่สุ่ม"

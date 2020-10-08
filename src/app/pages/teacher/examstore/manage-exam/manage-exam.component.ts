@@ -1,11 +1,18 @@
 import { AppService } from 'src/app/services/app.service';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import Compressor from 'compressorjs';
 import FroalaEditor from 'froala-editor';
+import { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 
 const _window: any = window;
 let self = null;
@@ -22,13 +29,24 @@ export class ManageExamComponent implements OnInit {
   public databaseResult: any = null;
   public examResult: Array<any> = [];
   public checkEditexam: boolean = false;
-  readonly separatorKeysCodes: number[] = [ENTER, COMMA];
+  readonly separatorKeysCodes: number[] = [COMMA];
   public examSelected: any = null;
   public selectPurpose: any = '';
   public teacherResult: any = null;
 
-  allKeyword: string[] = ['SELECT', 'INSERT', 'DELETE', 'UPDATE', 'LEFT JOIN'];
+  allKeyword: string[] = [
+    'SUB QUERY',
+    'SELECT',
+    'INSERT',
+    'DELETE',
+    'UPDATE',
+    'LEFT JOIN',
+    'LIMIT',
+  ];
   keyword: any[] = [];
+  filteredKeyword: Observable<string[]>;
+  keywordCtrl = new FormControl();
+
   @ViewChild('keywordInput') keywordInput: ElementRef<HTMLInputElement>;
 
   public options: Object = {
@@ -102,6 +120,18 @@ export class ManageExamComponent implements OnInit {
 
   constructor(public service: AppService, private formBuilder: FormBuilder) {
     self = this;
+    this.filteredKeyword = this.keywordCtrl.valueChanges.pipe(
+      startWith(null),
+      map((keyword: string | null) =>
+        keyword ? this._filter(keyword) : this.allKeyword.slice()
+      )
+    );
+  }
+
+  private _filter(value: string): string[] {
+    return this.allKeyword.filter(
+      (keyword) => keyword.toLowerCase().indexOf(value) === 0
+    );
   }
 
   ngOnInit() {
@@ -256,8 +286,10 @@ export class ManageExamComponent implements OnInit {
   };
 
   public onInsartexam = () => {
+    this.formInsertexam.patchValue({
+      answer: `${this.formInsertexam.value.answer}`.replace(/\s\s+/g, ' '),
+    });
     if (this.checkEditexam) {
-      console.log(this.formInsertexam.value);
       this.service
         .httpPost(
           `/exstore/update?token=${
@@ -277,7 +309,6 @@ export class ManageExamComponent implements OnInit {
           }
         });
     } else {
-      console.log(JSON.stringify(this.formInsertexam.value));
       this.service
         .httpPost(
           `/exstore/insertexam?token=${
@@ -349,7 +380,7 @@ export class ManageExamComponent implements OnInit {
     const input = event.input;
     const value = event.value;
     if ((value || '').trim()) {
-      this.keyword.push({ name: value.trim() });
+      this.keyword.push(value.trim());
     }
     if (input) {
       input.value = '';
@@ -360,9 +391,9 @@ export class ManageExamComponent implements OnInit {
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
-    console.log(event);
-    this.keyword.push({ name: event.option.viewValue });
+    this.keyword.push(event.option.viewValue);
     this.keywordInput.nativeElement.value = null;
+    this.keywordCtrl.setValue(null);
     this.keywordInput.nativeElement.blur();
 
     this.formInsertexam.patchValue({
@@ -370,8 +401,8 @@ export class ManageExamComponent implements OnInit {
     });
   }
 
-  remove(fruit: any): void {
-    const index = this.keyword.indexOf(fruit);
+  remove(keyword: any): void {
+    const index = this.keyword.indexOf(keyword);
 
     if (index >= 0) {
       this.keyword.splice(index, 1);
@@ -385,7 +416,7 @@ export class ManageExamComponent implements OnInit {
   showKeyword = () => {
     return this.keyword
       .map((e) => {
-        return e.name;
+        return e;
       })
       .join();
   };

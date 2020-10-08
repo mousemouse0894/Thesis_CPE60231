@@ -32,11 +32,34 @@
 
   <!--ข้อสอบบบ-->
   <div *ngIf="checkPassword == false">
-    <form [formGroup]="answerFrom" onsubmit="onSubmitAnswer()">
+    <form [formGroup]="answerFrom" (ngSubmit)="onSubmitAnswer()">
       <div class="row">
         <div class="col-lg-3 mb-3">
           <div class="card">
-            <div class="card-body">This is some text within a card body.</div>
+            <div class="card-body">
+              <h3>
+                <b>ชื่อชุดข้อสอบ : </b
+                >{{ Getexamtopicdata["result"][0].exbody_head }}
+              </h3>
+              <h3>
+                <b>กลุ่มเรียน : </b
+                >{{ Getexamtopicdata["result"][0].group_name }}
+              </h3>
+              <h3>
+                <b>คำสั่ง : </b>{{ Getexamtopicdata["result"][0].topicText }}
+              </h3>
+              <hr />
+              <div class="text-center">
+                <h3><b>เวลาสอบที่เหลือ</b></h3>
+                {{ timeCountdow }}
+              </div>
+              <hr />
+              <div class="text-center">
+                <button type="submit" class="btn btn-primary btn-sm">
+                  สิ้นสุดการสอบ
+                </button>
+              </div>
+            </div>
           </div>
         </div>
         <div class="col-lg-9 mb-3">
@@ -69,6 +92,9 @@
                   data-parent="#accordionExample"
                 >
                   <div class="card-body">
+                    <h3><b>หน่วยการเรียนรู้ : </b>{{ x.unit_name }}</h3>
+                    <h3><b>จุดประสงค์ : </b>{{ x.purpose_name }}</h3>
+                    <h3 class="mb-3"><b>โจทย์ : </b></h3>
                     <div [froalaView]="x.text" class="mb-3 mt-3"></div>
 
                     <input
@@ -77,7 +103,7 @@
                       type="text"
                       required
                       formControlName="studentAnswer"
-                      (blur)="onSubmitAllAnswer()"
+                      (blur)="onSubmitOneAnswer(i, x)"
                     />
                   </div>
                 </div>

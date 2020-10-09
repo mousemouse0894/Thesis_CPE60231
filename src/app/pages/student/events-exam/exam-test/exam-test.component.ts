@@ -153,10 +153,15 @@ export class ExamTestComponent implements OnInit {
       keywordMatch: {
         keywordTeacher: keyword,
         keywordStudent: {},
+        studentCount: 0,
+        percent: 0,
       },
       stringMatch: {
         teacherAnswer: teacherAnswer,
         studentAnswer: studentAnswer,
+        stringMatch: '',
+        percent: 0,
+        same: 0,
       },
     };
 
@@ -266,22 +271,24 @@ export class ExamTestComponent implements OnInit {
                         ) {
                           newObj[i][
                             `green,${obj}`
-                          ] = `<span style="color : #0f0">${score.arrayMatch.studentRow[i][obj]}</span>`;
+                          ] = `<span style="color : #2DA745">${score.arrayMatch.studentRow[i][obj]}</span>`;
                         } else {
                           score.arrayMatch.isQueryMatch = false;
                           newObj[i][
                             `red,${obj}`
-                          ] = `<span style="color : #000">${score.arrayMatch.teacherRow[i][obj]}</span>`;
+                          ] = `<span style="color : #DC3544">${score.arrayMatch.teacherRow[i][obj]}</span>`;
                         }
                       } else {
                         score.arrayMatch.isQueryMatch = false;
                         newObj[i][
                           `black,${obj}`
-                        ] = `<span style="color : #000">${score.arrayMatch.studentRow[i][obj]}</span>`;
+                        ] = `<span style="color : #343A40">${score.arrayMatch.studentRow[i][obj]}</span>`;
                       }
                     } catch (e) {
                       score.arrayMatch.isQueryMatch = false;
-                      newObj[i][`black,${obj}`] = `<span style="color : #000">${
+                      newObj[i][
+                        `black,${obj}`
+                      ] = `<span style="color : #343A40">${
                         score.arrayMatch.studentRow[i][obj] == undefined
                           ? ''
                           : score.arrayMatch.studentRow[i][obj]
@@ -304,22 +311,24 @@ export class ExamTestComponent implements OnInit {
                         ) {
                           newObj[i][
                             `green,${obj}`
-                          ] = `<span style="color : #0f0">${score.arrayMatch.teacherRow[i][obj]}</span>`;
+                          ] = `<span style="color : #2DA745">${score.arrayMatch.teacherRow[i][obj]}</span>`;
                         } else {
                           score.arrayMatch.isQueryMatch = false;
                           newObj[i][
                             `black,${obj}`
-                          ] = `<span style="color : #000">${score.arrayMatch.studentRow[i][obj]}</span>`;
+                          ] = `<span style="color : #343A40">${score.arrayMatch.studentRow[i][obj]}</span>`;
                         }
                       } else {
                         score.arrayMatch.isQueryMatch = false;
                         newObj[i][
                           `red,${obj}`
-                        ] = `<span style="color : #f00">${score.arrayMatch.teacherRow[i][obj]}</span>`;
+                        ] = `<span style="color : #DC3544">${score.arrayMatch.teacherRow[i][obj]}</span>`;
                       }
                     } catch (e) {
                       score.arrayMatch.isQueryMatch = false;
-                      newObj[i][`black,${obj}`] = `<span style="color : #000">${
+                      newObj[i][
+                        `black,${obj}`
+                      ] = `<span style="color : #343A40">${
                         score.arrayMatch.teacherRow[i][obj] == undefined
                           ? ''
                           : score.arrayMatch.teacherRow[i][obj]
@@ -375,74 +384,112 @@ export class ExamTestComponent implements OnInit {
         }
       });
 
+      Object.keys(keywordStudent).forEach((e) => {
+        if (keywordStudent[e]) {
+          score.keywordMatch.studentCount += 1;
+        }
+      });
+
       score.keywordMatch.keywordStudent = keywordStudent;
+      score.keywordMatch.percent =
+        (score.keywordMatch.studentCount / keywordTeacher.length) * 100;
+
       resoveCheckKeyword(true);
     });
 
     // 3. Check string match
     let promiseCheckStringMatch = new Promise((resloveCheckStringMatch) => {
-      function diff(o, n) {
-        let ns = new Object();
-        let os = new Object();
+      let countSame = 0;
 
-        for (let i = 0; i < n.length; i++) {
-          if (ns[n[i]] == null) ns[n[i]] = { rows: new Array(), o: null };
-          ns[n[i]].rows.push(i);
+      function diff(teacherString, studentString) {
+        let teacherStringObj = new Object();
+        let studentStringObj = new Object();
+
+        for (let i = 0; i < teacherString.length; i++) {
+          if (teacherStringObj[teacherString[i]] == null)
+            teacherStringObj[teacherString[i]] = {
+              rows: new Array(),
+            };
+          teacherStringObj[teacherString[i]].rows.push(i);
         }
 
-        for (let i = 0; i < o.length; i++) {
-          if (os[o[i]] == null) os[o[i]] = { rows: new Array(), n: null };
-          os[o[i]].rows.push(i);
+        for (let i = 0; i < studentString.length; i++) {
+          if (studentStringObj[studentString[i]] == null)
+            studentStringObj[studentString[i]] = {
+              rows: new Array(),
+            };
+          studentStringObj[studentString[i]].rows.push(i);
         }
 
-        for (let i in ns) {
+        for (let i in studentStringObj) {
           if (
-            ns[i].rows.length == 1 &&
-            typeof os[i] != 'undefined' &&
-            os[i].rows.length == 1
+            studentStringObj[i].rows.length == 1 &&
+            typeof teacherStringObj[i] != 'undefined' &&
+            teacherStringObj[i].rows.length == 1
           ) {
-            n[ns[i].rows[0]] = { text: n[ns[i].rows[0]], row: os[i].rows[0] };
-            o[os[i].rows[0]] = { text: o[os[i].rows[0]], row: ns[i].rows[0] };
+            studentString[studentStringObj[i].rows[0]] = {
+              text: studentString[studentStringObj[i].rows[0]],
+              row: teacherStringObj[i].rows[0],
+            };
+
+            teacherString[teacherStringObj[i].rows[0]] = {
+              text: teacherString[teacherStringObj[i].rows[0]],
+              row: studentStringObj[i].rows[0],
+            };
           }
         }
 
-        for (let i = 0; i < n.length - 1; i++) {
+        for (let i = 0; i < studentString.length - 1; i++) {
           if (
-            n[i].text != null &&
-            n[i + 1].text == null &&
-            n[i].row + 1 < o.length &&
-            o[n[i].row + 1].text == null &&
-            n[i + 1] == o[n[i].row + 1]
+            studentString[i].text != null &&
+            studentString[i + 1].text == null &&
+            studentString[i].row + 1 < teacherString.length &&
+            teacherString[studentString[i].row + 1].text == null &&
+            studentString[i + 1] == teacherString[studentString[i].row + 1]
           ) {
-            n[i + 1] = { text: n[i + 1], row: n[i].row + 1 };
-            o[n[i].row + 1] = { text: o[n[i].row + 1], row: i + 1 };
+            studentString[i + 1] = {
+              text: studentString[i + 1],
+              row: studentString[i].row + 1,
+            };
+
+            teacherString[studentString[i].row + 1] = {
+              text: teacherString[studentString[i].row + 1],
+              row: i + 1,
+            };
           }
         }
 
-        for (let i = n.length - 1; i > 0; i--) {
+        for (let i = studentString.length - 1; i > 0; i--) {
           if (
-            n[i].text != null &&
-            n[i - 1].text == null &&
-            n[i].row > 0 &&
-            o[n[i].row - 1].text == null &&
-            n[i - 1] == o[n[i].row - 1]
+            studentString[i].text != null &&
+            studentString[i - 1].text == null &&
+            studentString[i].row > 0 &&
+            teacherString[studentString[i].row - 1].text == null &&
+            studentString[i - 1] == teacherString[studentString[i].row - 1]
           ) {
-            n[i - 1] = { text: n[i - 1], row: n[i].row - 1 };
-            o[n[i].row - 1] = { text: o[n[i].row - 1], row: i - 1 };
+            studentString[i - 1] = {
+              text: studentString[i - 1],
+              row: studentString[i].row - 1,
+            };
+
+            teacherString[studentString[i].row - 1] = {
+              text: teacherString[studentString[i].row - 1],
+              row: i - 1,
+            };
           }
         }
 
-        return { o: o, n: n };
+        // o = teacherString
+        // n = studentString
+        return { o: teacherString, n: studentString };
       }
 
       const diffString = (o, n) => {
-        o = o.replace(/\s+$/, '');
-        n = n.replace(/\s+$/, '');
-
         let out = diff(
           o == '' ? [] : o.split(/\s+/),
           n == '' ? [] : n.split(/\s+/)
         );
+
         let str = '';
 
         let oSpace = o.match(/\s+/g);
@@ -451,6 +498,7 @@ export class ExamTestComponent implements OnInit {
         } else {
           oSpace.push('\n');
         }
+
         let nSpace = n.match(/\s+/g);
         if (nSpace == null) {
           nSpace = ['\n'];
@@ -482,7 +530,8 @@ export class ExamTestComponent implements OnInit {
               ) {
                 pre += '<del>' + escape(out.o[n]) + oSpace[n] + '</del>';
               }
-              str += ' ' + out.n[i].text + nSpace[i] + pre;
+              countSame += 1;
+              str += '<same>' + out.n[i].text + nSpace[i] + '</same>' + pre;
             }
           }
         }
@@ -490,7 +539,18 @@ export class ExamTestComponent implements OnInit {
         return str;
       };
 
-      console.log(diffString(studentAnswer, teacherAnswer));
+      score.stringMatch.stringMatch = diffString(teacherAnswer, studentAnswer);
+      let arrTeacher = teacherAnswer.split(/\s+/);
+      let arrStudent = studentAnswer.split(/\s+/);
+      let len =
+        arrTeacher.length > arrStudent.length
+          ? arrTeacher.length
+          : arrStudent.length;
+
+      let percent = (countSame / len) * 100;
+
+      score.stringMatch.percent = percent;
+      score.stringMatch.same = countSame;
 
       resloveCheckStringMatch(true);
     });
@@ -500,7 +560,12 @@ export class ExamTestComponent implements OnInit {
       promiseCheckKeywordMatch,
       promiseCheckStringMatch,
     ]).then((val) => {
+      this.answerFrom.get('answerList')['controls'][indexAnswer].patchValue({
+        checkDetail: JSON.stringify({ ...score }),
+      });
+
       console.log(score);
+      console.log(this.answerFrom.value.answerList);
     });
   };
 

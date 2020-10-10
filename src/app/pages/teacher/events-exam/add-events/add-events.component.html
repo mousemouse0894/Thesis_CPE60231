@@ -272,9 +272,18 @@
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalStudentScoreLabel">
-          Modal title
-        </h5>
+        <div
+          class="modal-title"
+          id="exampleModalStudentScoreLabel"
+          *ngIf="studentScore != null"
+        >
+          <h2>ผลคะแนน</h2>
+          <h4>
+            {{ studentScore["prename"] }}{{ studentScore["firstNameThai"] }}
+            {{ studentScore["lastNameThai"] }}
+          </h4>
+        </div>
+
         <button
           type="button"
           class="close"
@@ -292,46 +301,222 @@
           <thead>
             <tr>
               <th></th>
-              <th>answer</th>
-              <th>studentAnswer</th>
-              <th>text</th>
-              <th>studentScore</th>
-              <th>teacherScore</th>
-              <th></th>
+              <th>โจทย์</th>
+              <th>คะแนนจากระบบ</th>
+              <th>คะแนนจากอาจารย์</th>
               <th></th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let x of studentScore; let i = index">
+            <tr *ngFor="let x of studentScore.testData; let i = index">
               <td style="vertical-align: middle">
                 {{ i + 1 }}
               </td>
-              <td style="vertical-align: middle">{{ x.answer }}</td>
-              <td style="vertical-align: middle">{{ x.studentAnswer }}</td>
-              <td style="vertical-align: middle">{{ x.text }}</td>
+              <td style="vertical-align: middle">{{ replaceText(x.text) }}</td>
               <td style="vertical-align: middle">{{ x.studentScore }}</td>
               <td style="vertical-align: middle">{{ x.teacherScore }}</td>
               <td style="vertical-align: middle">
-                <input
-                  matInput
-                  placeholder="คะแนน"
-                  type="number"
-                  required
-                  #score
-                />
-              </td>
-              <td style="vertical-align: middle">
                 <button
                   type="button"
-                  class="btn btn-primary btn-sm"
-                  (click)="updateScore(x, score.value)"
+                  class="btn btn-primary btn-sm ml-2"
+                  data-toggle="modal"
+                  data-target="#exampleModalViewDetailScore"
+                  (click)="studentScoreDetail = x"
                 >
-                  ปรับคะเเนน
+                  รายละเอียดการตรวจ
                 </button>
               </td>
             </tr>
           </tbody>
         </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  id="exampleModalViewDetailScore"
+  tabindex="-1"
+  aria-labelledby="exampleModalViewDetailScoreLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title" id="exampleModalViewDetailScoreLabel">
+          <h2>รายละเอียดการตรวจ</h2>
+        </div>
+
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" *ngIf="studentScoreDetail">
+        <div
+          *ngIf="
+            studentScoreDetail.checkDetail.length > 0;
+            else studentAnswerIsNull
+          "
+        >
+          <div class="row">
+            <div class="col-lg-12 mb-4">
+              <div
+                class="border border-primary box-padding"
+                style="border-radius: 5px"
+              >
+                <h2>1. การตรวจผลลัพธ์</h2>
+                <hr />
+
+                <div class="row mb-3">
+                  <div class="col-lg-6">
+                    <h4><b>ผลลัพธ์ของอาจารย์</b></h4>
+                    <div>
+                      {{
+                        service.jsParse(studentScoreDetail.checkDetail)[
+                          "arrayMatch"
+                        ]["teacherRow"] | json
+                      }}
+                    </div>
+                  </div>
+
+                  <div class="col-lg-6">
+                    <h4><b>ผลลัพธ์ของนักศึกษา</b></h4>
+                    <div>
+                      {{
+                        service.jsParse(studentScoreDetail.checkDetail)[
+                          "arrayMatch"
+                        ]["studentRow"] | json
+                      }}
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <h4><b>ความถูกต้องของผลลัพธ์</b></h4>
+                  <div>
+                    {{
+                      service.jsParse(studentScoreDetail.checkDetail)[
+                        "arrayMatch"
+                      ]["isQueryMatch"]
+                        ? "100%"
+                        : "0%"
+                    }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-lg-6 mb-3">
+              <div
+                class="border border-primary box-padding"
+                style="border-radius: 5px"
+              >
+                <h2>2. การตรวจคำสำคัญ</h2>
+                <hr />
+
+                <h4><b>คำสำคัญของอาจารย์</b></h4>
+                <div class="mb-3">
+                  <span
+                    *ngFor="
+                      let x of service.jsParse(studentScoreDetail.checkDetail)[
+                        'keywordMatch'
+                      ]['keywordTeacher']
+                    "
+                  >
+                    {{ x }}
+                  </span>
+                </div>
+
+                <h4><b>คำสำคัญของนักศึกษา</b></h4>
+                <div class="mb-3">
+                  <span
+                    *ngFor="
+                      let x of getKeyObject(
+                        service.jsParse(studentScoreDetail.checkDetail)[
+                          'keywordMatch'
+                        ]['keywordStudent']
+                      )
+                    "
+                    class="text-{{
+                      service.jsParse(studentScoreDetail.checkDetail)[
+                        'keywordMatch'
+                      ]['keywordStudent'][x]
+                        ? 'dark'
+                        : 'danger'
+                    }}"
+                  >
+                    {{ x }}
+                  </span>
+                </div>
+
+                <h4><b>ความถูกต้องของคำสำคัญ</b></h4>
+                <div>
+                  {{
+                    service.jsParse(studentScoreDetail.checkDetail)[
+                      "keywordMatch"
+                    ]["percent"]
+                  }}%
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-6">
+              <div
+                class="border border-primary box-padding"
+                style="border-radius: 5px"
+              >
+                <h2>3. การตรวจคำตอบ</h2>
+                <hr />
+
+                <h4><b>คำตอบของอาจารย์</b></h4>
+                <div class="mb-3">
+                  {{ studentScoreDetail.answer }}
+                </div>
+
+                <h4><b>คำตอบของนักศึกษา</b></h4>
+                <div class="mb-3">
+                  <span
+                    *ngFor="
+                      let x of strSplit(
+                        service.jsParse(studentScoreDetail.checkDetail)[
+                          'stringMatch'
+                        ]['stringMatch'],
+                        ' '
+                      )
+                    "
+                    [ngStyle]="{ color: strSplit(x, ',!-')[0] }"
+                    [hidden]="strSplit(x, ',!-')[1] == undefined"
+                  >
+                    {{ decodeURIComponent(strSplit(x, ",!-")[1] + " ") }}
+                  </span>
+                </div>
+
+                <h4><b>ความถูกต้องของคำตอบ</b></h4>
+                <div class="">
+                  {{
+                    service.jsParse(studentScoreDetail.checkDetail)[
+                      "stringMatch"
+                    ]["percent"]
+                  }}%
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <ng-template #studentAnswerIsNull>
+          <div>
+            <h4>ไม่พบคำตอบของนักศึกษา</h4>
+          </div>
+        </ng-template>
       </div>
     </div>
   </div>

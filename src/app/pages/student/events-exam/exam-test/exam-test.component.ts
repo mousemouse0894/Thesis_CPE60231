@@ -15,7 +15,7 @@ export class ExamTestComponent implements OnInit {
   public Getexamtopicdata: any = null;
   public checkPassword: boolean = true;
   public answerFrom: FormGroup;
-  private countdownInterval: any = null;
+  public countdownInterval: any = null;
   public timeCountdow: string = '00:00:00';
 
   constructor(
@@ -59,10 +59,18 @@ export class ExamTestComponent implements OnInit {
         10
       )}`;
 
-      // if (distance < 0) {
-      //   clearInterval(this.countdownInterval);
-      //   document.getElementById("demo").innerHTML = "EXPIRED";
-      // }
+      if (distance < 0) {
+        clearInterval(this.countdownInterval);
+        this.checkPassword = true;
+        // this.service.showAlert(
+        //   'หมดเวลาทำข้อสอบ',
+        //   `${this.Getexamtopicdata['result'][0].group_name}`,
+        //   'error'
+        // );
+
+        this.countdownInterval = null;
+        this.onSubmitAnswer(false);
+      }
     }, 1000);
   };
 
@@ -79,7 +87,10 @@ export class ExamTestComponent implements OnInit {
       .then((value: any) => {
         if (value.success) {
           this.Getexamtopicdata = value;
-
+          this.testCountDown(
+            this.Getexamtopicdata['getDateTime'],
+            this.Getexamtopicdata['result'][0]['timeEnd']
+          );
           if (value.topicData.length > 0) {
             let answerList = this.answerFrom.get('answerList') as FormArray;
             value.topicData.forEach((element) => {
@@ -91,11 +102,23 @@ export class ExamTestComponent implements OnInit {
                   groupID_fk: this.service.localStorage.get('userLogin')[
                     'groupid_fk'
                   ],
-                  studentAnswer: ['', Validators.required],
-                  studentScore: ['', Validators.required],
-                  teacherScore: [null],
-                  checkDetail: ['', Validators.required],
-                  isEnd: [null, Validators.required],
+                  studentAnswer: [
+                    element.studentAnswer ? element.studentAnswer : '',
+                    Validators.required,
+                  ],
+                  studentScore: [
+                    element.studentScore ? element.studentScore : '',
+                    Validators.required,
+                  ],
+                  teacherScore: [
+                    element.teacherScore ? element.teacherScore : '',
+                    Validators.required,
+                  ],
+                  checkDetail: [
+                    element.checkDetail ? element.checkDetail : '',
+                    Validators.required,
+                  ],
+                  isEnd: ['false', Validators.required],
                 })
               );
             });
@@ -109,10 +132,6 @@ export class ExamTestComponent implements OnInit {
   public checkTopicpassword = (password) => {
     if (password == this.Getexamtopicdata.result[0].topicPassword) {
       this.checkPassword = false;
-      this.testCountDown(
-        this.Getexamtopicdata['getDateTime'],
-        this.Getexamtopicdata['result'][0]['timeEnd']
-      );
     } else {
       this.service.showAlert('รหัสผ่านไม่ถูกต้อง', '', 'error');
     }
@@ -157,8 +176,6 @@ export class ExamTestComponent implements OnInit {
         percent: 0,
       },
       stringMatch: {
-        teacherAnswer: teacherAnswer,
-        studentAnswer: studentAnswer,
         stringMatch: '',
         percent: 0,
         same: 0,
@@ -271,28 +288,26 @@ export class ExamTestComponent implements OnInit {
                         ) {
                           newObj[i][
                             `green,${obj}`
-                          ] = `<span style="color : #2DA745">${score.arrayMatch.studentRow[i][obj]}</span>`;
+                          ] = `#2DA745,!-${score.arrayMatch.studentRow[i][obj]}`;
                         } else {
                           score.arrayMatch.isQueryMatch = false;
                           newObj[i][
                             `red,${obj}`
-                          ] = `<span style="color : #DC3544">${score.arrayMatch.teacherRow[i][obj]}</span>`;
+                          ] = `#DC3544,!-${score.arrayMatch.teacherRow[i][obj]}`;
                         }
                       } else {
                         score.arrayMatch.isQueryMatch = false;
                         newObj[i][
                           `black,${obj}`
-                        ] = `<span style="color : #343A40">${score.arrayMatch.studentRow[i][obj]}</span>`;
+                        ] = `#343A40,!-${score.arrayMatch.studentRow[i][obj]}`;
                       }
                     } catch (e) {
                       score.arrayMatch.isQueryMatch = false;
-                      newObj[i][
-                        `black,${obj}`
-                      ] = `<span style="color : #343A40">${
+                      newObj[i][`black,${obj}`] = `#343A40,!-${
                         score.arrayMatch.studentRow[i][obj] == undefined
                           ? ''
                           : score.arrayMatch.studentRow[i][obj]
-                      }</span>`;
+                      }`;
                     }
                   });
                 });
@@ -311,28 +326,26 @@ export class ExamTestComponent implements OnInit {
                         ) {
                           newObj[i][
                             `green,${obj}`
-                          ] = `<span style="color : #2DA745">${score.arrayMatch.teacherRow[i][obj]}</span>`;
+                          ] = `#2DA745,!-${score.arrayMatch.teacherRow[i][obj]}`;
                         } else {
                           score.arrayMatch.isQueryMatch = false;
                           newObj[i][
                             `black,${obj}`
-                          ] = `<span style="color : #343A40">${score.arrayMatch.studentRow[i][obj]}</span>`;
+                          ] = `#343A40,!-${score.arrayMatch.studentRow[i][obj]}`;
                         }
                       } else {
                         score.arrayMatch.isQueryMatch = false;
                         newObj[i][
                           `red,${obj}`
-                        ] = `<span style="color : #DC3544">${score.arrayMatch.teacherRow[i][obj]}</span>`;
+                        ] = `#DC3544,!-${score.arrayMatch.teacherRow[i][obj]}`;
                       }
                     } catch (e) {
                       score.arrayMatch.isQueryMatch = false;
-                      newObj[i][
-                        `black,${obj}`
-                      ] = `<span style="color : #343A40">${
+                      newObj[i][`black,${obj}`] = `#343A40,!-${
                         score.arrayMatch.teacherRow[i][obj] == undefined
                           ? ''
                           : score.arrayMatch.teacherRow[i][obj]
-                      }</span>`;
+                      }`;
                     }
                   });
                 });
@@ -494,32 +507,32 @@ export class ExamTestComponent implements OnInit {
 
         let oSpace = o.match(/\s+/g);
         if (oSpace == null) {
-          oSpace = ['\n'];
+          oSpace = [' '];
         } else {
-          oSpace.push('\n');
+          oSpace.push(' ');
         }
 
         let nSpace = n.match(/\s+/g);
         if (nSpace == null) {
-          nSpace = ['\n'];
+          nSpace = [' '];
         } else {
-          nSpace.push('\n');
+          nSpace.push(' ');
         }
 
         if (out.n.length == 0) {
           for (let i = 0; i < out.o.length; i++) {
-            str += '<del>' + escape(out.o[i]) + oSpace[i] + '</del>';
+            str += `#DC3544,!-` + escape(out.o[i]) + oSpace[i] + '';
           }
         } else {
           if (out.n[0].text == null) {
             for (n = 0; n < out.o.length && out.o[n].text == null; n++) {
-              str += '<del>' + escape(out.o[n]) + oSpace[n] + '</del>';
+              str += `#DC3544,!-` + escape(out.o[n]) + oSpace[n] + '';
             }
           }
 
           for (let i = 0; i < out.n.length; i++) {
             if (out.n[i].text == null) {
-              str += '<ins>' + escape(out.n[i]) + nSpace[i] + '</ins>';
+              str += `#2DA745,!-` + escape(out.n[i]) + nSpace[i] + '';
             } else {
               let pre = '';
 
@@ -528,15 +541,15 @@ export class ExamTestComponent implements OnInit {
                 n < out.o.length && out.o[n].text == null;
                 n++
               ) {
-                pre += '<del>' + escape(out.o[n]) + oSpace[n] + '</del>';
+                pre += `#DC3544,!-` + escape(out.o[n]) + oSpace[n] + '';
               }
               countSame += 1;
-              str += '<same>' + out.n[i].text + nSpace[i] + '</same>' + pre;
+              str += `#343A40,!-` + out.n[i].text + nSpace[i] + '' + pre;
             }
           }
         }
 
-        return str;
+        return str.replace('\n', ' ');
       };
 
       score.stringMatch.stringMatch = diffString(teacherAnswer, studentAnswer);
@@ -564,31 +577,84 @@ export class ExamTestComponent implements OnInit {
         checkDetail: JSON.stringify({ ...score }),
       });
 
-      console.log(score);
-      console.log(this.answerFrom.value.answerList);
+      this.http
+        .post(
+          `${environment.rootAPI}stTesting/insertOneAns?token=${
+            this.service.localStorage.get('userLogin')['token']
+          }`,
+          JSON.stringify(this.answerFrom.value.answerList[indexAnswer])
+        )
+        .toPromise()
+        .then((value: any) => {
+          if (value.isLogin == false) {
+            // window.close();
+          }
+        })
+        .catch((reason) => {
+          console.log(reason);
+        });
     });
   };
 
-  public onSubmitAnswer = () => {
+  public onSubmitAnswer = (isSubmit = false) => {
     // Update isEnd
+    // let formAnswer: FormGroup = this.answerFrom.get('answerList')['controls'];
 
-    this.http
-      .post(
-        `${environment.rootAPI}stTesting/insertAns?token=${
-          this.service.localStorage.get('userLogin')['token']
-        }`,
-        JSON.stringify(this.answerFrom.value.answerList)
-      )
-      .toPromise()
-      .then((value: any) => {
-        console.log(value);
-        if (value.isLogin == false) {
-          // window.close();
-        }
-      })
-      .catch((reason) => {
-        console.log(reason);
+    if (isSubmit) {
+      this.service
+        .showConfirm(
+          'สิ้นสุดการทำแบบทดสอบ',
+          `เวลาที่เหลือ ${this.timeCountdow}`,
+          'warning'
+        )
+        .then((val) => {
+          if (val) {
+            this.answerFrom.get('answerList')['controls'].forEach((e, i) => {
+              this.answerFrom.get('answerList')['controls'][i].patchValue({
+                isEnd: 'true',
+              });
+            });
+
+            this.http
+              .post(
+                `${environment.rootAPI}stTesting/insertAns?token=${
+                  this.service.localStorage.get('userLogin')['token']
+                }`,
+                JSON.stringify(this.answerFrom.value.answerList)
+              )
+              .toPromise()
+              .then((value: any) => {
+                window.close();
+              })
+              .catch((reason) => {
+                console.log(reason);
+              });
+          }
+        });
+    } else {
+      this.answerFrom.get('answerList')['controls'].forEach((e, i) => {
+        this.answerFrom.get('answerList')['controls'][i].patchValue({
+          isEnd: 'true',
+        });
       });
+
+      this.http
+        .post(
+          `${environment.rootAPI}stTesting/insertAns?token=${
+            this.service.localStorage.get('userLogin')['token']
+          }`,
+          JSON.stringify(this.answerFrom.value.answerList)
+        )
+        .toPromise()
+        .then((value: any) => {
+          if (value.isLogin == false) {
+            // window.close();
+          }
+        })
+        .catch((reason) => {
+          console.log(reason);
+        });
+    }
   };
 
   private getKeyObject = (array) => {

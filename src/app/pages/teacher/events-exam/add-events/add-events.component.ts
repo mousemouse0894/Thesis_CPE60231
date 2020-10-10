@@ -18,6 +18,7 @@ export class AddEventsComponent implements OnInit {
   public CheckCreateexam: boolean = false;
   public historyTestResult: any = null;
   public studentScore: any = null;
+  public studentScoreDetail: any = null;
   public currentTime: Date = new Date();
 
   constructor(public service: AppService, private formBuilder: FormBuilder) {}
@@ -40,6 +41,13 @@ export class AddEventsComponent implements OnInit {
     this.onGetexamtopic();
     this.getCurrentTime();
   }
+
+  replaceText = (data: string) => {
+    let div = document.createElement('div');
+    div.innerHTML = data;
+    let text: string = div.textContent || div.innerText || '';
+    return text.length > 30 ? text.substring(0, 30) + '...' : text;
+  };
 
   public getCurrentTime = () => {
     this.service
@@ -204,5 +212,28 @@ export class AddEventsComponent implements OnInit {
           this.service.showAlert('', value.message, 'error');
         }
       });
+  };
+
+  public getKeyObject = (array) => {
+    if (array.length > 0) {
+      let ObjectData = [...array];
+      return Object.keys(ObjectData[0]);
+    } else if (typeof array == 'object') {
+      return Object.keys(array);
+    } else {
+      return [];
+    }
+  };
+
+  str = (data) => {
+    return String(data);
+  };
+
+  strSplit = (data: string, key: string) => {
+    return data.split(key);
+  };
+
+  decodeURIComponent = (uri_enc) => {
+    return decodeURIComponent(uri_enc);
   };
 }

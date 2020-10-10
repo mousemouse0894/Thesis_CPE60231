@@ -33,6 +33,31 @@
         ></span
         >{{ x.text }}
       </a>
+
+      <a
+        mat-list-item
+        href="https://docs.google.com/forms/d/e/1FAIpQLScGRdycKPNhNPSKi-AVLRaHAEMgQzOEzPkPBxlIkb7X0WHKSw/viewform"
+        target="_blank"
+        *ngIf="service.localStorage.get('userLogin')['gidNumber'] == '4500'"
+      >
+        <span style="display: inline-block; width: 35px">
+          <i class="fas fa-align-left"></i
+        ></span>
+        ประเมินประสิทธิภาพการทำงานของระบบ
+      </a>
+
+      <a
+        mat-list-item
+        href="https://docs.google.com/forms/d/e/1FAIpQLSeTtgrEVS5PT5aZM1VWBm_VeNuuebTLLdSo8kOHGyqQmyOT-A/viewform"
+        target="_blank"
+        *ngIf="service.localStorage.get('userLogin')['gidNumber'] != '4500'"
+      >
+        <span style="display: inline-block; width: 35px">
+          <i class="fas fa-align-left"></i
+        ></span>
+        ประเมินประสิทธิภาพการทำงานของระบบ
+      </a>
+
       <a mat-list-item (click)="onLogout()" href="javascript:void(0)">
         <span style="display: inline-block; width: 35px">
           <i class="fas fa-sign-out-alt"></i

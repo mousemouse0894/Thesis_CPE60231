@@ -26,10 +26,13 @@ export class UnitComponent implements OnInit {
     this.formInsertUnit = this.formBuilder.group({
       name: ['', Validators.required],
       owner: this.service.localStorage.get('userLogin')['uid'],
+      examUnitID: [''],
     });
+
     this.formInsertPurpose = this.formBuilder.group({
       name: ['', Validators.required],
     });
+
     this.getUnittable();
   }
 
@@ -114,10 +117,11 @@ export class UnitComponent implements OnInit {
   };
 
   public onUpdateUnit = (unitname: any, examUnitID: any) => {
-    this.formInsertUnit = this.formBuilder.group({
+    this.formInsertUnit.patchValue({
       examUnitID: examUnitID,
-      name: [unitname, Validators.required],
+      name: unitname,
     });
+
     this.checkupdate = true;
   };
 

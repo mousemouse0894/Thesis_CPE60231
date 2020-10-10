@@ -1,15 +1,38 @@
 <div class="box-padding">
   <div class="row" *ngIf="checkPassword">
-    <div class="col-md-4"></div>
-    <div class="col-md-4">
+    <div class="col-lg-3 col-mb-2"></div>
+    <div class="col-lg-6 col-mb-8" *ngIf="Getexamtopicdata">
       <div class="card">
         <div class="card-body">
-          <h2 class="mb-2">โปรดระบุรหัสเข้าสอบ</h2>
+          <div class="mb-4">
+            <h3>
+              <b>ชื่อชุดข้อสอบ : </b
+              >{{ Getexamtopicdata["result"][0].exbody_head }}
+            </h3>
+            <h3>
+              <b>กลุ่มเรียน : </b>{{ Getexamtopicdata["result"][0].group_name }}
+            </h3>
+            <h3>
+              <b>คำสั่ง : </b>{{ Getexamtopicdata["result"][0].topicText }}
+            </h3>
+            <h3 class="text-danger" *ngIf="countdownInterval == null">
+              <b>หมดเวลาทำแบบทดสอบ</b>
+            </h3>
+            <h3 class="text-success" *ngIf="countdownInterval != null">
+              <b>เวลาสอบที่เหลือ : </b>{{ timeCountdow }}
+            </h3>
+          </div>
+
+          <h3 class="mb-3">โปรดระบุรหัสเข้าสอบ</h3>
           <form
             #cPass="ngForm"
-            (ngSubmit)="checkTopicpassword(cPass.value.password)"
+            (ngSubmit)="
+              countdownInterval != null
+                ? checkTopicpassword(cPass.value.password)
+                : ''
+            "
           >
-            <mat-form-field class="example-full-width">
+            <mat-form-field appearance="outline">
               <mat-label>รหัสเข้าสอบ</mat-label>
               <input
                 matInput
@@ -21,18 +44,24 @@
             </mat-form-field>
 
             <div class="text-center">
-              <button type="submit" class="btn btn-primary btn-sm">ตกลง</button>
+              <button
+                type="submit"
+                class="btn btn-primary btn-sm"
+                [disabled]="countdownInterval == null"
+              >
+                ตกลง
+              </button>
             </div>
           </form>
         </div>
       </div>
     </div>
-    <div class="col-md-4"></div>
+    <div class="col-lg-3 col-mb-2"></div>
   </div>
 
   <!--ข้อสอบบบ-->
   <div *ngIf="checkPassword == false">
-    <form [formGroup]="answerFrom" (ngSubmit)="onSubmitAnswer()">
+    <form [formGroup]="answerFrom" (ngSubmit)="onSubmitAnswer(true)">
       <div class="row">
         <div class="col-lg-3 mb-3">
           <div class="card">
@@ -56,7 +85,7 @@
               <hr />
               <div class="text-center">
                 <button type="submit" class="btn btn-primary btn-sm">
-                  สิ้นสุดการสอบ
+                  สิ้นสุดการทำแบบทดสอบ
                 </button>
               </div>
             </div>
@@ -94,17 +123,24 @@
                   <div class="card-body">
                     <h3><b>หน่วยการเรียนรู้ : </b>{{ x.unit_name }}</h3>
                     <h3><b>จุดประสงค์ : </b>{{ x.purpose_name }}</h3>
+                    <h3><b>ชื่อฐานข้อมูลที่ใช้ : </b>{{ x.databaseName }}</h3>
                     <h3 class="mb-3"><b>โจทย์ : </b></h3>
                     <div [froalaView]="x.text" class="mb-3 mt-3"></div>
-
-                    <input
-                      matInput
-                      placeholder="คำตอบ"
-                      type="text"
-                      required
-                      formControlName="studentAnswer"
-                      (blur)="onSubmitOneAnswer(i, x)"
-                    />
+                    <h3>
+                      <b>คำสำคัญ : </b
+                      >{{ service.jsParse(x.keyword).join(", ") }}
+                    </h3>
+                    <h3 class="mb-3"><b>คะแนน : </b>{{ x.score }}</h3>
+                    <mat-form-field appearance="outline">
+                      <mat-label>คำตอบ</mat-label>
+                      <textarea
+                        matInput
+                        placeholder="คำตอบ"
+                        formControlName="studentAnswer"
+                        (blur)="onSubmitOneAnswer(i, x)"
+                        rows="4"
+                      ></textarea>
+                    </mat-form-field>
                   </div>
                 </div>
               </div>

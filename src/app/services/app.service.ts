@@ -76,7 +76,8 @@ export class AppService {
           .get(`${environment.rootAPI}${url}`)
           .toPromise()
           .then((value: any) => {
-            // console.log(value);
+            if (!environment.production) console.log(value);
+
             if (value.isLogin == false) {
               resolve(null);
               this.navRouter('/login');
@@ -105,7 +106,8 @@ export class AppService {
           .post(`${environment.rootAPI}${url}`, data)
           .toPromise()
           .then((value: any) => {
-            // console.log(value);
+            if (!environment.production) console.log(value);
+
             if (value.isLogin == false) {
               resolve(null);
               this.navRouter('/login');

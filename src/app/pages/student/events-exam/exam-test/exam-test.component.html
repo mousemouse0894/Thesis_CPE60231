@@ -47,7 +47,7 @@
               <button
                 type="submit"
                 class="btn btn-primary btn-sm"
-                [disabled]="countdownInterval == null"
+                [disabled]="countdownInterval == null || isIPAddress == false"
               >
                 ตกลง
               </button>
@@ -82,6 +82,28 @@
                 <h3><b>เวลาสอบที่เหลือ</b></h3>
                 {{ timeCountdow }}
               </div>
+
+              <div class="text-center">
+                <div
+                  *ngFor="let x of Getexamtopicdata.topicData; let i = index"
+                  class="list-box border"
+                  (click)="listSelect = i"
+                  [ngClass]="{ 'border-primary': listSelect == i }"
+                >
+                  <div class="topBox border-bottom">{{ i + 1 }}</div>
+                  <div
+                    class="bottomBox"
+                    [ngClass]="{
+                      'bg-success':
+                        answerFrom.get('answerList')['controls'][i].value
+                          .studentAnswer > 0,
+                      'bg-danger':
+                        answerFrom.get('answerList')['controls'][i].value
+                          .studentAnswer <= 0
+                    }"
+                  ></div>
+                </div>
+              </div>
               <hr />
               <div class="text-center">
                 <button type="submit" class="btn btn-primary btn-sm">
@@ -92,56 +114,34 @@
           </div>
         </div>
         <div class="col-lg-9 mb-3">
-          <div class="accordion" id="accordionExample">
-            <div
-              class="card mb-2"
-              *ngFor="let x of Getexamtopicdata.topicData; let i = index"
-              formArrayName="answerList"
-            >
-              <div [formGroupName]="i">
-                <div class="card-header" id="headingOne{{ i }}">
-                  <h2 class="mb-0">
-                    <button
-                      class="btn btn-link btn-block text-left"
-                      type="button"
-                      data-toggle="collapse"
-                      [attr.data-target]="'#collapseOne' + i"
-                      aria-expanded="true"
-                      [attr.aria-controls]="'collapseOne' + i"
-                    >
-                      ข้อที่ {{ i + 1 }} ( DB : {{ x.databaseName }} )
-                    </button>
-                  </h2>
-                </div>
-
-                <div
-                  id="collapseOne{{ i }}"
-                  class="collapse"
-                  aria-labelledby="headingOne"
-                  data-parent="#accordionExample"
-                >
-                  <div class="card-body">
-                    <h3><b>หน่วยการเรียนรู้ : </b>{{ x.unit_name }}</h3>
-                    <h3><b>จุดประสงค์ : </b>{{ x.purpose_name }}</h3>
-                    <h3><b>ชื่อฐานข้อมูลที่ใช้ : </b>{{ x.databaseName }}</h3>
-                    <h3 class="mb-3"><b>โจทย์ : </b></h3>
-                    <div [froalaView]="x.text" class="mb-3 mt-3"></div>
-                    <h3>
-                      <b>คำสำคัญ : </b
-                      >{{ service.jsParse(x.keyword).join(", ") }}
-                    </h3>
-                    <h3 class="mb-3"><b>คะแนน : </b>{{ x.score }}</h3>
-                    <mat-form-field appearance="outline">
-                      <mat-label>คำตอบ</mat-label>
-                      <textarea
-                        matInput
-                        placeholder="คำตอบ"
-                        formControlName="studentAnswer"
-                        (blur)="onSubmitOneAnswer(i, x)"
-                        rows="4"
-                      ></textarea>
-                    </mat-form-field>
-                  </div>
+          <div
+            class="card"
+            *ngFor="let x of Getexamtopicdata.topicData; let i = index"
+            formArrayName="answerList"
+            [hidden]="i != listSelect"
+          >
+            <div [formGroupName]="i">
+              <div class="card">
+                <div class="card-body">
+                  <h3><b>หน่วยการเรียนรู้ : </b>{{ x.unit_name }}</h3>
+                  <h3><b>จุดประสงค์ : </b>{{ x.purpose_name }}</h3>
+                  <h3><b>ชื่อฐานข้อมูลที่ใช้ : </b>{{ x.databaseName }}</h3>
+                  <h3 class="mb-3"><b>โจทย์ : </b></h3>
+                  <div [froalaView]="x.text" class="mb-3 mt-3"></div>
+                  <h3>
+                    <b>คำสำคัญ : </b>{{ service.jsParse(x.keyword).join(", ") }}
+                  </h3>
+                  <h3 class="mb-3"><b>คะแนน : </b>{{ x.score }}</h3>
+                  <mat-form-field appearance="outline">
+                    <mat-label>คำตอบ</mat-label>
+                    <textarea
+                      matInput
+                      placeholder="คำตอบ"
+                      formControlName="studentAnswer"
+                      (blur)="onSubmitOneAnswer(i, x)"
+                      rows="4"
+                    ></textarea>
+                  </mat-form-field>
                 </div>
               </div>
             </div>
@@ -151,3 +151,6 @@
     </form>
   </div>
 </div>
+
+<!-- 
+ -->

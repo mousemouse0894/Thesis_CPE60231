@@ -4,7 +4,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { promise } from 'protractor';
 
 @Component({
   selector: 'app-exam-test',
@@ -17,6 +16,8 @@ export class ExamTestComponent implements OnInit {
   public answerFrom: FormGroup;
   public countdownInterval: any = null;
   public timeCountdow: string = '00:00:00';
+  public isIPAddress: boolean = false;
+  public listSelect: number = 0;
 
   constructor(
     public service: AppService,
@@ -87,6 +88,21 @@ export class ExamTestComponent implements OnInit {
       .then((value: any) => {
         if (value.success) {
           this.Getexamtopicdata = value;
+
+          if (
+            `${value['MyIp']}`.split('.')[0] !=
+            `${value['result'][0]['limitIP']}`.split('.')[0]
+          ) {
+            this.service.showAlert(
+              'ไม่อนุญาตให้เข้าสอบจากเครือข่ายของคุณ',
+              '',
+              'error'
+            );
+            this.isIPAddress = false;
+          } else {
+            this.isIPAddress = true;
+          }
+
           this.testCountDown(
             this.Getexamtopicdata['getDateTime'],
             this.Getexamtopicdata['result'][0]['timeEnd']
@@ -112,6 +128,10 @@ export class ExamTestComponent implements OnInit {
                   ],
                   teacherScore: [
                     element.teacherScore ? element.teacherScore : '',
+                    Validators.required,
+                  ],
+                  stringMatch: [
+                    element.stringMatch ? element.stringMatch : '',
                     Validators.required,
                   ],
                   checkDetail: [
@@ -146,13 +166,15 @@ export class ExamTestComponent implements OnInit {
       .replace(/,/g, ', ')
       .replace('( ', '(')
       .replace(' )', ')')
+      .replace(/\n/g, ' ')
       .replace(/\s\s+/g, ' ');
 
     let teacherAnswer: string = `${topicData['answer']}`
       .replace(/,/g, ', ')
       .replace('( ', '(')
       .replace(' )', ')')
-      .replace(/\s\s+/g, ' ');
+      .replace(/\s\s+/g, ' ')
+      .replace(/\n/g, ' ');
 
     let keyword: Array<string> = [
       ...[...JSON.parse(`${topicData['keyword']}`)].map((m) =>
@@ -176,11 +198,12 @@ export class ExamTestComponent implements OnInit {
         percent: 0,
       },
       stringMatch: {
-        stringMatch: '',
         percent: 0,
         same: 0,
       },
     };
+
+    let stringMatch = '';
 
     // 1. check array match
     let promiseCheckArrayMatch = new Promise((resolveSelect) => {
@@ -505,34 +528,20 @@ export class ExamTestComponent implements OnInit {
 
         let str = '';
 
-        let oSpace = o.match(/\s+/g);
-        if (oSpace == null) {
-          oSpace = [' '];
-        } else {
-          oSpace.push(' ');
-        }
-
-        let nSpace = n.match(/\s+/g);
-        if (nSpace == null) {
-          nSpace = [' '];
-        } else {
-          nSpace.push(' ');
-        }
-
         if (out.n.length == 0) {
           for (let i = 0; i < out.o.length; i++) {
-            str += `#DC3544,!-` + escape(out.o[i]) + oSpace[i] + '';
+            str += `#DC3544,!-` + out.o[i] + ' ';
           }
         } else {
           if (out.n[0].text == null) {
             for (n = 0; n < out.o.length && out.o[n].text == null; n++) {
-              str += `#DC3544,!-` + escape(out.o[n]) + oSpace[n] + '';
+              str += `#DC3544,!-` + out.o[n] + ' ';
             }
           }
 
           for (let i = 0; i < out.n.length; i++) {
             if (out.n[i].text == null) {
-              str += `#2DA745,!-` + escape(out.n[i]) + nSpace[i] + '';
+              // str += `#343A40,!-` + out.n[i] + ' ';
             } else {
               let pre = '';
 
@@ -541,20 +550,23 @@ export class ExamTestComponent implements OnInit {
                 n < out.o.length && out.o[n].text == null;
                 n++
               ) {
-                pre += `#DC3544,!-` + escape(out.o[n]) + oSpace[n] + '';
+                pre += `#DC3544,!-` + out.o[n] + ' ';
               }
               countSame += 1;
-              str += `#343A40,!-` + out.n[i].text + nSpace[i] + '' + pre;
+              str += `#2DA745,!-` + out.n[i].text + ' ' + pre;
             }
           }
         }
 
-        return str.replace('\n', ' ');
+        return str.replace(/\s\s+/g, ' ').replace(/\n/g, ' ');
       };
 
-      score.stringMatch.stringMatch = diffString(teacherAnswer, studentAnswer);
-      let arrTeacher = teacherAnswer.split(/\s+/);
-      let arrStudent = studentAnswer.split(/\s+/);
+      stringMatch = diffString(
+        teacherAnswer.toLowerCase(),
+        studentAnswer.toLowerCase()
+      );
+      let arrTeacher = teacherAnswer.split(' ');
+      let arrStudent = studentAnswer.split(' ');
       let len =
         arrTeacher.length > arrStudent.length
           ? arrTeacher.length
@@ -573,8 +585,39 @@ export class ExamTestComponent implements OnInit {
       promiseCheckKeywordMatch,
       promiseCheckStringMatch,
     ]).then((val) => {
+      console.log('examStoreData', topicData);
+      console.log('score', score);
+      let sumScore: number;
+      if (
+        teacherAnswer.toLowerCase().includes('select') &&
+        score.arrayMatch.teacherRow.length > 0 &&
+        score.arrayMatch.teacherColumn.length > 0
+      ) {
+        let subSc = topicData.score / 3;
+        console.log('subSc', subSc);
+        console.log('rm1', (subSc * 2) / 100);
+        console.log('km1', (subSc * score.keywordMatch.percent) / 100);
+        console.log('strm1', (subSc * score.stringMatch.percent) / 100);
+        sumScore = score.arrayMatch.isQueryMatch
+          ? subSc * 2 + (subSc * score.keywordMatch.percent) / 100
+          : (subSc * score.keywordMatch.percent) / 100 +
+            (subSc * score.stringMatch.percent) / 100;
+        console.log('sumScore', sumScore);
+      } else {
+        let subSc = topicData.score / 2;
+        console.log('subSc', subSc);
+        console.log('km', (subSc * score.keywordMatch.percent) / 100);
+        console.log('strm', (subSc * score.stringMatch.percent) / 100);
+        sumScore =
+          (subSc * score.keywordMatch.percent) / 100 +
+          (subSc * score.stringMatch.percent) / 100;
+        console.log('sumScore', sumScore);
+      }
+
       this.answerFrom.get('answerList')['controls'][indexAnswer].patchValue({
         checkDetail: JSON.stringify({ ...score }),
+        stringMatch: stringMatch,
+        studentScore: sumScore,
       });
 
       this.http

@@ -9,8 +9,17 @@ const routes: Routes = [
     path: '',
     component: EventsExamComponent,
     children: [
-      { path: 'add', component: AddEventsComponent },
-      { path: 'old', component: OldEventsComponent },
+      {
+        path: 'add',
+        pathMatch: 'prefix',
+        children: [
+          { path: '', component: AddEventsComponent },
+          {
+            path: ':examId/:groupId/:studentId',
+            component: OldEventsComponent,
+          },
+        ],
+      },
       { path: '', redirectTo: '/events-exam/add' },
     ],
   },

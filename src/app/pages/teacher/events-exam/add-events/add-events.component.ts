@@ -184,7 +184,7 @@ export class AddEventsComponent implements OnInit {
         if (value.success) {
           this.historyTestResult = value.result;
         } else {
-          this.service.showAlert(``, value.massage, `error`);
+          // this.service.showAlert(``, value.massage, `error`);
         }
       });
   };
@@ -214,26 +214,9 @@ export class AddEventsComponent implements OnInit {
       });
   };
 
-  public getKeyObject = (array) => {
-    if (array.length > 0) {
-      let ObjectData = [...array];
-      return Object.keys(ObjectData[0]);
-    } else if (typeof array == 'object') {
-      return Object.keys(array);
-    } else {
-      return [];
-    }
-  };
-
-  str = (data) => {
-    return String(data);
-  };
-
-  strSplit = (data: string, key: string) => {
-    return data.split(key);
-  };
-
-  decodeURIComponent = (uri_enc) => {
-    return decodeURIComponent(uri_enc);
+  public detailScore = (data) => {
+    this.service.navRouter(
+      `/events-exam/add/${this.historySelected.examtopicID}/${this.historySelected.groupID_fk}/${data.studentId}`
+    );
   };
 }

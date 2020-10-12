@@ -1,0 +1,14 @@
+.list-box {
+  display: inline-block;
+  width: 40px;
+  margin: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+
+  div {
+    height: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}

@@ -25,11 +25,13 @@ export class EventsComponent implements OnInit {
   };
 
   public openNewtab = (path: any) => {
-    window.open(
-      environment.url + 'events/' + path,
-      '',
-      'width=1024, height=728'
-    );
+    // window.open(
+    //   environment.url + 'events/' + path,
+    //   '',
+    //   'width=1024, height=728'
+    // );
+
+    window.open(environment.url + 'events/' + path, '_blank');
   };
 
   timeRemake = (time) => {

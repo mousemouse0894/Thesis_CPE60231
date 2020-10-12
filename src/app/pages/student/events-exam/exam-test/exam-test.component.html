@@ -96,10 +96,10 @@
                     [ngClass]="{
                       'bg-success':
                         answerFrom.get('answerList')['controls'][i].value
-                          .studentAnswer > 0,
+                          .studentAnswer.length > 0,
                       'bg-danger':
                         answerFrom.get('answerList')['controls'][i].value
-                          .studentAnswer <= 0
+                          .studentAnswer.length <= 0
                     }"
                   ></div>
                 </div>

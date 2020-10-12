@@ -172,51 +172,9 @@ export class AddEventsComponent implements OnInit {
       });
   };
 
-  public historyTest = (x: any) => {
-    this.historySelected = x;
-    this.service
-      .httpGet(
-        `stTesting/teacherGetHistory/${x.examtopicID}/${x.groupID_fk}?token=${
-          this.service.localStorage.get('userLogin')['token']
-        }`
-      )
-      .then((value: any) => {
-        if (value.success) {
-          this.historyTestResult = value.result;
-        } else {
-          // this.service.showAlert(``, value.massage, `error`);
-        }
-      });
-  };
-
-  public updateScore = (x: any, score: any) => {
-    let data = {
-      teacherScore: score,
-      stID_fk: x.stID_fk,
-      topicID_fk: x.topicID_fk,
-      storeID_fk: x.storeID,
-    };
-
-    this.service
-      .httpPost(
-        `stTesting/teacherUpdateScore?token=${
-          this.service.localStorage.get('userLogin')['token']
-        }
-  `,
-        JSON.stringify(data)
-      )
-      .then((value: any) => {
-        if (value.success) {
-          this.service.showAlert('', 'สำเร็จ', 'success');
-        } else {
-          this.service.showAlert('', value.message, 'error');
-        }
-      });
-  };
-
-  public detailScore = (data) => {
+  public historyTest = (data: any) => {
     this.service.navRouter(
-      `/events-exam/add/${this.historySelected.examtopicID}/${this.historySelected.groupID_fk}/${data.studentId}`
+      `/events-exam/${data.examtopicID}/${data.groupID_fk}`
     );
   };
 }

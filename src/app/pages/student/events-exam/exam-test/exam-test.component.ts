@@ -285,97 +285,56 @@ export class ExamTestComponent implements OnInit {
 
           // After Query
           // Check value between teacher and student
-          let newObj = [];
-          let allkey = [
-            ...new Set([
-              ...score.arrayMatch.teacherColumn,
-              ...score.arrayMatch.studentColumn,
-            ]),
-          ];
-
           if (score.arrayMatch.studentRow.length > 0) {
             if (keyword.includes('order by')) {
-              // Row match with order by
-              if (
-                score.arrayMatch.studentRow.length >
-                score.arrayMatch.teacherRow.length
-              ) {
-                score.arrayMatch.studentRow.forEach((array, i) => {
-                  if (typeof newObj[i] != 'object') newObj[i] = {};
-                  allkey.forEach((obj) => {
-                    try {
-                      if (score.arrayMatch.teacherRow[i][obj]) {
-                        if (
-                          score.arrayMatch.teacherRow[i][obj] ==
-                          score.arrayMatch.studentRow[i][obj]
-                        ) {
-                          newObj[i][
-                            `green,${obj}`
-                          ] = `#2DA745,!-${score.arrayMatch.studentRow[i][obj]}`;
-                        } else {
-                          score.arrayMatch.isQueryMatch = false;
-                          newObj[i][
-                            `red,${obj}`
-                          ] = `#DC3544,!-${score.arrayMatch.teacherRow[i][obj]}`;
-                        }
-                      } else {
-                        score.arrayMatch.isQueryMatch = false;
-                        newObj[i][
-                          `black,${obj}`
-                        ] = `#343A40,!-${score.arrayMatch.studentRow[i][obj]}`;
-                      }
-                    } catch (e) {
-                      score.arrayMatch.isQueryMatch = false;
-                      newObj[i][`black,${obj}`] = `#343A40,!-${
-                        score.arrayMatch.studentRow[i][obj] == undefined
-                          ? ''
-                          : score.arrayMatch.studentRow[i][obj]
-                      }`;
-                    }
-                  });
-                });
+              // Check column match
+              let listCol = [
+                ...new Set([
+                  ...score.arrayMatch.teacherColumn,
+                  ...score.arrayMatch.studentColumn,
+                ]),
+              ];
 
-                score.arrayMatch.tableMatch = [...newObj];
-                resolveSelect(true);
+              let isColMatch = true;
+
+              listCol.forEach((e, i) => {
+                if (
+                  `${score.arrayMatch.teacherColumn[i]}` ===
+                    `${score.arrayMatch.studentColumn[i]}` &&
+                  score.arrayMatch.teacherColumn[i] != undefined &&
+                  score.arrayMatch.teacherColumn[i] != ''
+                ) {
+                  listCol[i] = { col: `${e}`, match: true };
+                } else {
+                  listCol[i] = { col: `${e}`, match: false };
+                  isColMatch = false;
+                }
+              });
+
+              console.log(listCol);
+
+              // Check row
+              if (isColMatch) {
+                const Compare = (arr1, arr2) => {
+                  if (arr1.length != arr2.length) {
+                    return false;
+                  }
+
+                  let a1 = arr1.map((e) => JSON.stringify(e));
+                  let a2 = arr2.map((e) => JSON.stringify(e));
+
+                  return !a1.map((e, i) => e == a2[i]).includes(false);
+                };
+
+                score.arrayMatch.isQueryMatch = Compare(
+                  score.arrayMatch.studentRow,
+                  score.arrayMatch.teacherRow
+                );
               } else {
-                score.arrayMatch.teacherRow.forEach((array, i) => {
-                  if (typeof newObj[i] != 'object') newObj[i] = {};
-                  allkey.forEach((obj) => {
-                    try {
-                      if (score.arrayMatch.studentRow[i][obj]) {
-                        if (
-                          score.arrayMatch.teacherRow[i][obj] ==
-                          score.arrayMatch.studentRow[i][obj]
-                        ) {
-                          newObj[i][
-                            `green,${obj}`
-                          ] = `#2DA745,!-${score.arrayMatch.teacherRow[i][obj]}`;
-                        } else {
-                          score.arrayMatch.isQueryMatch = false;
-                          newObj[i][
-                            `black,${obj}`
-                          ] = `#343A40,!-${score.arrayMatch.studentRow[i][obj]}`;
-                        }
-                      } else {
-                        score.arrayMatch.isQueryMatch = false;
-                        newObj[i][
-                          `red,${obj}`
-                        ] = `#DC3544,!-${score.arrayMatch.teacherRow[i][obj]}`;
-                      }
-                    } catch (e) {
-                      score.arrayMatch.isQueryMatch = false;
-                      newObj[i][`black,${obj}`] = `#343A40,!-${
-                        score.arrayMatch.teacherRow[i][obj] == undefined
-                          ? ''
-                          : score.arrayMatch.teacherRow[i][obj]
-                      }`;
-                    }
-                  });
-                });
-
-                score.arrayMatch.tableMatch = [...newObj];
-                resolveSelect(true);
+                score.arrayMatch.isQueryMatch = false;
               }
+
+              resolveSelect(true);
             } else {
               // Row match without order by
               const Compare = (arr1, arr2) => {
@@ -585,8 +544,8 @@ export class ExamTestComponent implements OnInit {
       promiseCheckKeywordMatch,
       promiseCheckStringMatch,
     ]).then((val) => {
-      console.log('examStoreData', topicData);
-      console.log('score', score);
+      // console.log('examStoreData', topicData);
+      // console.log('score', score);
       let sumScore: number;
       if (
         teacherAnswer.toLowerCase().includes('select') &&
@@ -594,24 +553,24 @@ export class ExamTestComponent implements OnInit {
         score.arrayMatch.teacherColumn.length > 0
       ) {
         let subSc = topicData.score / 3;
-        console.log('subSc', subSc);
-        console.log('rm1', (subSc * 2) / 100);
-        console.log('km1', (subSc * score.keywordMatch.percent) / 100);
-        console.log('strm1', (subSc * score.stringMatch.percent) / 100);
+        // console.log('subSc', subSc);
+        // console.log('rm1', (subSc * 2) / 100);
+        // console.log('km1', (subSc * score.keywordMatch.percent) / 100);
+        // console.log('strm1', (subSc * score.stringMatch.percent) / 100);
         sumScore = score.arrayMatch.isQueryMatch
           ? subSc * 2 + (subSc * score.keywordMatch.percent) / 100
           : (subSc * score.keywordMatch.percent) / 100 +
             (subSc * score.stringMatch.percent) / 100;
-        console.log('sumScore', sumScore);
+        // console.log('sumScore', sumScore);
       } else {
         let subSc = topicData.score / 2;
-        console.log('subSc', subSc);
-        console.log('km', (subSc * score.keywordMatch.percent) / 100);
-        console.log('strm', (subSc * score.stringMatch.percent) / 100);
+        // console.log('subSc', subSc);
+        // console.log('km', (subSc * score.keywordMatch.percent) / 100);
+        // console.log('strm', (subSc * score.stringMatch.percent) / 100);
         sumScore =
           (subSc * score.keywordMatch.percent) / 100 +
           (subSc * score.stringMatch.percent) / 100;
-        console.log('sumScore', sumScore);
+        // console.log('sumScore', sumScore);
       }
 
       this.answerFrom.get('answerList')['controls'][indexAnswer].patchValue({

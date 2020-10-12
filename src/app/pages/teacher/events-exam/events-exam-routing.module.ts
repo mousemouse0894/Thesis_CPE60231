@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AddEventsComponent } from './add-events/add-events.component';
 import { OldEventsComponent } from './old-events/old-events.component';
+import { DetailEventsComponent } from './detail-events/detail-events.component';
 
 const routes: Routes = [
   {
@@ -10,17 +11,21 @@ const routes: Routes = [
     component: EventsExamComponent,
     children: [
       {
-        path: 'add',
+        path: '',
         pathMatch: 'prefix',
         children: [
           { path: '', component: AddEventsComponent },
+          {
+            path: ':examId/:groupId',
+            component: DetailEventsComponent,
+          },
           {
             path: ':examId/:groupId/:studentId',
             component: OldEventsComponent,
           },
         ],
       },
-      { path: '', redirectTo: '/events-exam/add' },
+      { path: '', redirectTo: '/events-exam' },
     ],
   },
 ];

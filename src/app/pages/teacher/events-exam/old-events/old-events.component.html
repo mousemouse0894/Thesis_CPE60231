@@ -4,6 +4,11 @@
     <li class="breadcrumb-item">
       <a [routerLink]="['/events-exam']">ระบบสอบ</a>
     </li>
+    <li class="breadcrumb-item">
+      <a [routerLink]="['/events-exam/' + this.examId + '/' + this.groupId]"
+        >ผลสอบ</a
+      >
+    </li>
     <li class="breadcrumb-item active" aria-current="page">
       คะแนนสอบ<span *ngIf="historyTestResult.length > 0">
         &nbsp;( {{ historyTestResult[0]["prename"]
@@ -14,336 +19,444 @@
   </ol>
 </nav>
 
-<div class="row" *ngIf="historyTestResult.length > 0; else noneResult">
-  <div class="col-lg-3 mb-3">
-    <div class="card">
-      <div class="card-body">
-        <div class="text-center">
-          <div
-            *ngFor="let x of historyTestResult[0]['testData']; let i = index"
-            class="list-box border"
-            (click)="listSelect = i"
-            [ngClass]="{ 'border-primary': listSelect == i }"
-          >
-            <div class="topBox border-bottom">{{ i + 1 }}</div>
-            <div
-              class="bottomBox"
-              [ngClass]="{
-                'bg-success': x.studentAnswer.length > 0,
-                'bg-danger': x.studentAnswer.length <= 0
-              }"
-            ></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-lg-9">
-    <div class="accordion mb-3" id="accordionExample">
+<div *ngIf="historyTestResult.length > 0; else noneResult">
+  <div
+    class="row"
+    *ngIf="historyTestResult[0]['testData'].length > 0; else noneResult2"
+  >
+    <div class="col-lg-3 mb-3">
       <div class="card">
-        <div class="card-header" id="headingOne">
-          <h2 class="mb-0">
-            <button
-              class="btn btn-link btn-block text-left"
-              type="button"
-              data-toggle="collapse"
-              data-target="#collapseOne"
-              aria-expanded="true"
-              aria-controls="collapseOne"
-            >
-              {{ listSelect + 1 }}.&nbsp;โจทย์
-            </button>
-          </h2>
-        </div>
-
-        <div
-          id="collapseOne"
-          class="collapse"
-          aria-labelledby="headingOne"
-          data-parent="#accordionExample"
-        >
-          <div class="card-body">
+        <div class="card-body">
+          <div class="mb-3">
+            <h3>ข้อสอบ</h3>
+          </div>
+          <div class="text-center">
             <div
-              [froalaView]="
-                historyTestResult[0]['testData'][listSelect]['text']
+              *ngFor="let x of historyTestResult[0]['testData']; let i = index"
+              class="list-box border"
+              (click)="
+                listSelect = i;
+                teacherScoreInput.setValue(
+                  historyTestResult[0]['testData'][this.listSelect][
+                    'teacherScore'
+                  ]
+                )
               "
-            ></div>
+              [ngClass]="{ 'border-primary': listSelect == i }"
+            >
+              <div class="topBox border-bottom">{{ i + 1 }}</div>
+              <div
+                class="bottomBox"
+                [ngClass]="{
+                  'bg-success': x.studentAnswer.length > 0,
+                  'bg-danger': x.studentAnswer.length <= 0
+                }"
+              ></div>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="card">
-      <div class="card-body">
-        <div
-          *ngIf="
-            historyTestResult[0]['testData'][listSelect]['checkDetail'].length >
-            0
-          "
-        >
-          <div class="row">
-            <div class="col-lg-12 mb-4">
-              <div class="border box-padding" style="border-radius: 5px">
-                <h2>1. การตรวจผลลัพธ์</h2>
-                <hr />
+    <div class="col-lg-9">
+      <div class="accordion" id="accordionExample">
+        <div class="card mb-3">
+          <div class="card-header" id="headingOne">
+            <h2 class="mb-0">
+              <button
+                class="btn btn-link btn-block text-left"
+                type="button"
+                data-toggle="collapse"
+                data-target="#collapseOne"
+                aria-expanded="true"
+                aria-controls="collapseOne"
+              >
+                {{ 1 }}.&nbsp;โจทย์
+              </button>
+            </h2>
+          </div>
 
+          <div
+            id="collapseOne"
+            class="collapse show"
+            aria-labelledby="headingOne"
+            data-parent="#accordionExample"
+          >
+            <div class="card-body">
+              <div
+                [froalaView]="
+                  historyTestResult[0]['testData'][listSelect]['text']
+                "
+              ></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card mb-3">
+          <div class="card-header" id="headingOne2">
+            <h2 class="mb-0">
+              <button
+                class="btn btn-link btn-block text-left"
+                type="button"
+                data-toggle="collapse"
+                data-target="#collapseOne2"
+                aria-expanded="true"
+                aria-controls="collapseOne2"
+              >
+                {{ 2 }}.&nbsp;การตรวจคำตอบ
+              </button>
+            </h2>
+          </div>
+
+          <div
+            id="collapseOne2"
+            class="collapse"
+            aria-labelledby="headingOne2"
+            data-parent="#accordionExample"
+          >
+            <div class="card-body mb-3">
+              <div
+                *ngIf="
+                  historyTestResult[0]['testData'][listSelect]['checkDetail']
+                    .length > 0
+                "
+              >
                 <div class="row">
-                  <div class="col-lg-12 mb-3">
-                    <h4 class="mb-3"><b>ผลลัพธ์ของอาจารย์</b></h4>
-                    <div style="overflow: auto">
-                      <table
-                        class="table table-sm table-bordered table-hover"
-                        *ngIf="
-                          getKeyObject(
-                            service.jsParse(
-                              historyTestResult[0]['testData'][listSelect][
-                                'checkDetail'
-                              ]
-                            )['arrayMatch']['teacherRow']
-                          ).length > 0
-                        "
-                      >
-                        <thead>
-                          <tr>
-                            <th
-                              *ngFor="
-                                let x of getKeyObject(
+                  <div class="col-lg-12 mb-4">
+                    <div class="border box-padding" style="border-radius: 5px">
+                      <h2>1. การตรวจผลลัพธ์</h2>
+                      <hr />
+
+                      <div class="row">
+                        <div class="col-lg-12 mb-3">
+                          <h4 class="mb-3"><b>ผลลัพธ์ของอาจารย์</b></h4>
+                          <div style="overflow: auto">
+                            <table
+                              class="table table-sm table-bordered table-hover"
+                              *ngIf="
+                                getKeyObject(
                                   service.jsParse(
                                     historyTestResult[0]['testData'][
                                       listSelect
                                     ]['checkDetail']
                                   )['arrayMatch']['teacherRow']
-                                )
+                                ).length > 0
                               "
                             >
-                              {{ x }}
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr
-                            *ngFor="
-                              let x of service.jsParse(
-                                historyTestResult[0]['testData'][listSelect][
-                                  'checkDetail'
-                                ]
-                              )['arrayMatch']['teacherRow']
-                            "
-                          >
-                            <td *ngFor="let xx of getKeyObject(x)">
-                              {{ x[xx] }}
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
+                              <thead>
+                                <tr>
+                                  <th
+                                    *ngFor="
+                                      let x of getKeyObject(
+                                        service.jsParse(
+                                          historyTestResult[0]['testData'][
+                                            listSelect
+                                          ]['checkDetail']
+                                        )['arrayMatch']['teacherRow']
+                                      )
+                                    "
+                                  >
+                                    {{ x }}
+                                  </th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr
+                                  *ngFor="
+                                    let x of service.jsParse(
+                                      historyTestResult[0]['testData'][
+                                        listSelect
+                                      ]['checkDetail']
+                                    )['arrayMatch']['teacherRow']
+                                  "
+                                >
+                                  <td *ngFor="let xx of getKeyObject(x)">
+                                    {{ x[xx] }}
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
 
-                  <div class="col-lg-12 mb-3">
-                    <h4 class="mb-3"><b>ผลลัพธ์ของนักศึกษา</b></h4>
-                    <div style="overflow: auto">
-                      <table
-                        class="table table-sm table-bordered table-hover"
-                        *ngIf="
-                          getKeyObject(
-                            service.jsParse(
-                              historyTestResult[0]['testData'][listSelect][
-                                'checkDetail'
-                              ]
-                            )['arrayMatch']['studentRow']
-                          ).length > 0
-                        "
-                      >
-                        <thead>
-                          <tr>
-                            <th
-                              *ngFor="
-                                let x of getKeyObject(
+                        <div class="col-lg-12 mb-3">
+                          <h4 class="mb-3"><b>ผลลัพธ์ของนักศึกษา</b></h4>
+                          <div style="overflow: auto">
+                            <table
+                              class="table table-sm table-bordered table-hover"
+                              *ngIf="
+                                getKeyObject(
                                   service.jsParse(
                                     historyTestResult[0]['testData'][
                                       listSelect
                                     ]['checkDetail']
                                   )['arrayMatch']['studentRow']
-                                )
+                                ).length > 0
                               "
                             >
-                              {{ x }}
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr
-                            *ngFor="
-                              let x of service.jsParse(
-                                historyTestResult[0]['testData'][listSelect][
-                                  'checkDetail'
-                                ]
-                              )['arrayMatch']['studentRow']
-                            "
-                          >
-                            <td *ngFor="let xx of getKeyObject(x)">
-                              {{ x[xx] }}
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
+                              <thead>
+                                <tr>
+                                  <th
+                                    *ngFor="
+                                      let x of getKeyObject(
+                                        service.jsParse(
+                                          historyTestResult[0]['testData'][
+                                            listSelect
+                                          ]['checkDetail']
+                                        )['arrayMatch']['studentRow']
+                                      )
+                                    "
+                                  >
+                                    {{ x }}
+                                  </th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr
+                                  *ngFor="
+                                    let x of service.jsParse(
+                                      historyTestResult[0]['testData'][
+                                        listSelect
+                                      ]['checkDetail']
+                                    )['arrayMatch']['studentRow']
+                                  "
+                                >
+                                  <td *ngFor="let xx of getKeyObject(x)">
+                                    {{ x[xx] }}
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div>
+                        <h4><b>ความถูกต้องของผลลัพธ์</b></h4>
+                        <div>
+                          {{
+                            service.jsParse(
+                              historyTestResult[0]["testData"][listSelect][
+                                "checkDetail"
+                              ]
+                            )["arrayMatch"]["isQueryMatch"]
+                              ? "100%"
+                              : "0%"
+                          }}
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
 
-                <div>
-                  <h4><b>ความถูกต้องของผลลัพธ์</b></h4>
-                  <div>
-                    {{
-                      service.jsParse(
-                        historyTestResult[0]["testData"][listSelect][
-                          "checkDetail"
-                        ]
-                      )["arrayMatch"]["isQueryMatch"]
-                        ? "100%"
-                        : "0%"
-                    }}
+                <div class="row">
+                  <div class="col-lg-6 mb-3">
+                    <div class="border box-padding" style="border-radius: 5px">
+                      <h2>2. การตรวจคำสำคัญ</h2>
+                      <hr />
+
+                      <h4><b>คำสำคัญของอาจารย์</b></h4>
+                      <div class="mb-3">
+                        <span
+                          *ngFor="
+                            let x of service.jsParse(
+                              historyTestResult[0]['testData'][listSelect][
+                                'checkDetail'
+                              ]
+                            )['keywordMatch']['keywordTeacher']
+                          "
+                        >
+                          {{ upperCase(x) }}
+                        </span>
+                      </div>
+
+                      <h4><b>คำสำคัญของนักศึกษา</b></h4>
+                      <div class="mb-3">
+                        <span
+                          *ngFor="
+                            let x of getKeyObject(
+                              service.jsParse(
+                                historyTestResult[0]['testData'][listSelect][
+                                  'checkDetail'
+                                ]
+                              )['keywordMatch']['keywordStudent']
+                            )
+                          "
+                          [hidden]="
+                            !service.jsParse(
+                              historyTestResult[0]['testData'][listSelect][
+                                'checkDetail'
+                              ]
+                            )['keywordMatch']['keywordStudent'][x]
+                          "
+                        >
+                          {{ upperCase(x) }}
+                        </span>
+                      </div>
+
+                      <h4><b>การเทียบคำ</b></h4>
+                      <div class="mb-3">
+                        <span
+                          *ngFor="
+                            let x of getKeyObject(
+                              service.jsParse(
+                                historyTestResult[0]['testData'][listSelect][
+                                  'checkDetail'
+                                ]
+                              )['keywordMatch']['keywordStudent']
+                            )
+                          "
+                          class="text-{{
+                            service.jsParse(
+                              historyTestResult[0]['testData'][listSelect][
+                                'checkDetail'
+                              ]
+                            )['keywordMatch']['keywordStudent'][x]
+                              ? 'success'
+                              : 'danger'
+                          }}"
+                        >
+                          {{ upperCase(x) }}
+                        </span>
+                      </div>
+
+                      <h4><b>ความถูกต้องของคำสำคัญ</b></h4>
+                      <div>
+                        {{
+                          subString(
+                            service.jsParse(
+                              historyTestResult[0]["testData"][listSelect][
+                                "checkDetail"
+                              ]
+                            )["keywordMatch"]["percent"]
+                          )
+                        }}%
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-6">
+                    <div class="border box-padding" style="border-radius: 5px">
+                      <h2>3. การตรวจคำตอบ</h2>
+                      <hr />
+
+                      <h4><b>คำตอบของอาจารย์</b></h4>
+                      <div class="mb-3">
+                        {{
+                          historyTestResult[0]["testData"][listSelect]["answer"]
+                        }}
+                      </div>
+
+                      <h4><b>คำตอบของนักศึกษา</b></h4>
+                      <div class="mb-3">
+                        {{
+                          historyTestResult[0]["testData"][listSelect][
+                            "studentAnswer"
+                          ]
+                        }}
+                      </div>
+
+                      <h4><b>การเทียบคำ (เทียบด้วยตัวพิมพ์เล็ก)</b></h4>
+                      <div class="mb-3">
+                        <span
+                          *ngFor="
+                            let x of strSplit(
+                              historyTestResult[0]['testData'][listSelect][
+                                'stringMatch'
+                              ],
+                              ' '
+                            )
+                          "
+                          [ngStyle]="{ color: strSplit(x, ',!-')[0] }"
+                          [hidden]="strSplit(x, ',!-')[1] == undefined"
+                        >
+                          {{ decodeURIComponent(strSplit(x, ",!-")[1] + " ") }}
+                        </span>
+                      </div>
+
+                      <h4><b>ความถูกต้องของคำตอบ</b></h4>
+                      <div class="">
+                        {{
+                          subString(
+                            service.jsParse(
+                              historyTestResult[0]["testData"][listSelect][
+                                "checkDetail"
+                              ]
+                            )["stringMatch"]["percent"]
+                          )
+                        }}%
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
+        </div>
 
-          <div class="row">
-            <div class="col-lg-6 mb-3">
-              <div class="border box-padding" style="border-radius: 5px">
-                <h2>2. การตรวจคำสำคัญ</h2>
-                <hr />
+        <div class="card">
+          <div class="card-header" id="headingOne3">
+            <h2 class="mb-0">
+              <button
+                class="btn btn-link btn-block text-left"
+                type="button"
+                data-toggle="collapse"
+                data-target="#collapseOne3"
+                aria-expanded="true"
+                aria-controls="collapseOne3"
+              >
+                {{ 3 }}.&nbsp;การให้คะแนน
+              </button>
+            </h2>
+          </div>
 
-                <h4><b>คำสำคัญของอาจารย์</b></h4>
-                <div class="mb-3">
-                  <span
-                    *ngFor="
-                      let x of service.jsParse(
-                        historyTestResult[0]['testData'][listSelect][
-                          'checkDetail'
-                        ]
-                      )['keywordMatch']['keywordTeacher']
-                    "
-                  >
-                    {{ upperCase(x) }}
-                  </span>
-                </div>
-
-                <h4><b>คำสำคัญของนักศึกษา</b></h4>
-                <div class="mb-3">
-                  <span
-                    *ngFor="
-                      let x of getKeyObject(
-                        service.jsParse(
-                          historyTestResult[0]['testData'][listSelect][
-                            'checkDetail'
-                          ]
-                        )['keywordMatch']['keywordStudent']
-                      )
-                    "
-                    [hidden]="
-                      !service.jsParse(
-                        historyTestResult[0]['testData'][listSelect][
-                          'checkDetail'
-                        ]
-                      )['keywordMatch']['keywordStudent'][x]
-                    "
-                  >
-                    {{ upperCase(x) }}
-                  </span>
-                </div>
-
-                <h4><b>การเทียบคำ</b></h4>
-                <div class="mb-3">
-                  <span
-                    *ngFor="
-                      let x of getKeyObject(
-                        service.jsParse(
-                          historyTestResult[0]['testData'][listSelect][
-                            'checkDetail'
-                          ]
-                        )['keywordMatch']['keywordStudent']
-                      )
-                    "
-                    class="text-{{
-                      service.jsParse(
-                        historyTestResult[0]['testData'][listSelect][
-                          'checkDetail'
-                        ]
-                      )['keywordMatch']['keywordStudent'][x]
-                        ? 'success'
-                        : 'danger'
-                    }}"
-                  >
-                    {{ upperCase(x) }}
-                  </span>
-                </div>
-
-                <h4><b>ความถูกต้องของคำสำคัญ</b></h4>
-                <div>
-                  {{
-                    subString(
-                      service.jsParse(
-                        historyTestResult[0]["testData"][listSelect][
-                          "checkDetail"
-                        ]
-                      )["keywordMatch"]["percent"]
-                    )
-                  }}%
-                </div>
-              </div>
-            </div>
-
-            <div class="col-lg-6">
-              <div class="border box-padding" style="border-radius: 5px">
-                <h2>3. การตรวจคำตอบ</h2>
-                <hr />
-
-                <h4><b>คำตอบของอาจารย์</b></h4>
-                <div class="mb-3">
-                  {{ historyTestResult[0]["testData"][listSelect]["answer"] }}
-                </div>
-
-                <h4><b>คำตอบของนักศึกษา</b></h4>
-                <div class="mb-3">
-                  {{
-                    historyTestResult[0]["testData"][listSelect][
-                      "studentAnswer"
-                    ]
-                  }}
-                </div>
-
-                <h4><b>การเทียบคำ (เทียบด้วยตัวพิมพ์เล็ก)</b></h4>
-                <div class="mb-3">
-                  <span
-                    *ngFor="
-                      let x of strSplit(
-                        historyTestResult[0]['testData'][listSelect][
-                          'stringMatch'
-                        ],
-                        ' '
-                      )
-                    "
-                    [ngStyle]="{ color: strSplit(x, ',!-')[0] }"
-                    [hidden]="strSplit(x, ',!-')[1] == undefined"
-                  >
-                    {{ decodeURIComponent(strSplit(x, ",!-")[1] + " ") }}
-                  </span>
-                </div>
-
-                <h4><b>ความถูกต้องของคำตอบ</b></h4>
-                <div class="">
-                  {{
-                    subString(
-                      service.jsParse(
-                        historyTestResult[0]["testData"][listSelect][
-                          "checkDetail"
-                        ]
-                      )["stringMatch"]["percent"]
-                    )
-                  }}%
+          <div
+            id="collapseOne3"
+            class="collapse"
+            aria-labelledby="headingOne3"
+            data-parent="#accordionExample"
+          >
+            <div class="card-body">
+              <h4>
+                <b>คะแนนของโจทย์ : </b
+                >{{ historyTestResult[0]["testData"][listSelect]["score"] }}
+              </h4>
+              <h4>
+                <b>คะแนนการตรวจของระบบ : </b
+                >{{
+                  historyTestResult[0]["testData"][listSelect]["studentScore"]
+                }}
+              </h4>
+              <h4>
+                <b>คะแนนการตรวจของอาจารย์ : </b>
+              </h4>
+              <div class="row">
+                <div class="col-lg-6">
+                  <div class="input-group">
+                    <input
+                      type="number"
+                      class="form-control"
+                      placeholder="คะแนนการตรวจของอาจารย์"
+                      aria-label="teacherScore"
+                      aria-describedby="button-teacherScore"
+                      [formControl]="teacherScoreInput"
+                    />
+                    <div class="input-group-append">
+                      <button
+                        class="btn btn-outline-primary"
+                        type="button"
+                        id="button-teacherScore"
+                        (click)="
+                          updateScore(
+                            historyTestResult[0]['testData'][listSelect],
+                            teacherScoreInput.value
+                          )
+                        "
+                      >
+                        บันทึก
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -352,6 +465,8 @@
       </div>
     </div>
   </div>
+
+  <ng-template #noneResult2> <h2>ไม่พบข้อมูลการสอบ</h2> </ng-template>
 </div>
 
-<ng-template #noneResult> Hello </ng-template>
+<ng-template #noneResult> <h2>ไม่พบข้อมูลการสอบ</h2> </ng-template>

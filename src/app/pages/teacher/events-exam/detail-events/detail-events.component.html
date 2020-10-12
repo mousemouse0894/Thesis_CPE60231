@@ -1,0 +1,107 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a [routerLink]="['/home']">หน้าหลัก</a></li>
+    <li class="breadcrumb-item">
+      <a [routerLink]="['/events-exam']">ระบบสอบ</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">
+      ผลสอบ (รหัสรายการสอบ : {{ examId }})
+    </li>
+  </ol>
+</nav>
+
+<div *ngIf="testResult != null; else onTestResult">
+  <div class="card">
+    <div class="card-body">
+      <h3><b>กลุ่มเรียน : </b>{{ testResult["groupName"] }}</h3>
+      <h3><b>คำสั่ง : </b>{{ testResult["topicText"] }}</h3>
+      <h3><b>เริ่มสอบ : </b>{{ timeRemake(testResult["timeStart"]) }}</h3>
+      <h3><b>สิ้นสุดการสอบ : </b>{{ timeRemake(testResult["timeEnd"]) }}</h3>
+
+      <div style="overflow: auto" class="mt-3">
+        <table class="table table-bordered table-md">
+          <thead>
+            <tr>
+              <th scope="col"></th>
+              <th scope="col">ชื่อ - นามสกุล</th>
+              <th scope="col">ประเภทคะแนน</th>
+              <th scope="col" *ngFor="let x of numTopicList; let i = index">
+                ข้อที่ {{ i + 1 }}
+              </th>
+            </tr>
+          </thead>
+          <tbody *ngFor="let x of historyTestResult; let i = index">
+            <tr>
+              <td rowspan="2" style="vertical-align: middle">{{ i + 1 }}</td>
+              <td rowspan="2" style="vertical-align: middle">
+                <a
+                  [routerLink]="[
+                    '/events-exam/' +
+                      this.examId +
+                      '/' +
+                      this.groupId +
+                      '/' +
+                      x.studentId
+                  ]"
+                >
+                  {{ x["prename"] }}{{ x["firstNameThai"] }}
+                  {{ x["lastNameThai"] }}</a
+                >
+              </td>
+              <td style="vertical-align: middle">คะแนนจากระบบ</td>
+              <td
+                *ngFor="let test of numTopicList; let testIndex = index"
+                style="vertical-align: middle"
+              >
+                <span *ngIf="x['testData'][testIndex]; else nonStudentScore">
+                  {{
+                    x["testData"][testIndex]["answer"].length <= 0
+                      ? "-"
+                      : subString(x["testData"][testIndex]["studentScore"])
+                          .length <= 0
+                      ? "-"
+                      : subString(x["testData"][testIndex]["studentScore"])
+                  }}
+                  /
+                  {{ subString(x["testData"][testIndex]["score"]) }}
+                </span>
+                <ng-template #nonStudentScore>
+                  {{ "-" }}
+                </ng-template>
+              </td>
+            </tr>
+            <tr>
+              <td style="vertical-align: middle">คะแนนจากอาจารย์</td>
+              <td
+                *ngFor="let test of numTopicList; let testIndex = index"
+                style="vertical-align: middle"
+              >
+                <span *ngIf="x['testData'][testIndex]; else nonStudentScore">
+                  {{
+                    x["testData"][testIndex]["answer"].length <= 0
+                      ? "-"
+                      : subString(x["testData"][testIndex]["teacherScore"])
+                          .length <= 0
+                      ? "-"
+                      : subString(x["testData"][testIndex]["teacherScore"])
+                  }}
+                  /
+                  {{ subString(x["testData"][testIndex]["score"]) }}
+                </span>
+                <ng-template #nonStudentScore>
+                  {{ "-" }}
+                </ng-template>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #onTestResult>
+  <div>
+    <h2>ไม่พบข้อมูลการสอบ</h2>
+  </div>
+</ng-template>

@@ -1,4 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { AppService } from 'src/app/services/app.service';
 
@@ -7,9 +14,12 @@ import { AppService } from 'src/app/services/app.service';
   templateUrl: './old-events.component.html',
   styleUrls: ['./old-events.component.scss'],
 })
-export class OldEventsComponent implements OnInit {
+export class OldEventsComponent implements OnInit, AfterViewInit {
   public historyTestResult: Array<any> = [];
   public listSelect: number = 0;
+  public examId: string = '';
+  public groupId: string = '';
+  public teacherScoreInput = new FormControl();
 
   constructor(
     private activeRoute: ActivatedRoute,
@@ -17,15 +27,17 @@ export class OldEventsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.examId = this.activeRoute.snapshot.paramMap.get('examId');
+    this.groupId = this.activeRoute.snapshot.paramMap.get('groupId');
     this.testHistory();
   }
+
+  ngAfterViewInit() {}
 
   private testHistory = () => {
     this.service
       .httpGet(
-        `stTesting/teacherGetHistory/${this.activeRoute.snapshot.paramMap.get(
-          'examId'
-        )}/${this.activeRoute.snapshot.paramMap.get('groupId')}?token=${
+        `stTesting/teacherGetHistory/${this.examId}/${this.groupId}?token=${
           this.service.localStorage.get('userLogin')['token']
         }`
       )
@@ -47,7 +59,13 @@ export class OldEventsComponent implements OnInit {
                   })
                 : [];
 
-            console.log(this.historyTestResult);
+            this.teacherScoreInput.setValue(
+              `${
+                this.historyTestResult[0]['testData'][this.listSelect][
+                  'teacherScore'
+                ]
+              }`
+            );
           }
         } else {
           // this.service.showAlert(``, value.massage, `error`);
@@ -80,5 +98,36 @@ export class OldEventsComponent implements OnInit {
 
   subString = (str: any) => {
     return String(str).length > 4 ? String(str).substring(0, 5) : String(str);
+  };
+
+  public updateScore = (x: any, score: any) => {
+    score = parseInt(score);
+
+    if (score > parseInt(x['score'])) {
+      this.service.toastr.error('บันทึกคะแนนไม่สำเร็จ', '');
+    } else {
+      let data = {
+        teacherScore: score,
+        stID_fk: x.stID_fk,
+        topicID_fk: x.topicID_fk,
+        storeID_fk: x.storeID,
+      };
+
+      this.service
+        .httpPost(
+          `stTesting/teacherUpdateScore?token=${
+            this.service.localStorage.get('userLogin')['token']
+          }
+      `,
+          JSON.stringify(data)
+        )
+        .then((value: any) => {
+          if (value.success) {
+            this.service.toastr.success('บันทึกคะแนนสำเร็จ', '');
+          } else {
+            this.service.showAlert('', value.message, 'error');
+          }
+        });
+    }
   };
 }

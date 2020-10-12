@@ -3,7 +3,13 @@ import { AppService } from './../../../../services/app.service';
 import { Component, OnInit } from '@angular/core';
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
+import { HttpClient } from '@angular/common/http';
+import MySQLParser, { SqlMode, MySQLQueryType } from 'ts-mysql-parser';
 
+const parser = new MySQLParser({
+  version: '5.7.7',
+  mode: SqlMode.AnsiQuotes,
+});
 const _window: any = window;
 
 interface FoodNode {
@@ -23,11 +29,21 @@ export class QueryComponent implements OnInit {
   public sqlCommand: string = '';
   public pagiShowdatabase: number = 1;
   public aceEditor: any = null;
+  public isSQLCommand = {
+    isPass: false,
+    command: '',
+    errorText: '',
+    queryType: '',
+  };
 
   treeControl = new NestedTreeControl<FoodNode>((node) => node.children);
   dataSource = new MatTreeNestedDataSource<FoodNode>();
 
-  constructor(public service: AppService, private route: ActivatedRoute) {}
+  constructor(
+    public service: AppService,
+    private route: ActivatedRoute,
+    private http: HttpClient
+  ) {}
 
   hasChild = (_: number, node: FoodNode) =>
     !!node.children && node.children.length > 0;
@@ -119,23 +135,60 @@ export class QueryComponent implements OnInit {
 
   public onQuery = () => {
     this.dataInTable = null;
-    this.service
-      .httpPost(
-        `/exdatabase/simquery?token=${
-          this.service.localStorage.get('userLogin')['token']
-        }`,
-        JSON.stringify({
-          sqldatabase: this.dbSelected,
-          sqlquery: this.aceEditor.getValue(),
-        })
-      )
-      .then((value: any) => {
-        if (value.success) {
-          this.dataInTable = value.result;
-        } else {
-          this.dataInTable = null;
+    this.isSQLCommand = {
+      isPass: false,
+      command: '',
+      errorText: '',
+      queryType: '',
+    };
+    let queryTypeList = [];
+
+    const checkSQLParse = parser.parse(`${this.aceEditor.getValue()}`);
+
+    if (checkSQLParse['parserError'] == undefined) {
+      // pass is query
+      const queryType = parser.getQueryType(checkSQLParse);
+
+      Object.keys(MySQLQueryType).forEach((e) => {
+        if (MySQLQueryType[e] === queryType) {
+          queryTypeList.push(`${e}`.split('Qt').pop());
         }
       });
+
+      this.isSQLCommand = {
+        command: this.aceEditor.getValue(),
+        isPass: true,
+        errorText: '',
+        queryType: queryTypeList.join(','),
+      };
+    } else {
+      this.isSQLCommand = {
+        command: this.aceEditor.getValue(),
+        isPass: false,
+        errorText: checkSQLParse['parserError']['message'],
+        queryType: queryTypeList.join(','),
+      };
+    }
+
+    console.log(this.isSQLCommand);
+
+    // this.service
+    //   .httpPost(
+    //     `/exdatabase/simquery?token=${
+    //       this.service.localStorage.get('userLogin')['token']
+    //     }`,
+    //     JSON.stringify({
+    //       sqldatabase: this.dbSelected,
+    //       sqlquery: this.aceEditor.getValue(),
+    //     })
+    //   )
+    //   .then((value: any) => {
+    //     if (value.success) {
+    //       this.dataInTable = value.result;
+    //     } else {
+    //       this.dataInTable = null;
+    //     }
+    //   });
   };
 
   public getKeyObject = (array) => {

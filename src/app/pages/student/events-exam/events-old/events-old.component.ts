@@ -89,4 +89,8 @@ export class EventsOldComponent implements OnInit {
         }
       });
   };
+
+  subString = (str: any) => {
+    return String(str).length > 4 ? String(str).substring(0, 5) : String(str);
+  };
 }

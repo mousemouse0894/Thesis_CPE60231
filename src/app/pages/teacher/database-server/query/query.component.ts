@@ -108,6 +108,8 @@ export class QueryComponent implements OnInit {
     this.dbSelected = db_name;
     this.tbSelected = tb_name;
     this.dataInTable = null;
+    this.isSQLCommand.isPass = true;
+    this.isSQLCommand.queryType = 'Select';
 
     this.service
       .httpGet(
@@ -172,23 +174,23 @@ export class QueryComponent implements OnInit {
 
     console.log(this.isSQLCommand);
 
-    // this.service
-    //   .httpPost(
-    //     `/exdatabase/simquery?token=${
-    //       this.service.localStorage.get('userLogin')['token']
-    //     }`,
-    //     JSON.stringify({
-    //       sqldatabase: this.dbSelected,
-    //       sqlquery: this.aceEditor.getValue(),
-    //     })
-    //   )
-    //   .then((value: any) => {
-    //     if (value.success) {
-    //       this.dataInTable = value.result;
-    //     } else {
-    //       this.dataInTable = null;
-    //     }
-    //   });
+    this.service
+      .httpPost(
+        `/exdatabase/simquery?token=${
+          this.service.localStorage.get('userLogin')['token']
+        }`,
+        JSON.stringify({
+          sqldatabase: this.dbSelected,
+          sqlquery: this.aceEditor.getValue(),
+        })
+      )
+      .then((value: any) => {
+        if (value.success) {
+          this.dataInTable = value.result;
+        } else {
+          this.dataInTable = null;
+        }
+      });
   };
 
   public getKeyObject = (array) => {

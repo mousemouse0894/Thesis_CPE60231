@@ -4,6 +4,13 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
+import MySQLParser, { SqlMode, MySQLQueryType } from 'ts-mysql-parser';
+
+const parser = new MySQLParser({
+  version: '5.7.7',
+  mode: SqlMode.AnsiQuotes,
+});
+const _window: any = window;
 
 @Component({
   selector: 'app-exam-test',
@@ -18,6 +25,13 @@ export class ExamTestComponent implements OnInit {
   public timeCountdow: string = '00:00:00';
   public isIPAddress: boolean = false;
   public listSelect: number = 0;
+  public testSuccess: boolean = false;
+
+  public sqlFormat = {
+    isTrue: false,
+    message: '',
+    keywordMissing: '',
+  };
 
   constructor(
     public service: AppService,
@@ -36,43 +50,85 @@ export class ExamTestComponent implements OnInit {
     });
   }
 
-  public testCountDown = (timeNow, timeEnd) => {
+  answerKeyup = (str: string, keyword: Array<any>) => {
+    const checkSQLParse = parser.parse(`${str}`);
+    let listMissing = [];
+    if (checkSQLParse['parserError'] == undefined) {
+      this.sqlFormat.isTrue = true;
+
+      keyword.forEach((e, i) => {
+        if (!str.toLowerCase().includes(`${e}`.toLowerCase()))
+          listMissing.push(`${keyword[i]}`);
+      });
+
+      this.sqlFormat.keywordMissing = listMissing.join(', ');
+    } else {
+      this.sqlFormat = {
+        isTrue: false,
+        message: checkSQLParse['parserError']['message'],
+        keywordMissing: '',
+      };
+    }
+  };
+
+  timeRemake = (time) => {
+    let dt = new Date(time);
+
+    return `${dt.getDate()} ${this.service.month[dt.getMonth()]} ${
+      dt.getFullYear() + 543
+    }  ${dt.getHours()}:${dt.getMinutes()}`;
+  };
+
+  public testCountDown = (timeNow, timeEnd, timeStart) => {
     let countDownDate = new Date(timeEnd).getTime();
     let now = new Date(timeNow).getTime();
+    let start = new Date(timeStart).getTime();
     let distance = countDownDate - now;
 
-    this.countdownInterval = setInterval(() => {
-      now += 1000;
-      distance = countDownDate - now;
+    if (!this.testSuccess) {
+      if (start - now > 0) {
+        this.service.showAlert('ยังไม่ถึงเวลาเข้าสอบ', '', 'error');
+      } else {
+        this.countdownInterval = setInterval(() => {
+          now += 1000;
+          distance = countDownDate - now;
 
-      let days = Math.floor(distance / (1000 * 60 * 60 * 24));
-      let hours = Math.floor(
-        (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-      );
-      let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-      let seconds = Math.floor((distance % (1000 * 60)) / 1000);
+          let days = Math.floor(distance / (1000 * 60 * 60 * 24));
+          let hours = Math.floor(
+            (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+          );
+          let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+          let seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-      this.timeCountdow = `${this.service.zeroPad(
-        hours,
-        10
-      )}:${this.service.zeroPad(minutes, 10)}:${this.service.zeroPad(
-        seconds,
-        10
-      )}`;
+          this.timeCountdow = `${this.service.zeroPad(
+            hours,
+            10
+          )}:${this.service.zeroPad(minutes, 10)}:${this.service.zeroPad(
+            seconds,
+            10
+          )}`;
 
-      if (distance < 0) {
-        clearInterval(this.countdownInterval);
-        this.checkPassword = true;
-        // this.service.showAlert(
-        //   'หมดเวลาทำข้อสอบ',
-        //   `${this.Getexamtopicdata['result'][0].group_name}`,
-        //   'error'
-        // );
+          if (distance < 0) {
+            clearInterval(this.countdownInterval);
+            this.checkPassword = true;
+            // this.service.showAlert(
+            //   'หมดเวลาทำข้อสอบ',
+            //   `${this.Getexamtopicdata['result'][0].group_name}`,
+            //   'error'
+            // );
 
-        this.countdownInterval = null;
-        this.onSubmitAnswer(false);
+            this.countdownInterval = null;
+            this.onSubmitAnswer(false);
+          }
+        }, 1000);
       }
-    }, 1000);
+    } else {
+      this.service.showAlert(
+        'คุณทำข้อสอบชุดนี้แล้ว',
+        'สามารถดูคะแนนได้หลังจากหมดเวลาสอบ',
+        'error'
+      );
+    }
   };
 
   public onGetexamtopicdata = () => {
@@ -89,24 +145,37 @@ export class ExamTestComponent implements OnInit {
         if (value.success) {
           this.Getexamtopicdata = value;
 
-          if (
-            `${value['MyIp']}`.split('.')[0] !=
-            `${value['result'][0]['limitIP']}`.split('.')[0]
-          ) {
-            this.service.showAlert(
-              'ไม่อนุญาตให้เข้าสอบจากเครือข่ายของคุณ',
-              '',
-              'error'
-            );
-            this.isIPAddress = false;
-          } else {
+          value['topicData'].forEach((e) => {
+            if (e['isEnd'] == 'true') {
+              this.testSuccess = true;
+            }
+          });
+
+          if (`${value['result'][0]['limitIP']}` == '0') {
             this.isIPAddress = true;
+          } else {
+            if (
+              `${value['MyIp']}`.split('.')[0] !=
+              `${value['result'][0]['limitIP']}`.split('.')[0]
+            ) {
+              this.service.showAlert(
+                'ไม่อนุญาตให้เข้าสอบจากเครือข่ายของคุณ',
+                '',
+                'error'
+              );
+              this.isIPAddress = false;
+            } else {
+              this.isIPAddress = true;
+            }
           }
 
+          // start count time
           this.testCountDown(
             this.Getexamtopicdata['getDateTime'],
-            this.Getexamtopicdata['result'][0]['timeEnd']
+            this.Getexamtopicdata['result'][0]['timeEnd'],
+            this.Getexamtopicdata['result'][0]['timeStart']
           );
+
           if (value.topicData.length > 0) {
             let answerList = this.answerFrom.get('answerList') as FormArray;
             value.topicData.forEach((element) => {
@@ -311,7 +380,7 @@ export class ExamTestComponent implements OnInit {
                 }
               });
 
-              console.log(listCol);
+              // console.log(listCol);
 
               // Check row
               if (isColMatch) {

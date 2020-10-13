@@ -36,9 +36,10 @@ export class EventsComponent implements OnInit {
 
   timeRemake = (time) => {
     let dt = new Date(time);
-    return `${
-      dt.toISOString().split('T')[0]
-    } ${dt.getHours()}:${dt.getMinutes()}`;
+
+    return `${dt.getDate()} ${this.service.month[dt.getMonth()]} ${
+      dt.getFullYear() + 543
+    }  ${dt.getHours()}:${dt.getMinutes()}`;
   };
 
   public getCurrentTime = () => {

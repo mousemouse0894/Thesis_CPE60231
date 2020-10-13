@@ -71,8 +71,8 @@
           <h4>
             <b>ผลการตรวจจากระบบ : </b
             >{{
-              historySelected.sumstudentScore
-                ? historySelected.sumstudentScore
+              historyTestResult[0]["sumstudentScore"]
+                ? subString(historyTestResult[0]["sumstudentScore"])
                 : 0
             }}
             / {{ historyTestResult[0]["exambodyScore"] }}
@@ -80,18 +80,12 @@
           <h4>
             <b>ผลการตรวจจากอาจารย์ : </b
             >{{
-              historySelected.sumteacherScore
-                ? historySelected.sumteacherScore
+              historyTestResult[0]["sumteacherScore"]
+                ? subString(historyTestResult[0]["sumteacherScore"])
                 : 0
             }}
             / {{ historyTestResult[0]["exambodyScore"] }}
           </h4>
-        </div>
-
-        <div class="text-right">
-          <button type="button" class="btn btn-primary btn-sm">
-            รายละเอียดการให้คะแนน
-          </button>
         </div>
       </div>
     </div>

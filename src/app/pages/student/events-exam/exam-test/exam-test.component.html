@@ -15,10 +15,17 @@
             <h3>
               <b>คำสั่ง : </b>{{ Getexamtopicdata["result"][0].topicText }}
             </h3>
-            <h3 class="text-danger" *ngIf="countdownInterval == null">
-              <b>หมดเวลาทำแบบทดสอบ</b>
-            </h3>
-            <h3 class="text-success" *ngIf="countdownInterval != null">
+            <div class="text-danger mt-3" *ngIf="countdownInterval == null">
+              <h4>
+                <b>เริ่มการสอบ : </b
+                >{{ timeRemake(Getexamtopicdata["result"][0].timeStart) }}
+              </h4>
+              <h4>
+                <b>สิ้นสุดการสอบ : </b
+                >{{ timeRemake(Getexamtopicdata["result"][0].timeEnd) }}
+              </h4>
+            </div>
+            <h3 class="text-success mt-3" *ngIf="countdownInterval != null">
               <b>เวลาสอบที่เหลือ : </b>{{ timeCountdow }}
             </h3>
           </div>
@@ -128,17 +135,56 @@
                   <h3><b>ชื่อฐานข้อมูลที่ใช้ : </b>{{ x.databaseName }}</h3>
                   <h3 class="mb-3"><b>โจทย์ : </b></h3>
                   <div [froalaView]="x.text" class="mb-3 mt-3"></div>
-                  <h3>
-                    <b>คำสำคัญ : </b>{{ service.jsParse(x.keyword).join(", ") }}
-                  </h3>
                   <h3 class="mb-3"><b>คะแนน : </b>{{ x.score }}</h3>
+
+                  <div
+                    class="mt-3 mb-3 border border-success box-padding"
+                    style="border-radius: 5px"
+                  >
+                    <!-- <h3><b>คำแนะนำ</b></h3>
+                    <div class="ml-3 mr-3 mb-2">
+                      <p>
+                        คำสำคัญที่ควรมี :
+                        {{ service.jsParse(x.keyword).join(", ") }}
+                      </p>
+                    </div> -->
+
+                    <h3><b>คำแนะนำ (วิเคราะห์จากคำตอบ)</b></h3>
+                    <div class="ml-3 mr-3">
+                      <p class="text-danger">
+                        {{ "คำสำคัญที่ขาด " + sqlFormat.keywordMissing }}
+                      </p>
+
+                      <p *ngIf="sqlFormat.isTrue" class="text-success mt-3">
+                        {{ "รูปแบบคำสั่งถูกต้อง" }}
+                      </p>
+
+                      <p *ngIf="!sqlFormat.isTrue" class="text-danger mt-3">
+                        {{ sqlFormat.message }}
+                      </p>
+                    </div>
+                  </div>
+
                   <mat-form-field appearance="outline">
                     <mat-label>คำตอบ</mat-label>
                     <textarea
+                      #answerTextInput
                       matInput
                       placeholder="คำตอบ"
                       formControlName="studentAnswer"
                       (blur)="onSubmitOneAnswer(i, x)"
+                      (focus)="
+                        answerKeyup(
+                          answerTextInput.value,
+                          service.jsParse(x.keyword)
+                        )
+                      "
+                      (keyup)="
+                        answerKeyup(
+                          answerTextInput.value,
+                          service.jsParse(x.keyword)
+                        )
+                      "
                       rows="4"
                     ></textarea>
                   </mat-form-field>

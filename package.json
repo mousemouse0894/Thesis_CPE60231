@@ -26,6 +26,7 @@
     "@fullcalendar/angular": "^5.1.0",
     "@fullcalendar/daygrid": "^5.1.0",
     "@fullcalendar/interaction": "^5.1.0",
+    "@material-extended/mde": "^3.0.3",
     "ace-builds": "^1.4.12",
     "angular-calendar": "^0.28.16",
     "angular-froala-wysiwyg": "^3.2.2",

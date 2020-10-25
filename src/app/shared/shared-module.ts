@@ -10,6 +10,7 @@ import interactionPlugin from '@fullcalendar/interaction'; // a plugin
 import { CalendarHeaderComponent } from './calendar-header.component';
 import { ToastrModule } from 'ngx-toastr';
 import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
+import { MdePopoverModule } from '@material-extended/mde';
 
 FullCalendarModule.registerPlugins([
   // register FullCalendar plugins
@@ -30,6 +31,7 @@ FullCalendarModule.registerPlugins([
     ToastrModule,
     FroalaEditorModule,
     FroalaViewModule,
+    MdePopoverModule,
   ],
   exports: [
     CommonModule,
@@ -43,6 +45,7 @@ FullCalendarModule.registerPlugins([
     ToastrModule,
     FroalaEditorModule,
     FroalaViewModule,
+    MdePopoverModule,
   ],
 })
 export class SharedModule {}

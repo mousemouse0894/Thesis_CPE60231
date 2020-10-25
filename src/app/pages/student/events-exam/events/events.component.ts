@@ -20,7 +20,8 @@ export class EventsComponent implements OnInit {
 
   filterTopicList = (topic: Array<any>) => {
     return topic.filter((e) => {
-      return new Date(e.timeEnd) > this.currentTime;
+      console.log(new Date(e.timeEnd));
+      return new Date(e.timeEnd).getTime() > this.currentTime.getTime();
     });
   };
 
@@ -50,7 +51,7 @@ export class EventsComponent implements OnInit {
         }`
       )
       .then((val: any) => {
-        this.currentTime = new Date(val.result);
+        this.currentTime = new Date(`${val.result}`.replace(/ /g, 'T'));
       });
   };
 

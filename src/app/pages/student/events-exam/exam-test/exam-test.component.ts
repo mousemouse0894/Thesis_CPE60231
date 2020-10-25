@@ -171,9 +171,9 @@ export class ExamTestComponent implements OnInit {
 
           // start count time
           this.testCountDown(
-            this.Getexamtopicdata['getDateTime'],
-            this.Getexamtopicdata['result'][0]['timeEnd'],
-            this.Getexamtopicdata['result'][0]['timeStart']
+            `${this.Getexamtopicdata['getDateTime']}`.replace(/ /g, 'T'),
+            `${this.Getexamtopicdata['result'][0]['timeEnd']}`,
+            `${this.Getexamtopicdata['result'][0]['timeStart']}`
           );
 
           if (value.topicData.length > 0) {

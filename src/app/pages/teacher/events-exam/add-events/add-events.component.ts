@@ -20,10 +20,19 @@ export class AddEventsComponent implements OnInit {
   public studentScore: any = null;
   public studentScoreDetail: any = null;
   public currentTime: Date = new Date();
+  public topicSelect: any = null;
 
   constructor(public service: AppService, private formBuilder: FormBuilder) {}
 
   ngOnInit() {
+    this.initialFrom();
+    this.getExamSet();
+    this.onGetgroupstudent();
+    this.onGetexamtopic();
+    this.getCurrentTime();
+  }
+
+  public initialFrom = () => {
     this.formInserttest = this.formBuilder.group({
       groupID_fk: ['', Validators.required],
       exambodyID_fk: ['', Validators.required],
@@ -34,13 +43,9 @@ export class AddEventsComponent implements OnInit {
       owner: this.service.localStorage.get('userLogin')['uid'],
       limitIP: ['', Validators.required],
       statusHistory: ['0'],
+      statusAdvice: ['0'],
     });
-
-    this.getExamSet();
-    this.onGetgroupstudent();
-    this.onGetexamtopic();
-    this.getCurrentTime();
-  }
+  };
 
   replaceText = (data: string) => {
     let div = document.createElement('div');
@@ -70,6 +75,10 @@ export class AddEventsComponent implements OnInit {
     return `${
       dt.toISOString().split('T')[0]
     } ${dt.getHours()}:${dt.getMinutes()}`;
+  };
+
+  isTimeOver = (tiemEnd) => {
+    return new Date(tiemEnd).getTime() <= new Date().getTime();
   };
 
   public getExamSet = () => {
@@ -102,7 +111,7 @@ export class AddEventsComponent implements OnInit {
         if (value.success) {
           this.onGetexamtopic();
           this.selectBody = null;
-          this.service.showAlert('', 'สำเร็จ', 'success');
+          this.service.showAlert('', 'บันทึกข้อมูลสำเร็จ', 'success');
         } else {
           this.service.showAlert('', value.message, 'error');
         }
@@ -165,7 +174,8 @@ export class AddEventsComponent implements OnInit {
       )
       .then((value: any) => {
         if (value.success) {
-          this.service.showAlert('', 'สำเร็จ', 'success');
+          this.onGetexamtopic();
+          this.service.showAlert('', 'บันทึกข้อมูลสำเร็จ', 'success');
         } else {
           this.service.showAlert('', value.message, 'error');
         }
@@ -176,5 +186,68 @@ export class AddEventsComponent implements OnInit {
     this.service.navRouter(
       `/events-exam/${data.examtopicID}/${data.groupID_fk}`
     );
+  };
+
+  public selectBeforeUpdate = (data: any) => {
+    this.topicSelect = data;
+    this.formInserttest.patchValue({
+      groupID_fk: data['groupID_fk'],
+      exambodyID_fk: data['exambodyID_fk'],
+      topicPassword: data['topicPassword'],
+      timeStart: data['timeStart'],
+      timeEnd: data['timeEnd'],
+      topicText: data['topicText'],
+      limitIP: data['limitIP'],
+      statusHistory: data['statusHistory'],
+      statusAdvice: data['statusAdvice'],
+    });
+  };
+
+  public onUpdateTopic = () => {
+    this.service
+      .httpPost(
+        `extopic/updateTopic?token=${
+          this.service.localStorage.get('userLogin')['token']
+        }`,
+        JSON.stringify(this.formInserttest.value)
+      )
+      .then((value: any) => {
+        if (value.success) {
+          this.onGetexamtopic();
+          this.selectBody = null;
+          this.topicSelect = null;
+          this.service.showAlert('', 'บันทึกข้อมูลสำเร็จ', 'success');
+        } else {
+          this.service.showAlert('', value.message, 'error');
+        }
+      });
+  };
+
+  public onDeleteTopic = (data) => {
+    this.service
+      .showConfirm(
+        'ยืนยันการลบ',
+        `รหัสรายการสอบ : ${data.examtopicID}`,
+        'warning'
+      )
+      .then((val: boolean) => {
+        if (val) {
+          this.service
+            .httpPost(
+              `extopic/deltopic?token=${
+                this.service.localStorage.get('userLogin')['token']
+              }`,
+              JSON.stringify(data)
+            )
+            .then((value: any) => {
+              if (value['success']) {
+                this.onGetexamtopic();
+                this.service.showAlert('', 'ลบข้อมูลสำเร็จ', 'success');
+              } else {
+                this.service.showAlert('', value.message, 'error');
+              }
+            });
+        }
+      });
   };
 }

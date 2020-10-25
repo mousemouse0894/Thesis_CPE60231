@@ -21,7 +21,12 @@
                   class="btn btn-primary btn-sm"
                   data-toggle="modal"
                   data-target="#exampleModalSelectBody"
-                  (click)="paginationPage = 1; historySelected = null"
+                  (click)="
+                    paginationPage = 1;
+                    historySelected = null;
+                    topicSelect = null;
+                    initialFrom()
+                  "
                 >
                   เปิดระบบสอบ
                 </button>
@@ -59,10 +64,28 @@
           <div class="mt-3 text-right">
             <button
               type="button"
-              class="btn btn-warning btn-sm"
-              (click)="historyTest(x); selectBody = null"
+              class="btn btn-primary btn-sm mr-2"
+              (click)="historyTest(x); selectBody = null; topicSelect = null"
             >
               ผลสอบ
+            </button>
+
+            <button
+              type="button"
+              class="btn btn-warning btn-sm ml-2 mr-2"
+              (click)="selectBeforeUpdate(x); selectBody = null"
+              [disabled]="isTimeOver(x.timeEnd)"
+            >
+              แก้ไข
+            </button>
+
+            <button
+              type="button"
+              class="btn btn-danger btn-sm ml-2"
+              (click)="topicSelect = null; onDeleteTopic(x)"
+              [disabled]="isTimeOver(x.timeEnd)"
+            >
+              ลบ
             </button>
           </div>
         </div>
@@ -168,6 +191,162 @@
               ></ngx-mat-datetime-picker>
             </mat-form-field>
 
+            <div class="mb-3">
+              <mat-form-field>
+                <input
+                  matInput
+                  placeholder="จำกัดIP"
+                  type="text"
+                  required
+                  formControlName="limitIP"
+                />
+              </mat-form-field>
+            </div>
+
+            <div class="mb-3">
+              <label id="example-radio-group-label">การแสดงคำแนะนำ</label>
+
+              <mat-radio-group
+                aria-label="Select an option"
+                formControlName="statusAdvice"
+                class="example-radio-group"
+              >
+                <mat-radio-button value="0"
+                  >ไม่อนุณาติให้แสดงคำแนะนำ</mat-radio-button
+                >
+                <mat-radio-button value="1"
+                  >อนุณาติให้แสดงคำแนะนำ</mat-radio-button
+                >
+              </mat-radio-group>
+            </div>
+
+            <div class="mb-3">
+              <label id="example-radio-group-label">ประวัติการสอบ</label>
+
+              <mat-radio-group
+                aria-label="Select an option"
+                formControlName="statusHistory"
+                class="example-radio-group"
+              >
+                <mat-radio-button value="0"
+                  >ไม่อนุณาติให้นักศึกษาดูประวัติ</mat-radio-button
+                >
+                <mat-radio-button value="1"
+                  >อนุณาติให้นักศึกษาดูประวัติ</mat-radio-button
+                >
+              </mat-radio-group>
+            </div>
+
+            <div style="margin-top: 20px" class="text-right mb-1">
+              <button type="submit" class="btn btn-primary btn-sm">
+                บันทึก
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-xl-6 mb-3" *ngIf="topicSelect">
+    <div class="card">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-7 mb-3">
+            <h2>แก้ไขระบบสอบ</h2>
+            <h4>รหัสรายการสอบ {{ topicSelect.examtopicID }}</h4>
+            <h4>
+              ชุดข้อสอบ {{ service.zeroPad(topicSelect.exambodyID_fk, 1000) }} :
+              {{ topicSelect.exambodyTopic }}
+            </h4>
+          </div>
+          <div class="col-5 mb-3">
+            <div class="text-right">
+              <button type="button" class="close" (click)="topicSelect = null">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <form
+            [formGroup]="formInserttest"
+            (ngSubmit)="formInserttest.valid ? onUpdateTopic() : ''"
+          >
+            <mat-form-field>
+              <input
+                matInput
+                placeholder="คำสั่ง"
+                type="text"
+                required
+                formControlName="topicText"
+              />
+            </mat-form-field>
+
+            <mat-form-field>
+              <mat-label>กลุ่มเรียน</mat-label>
+              <mat-select #groupID formControlName="groupID_fk">
+                <mat-option
+                  [value]="x.groupID"
+                  *ngFor="let x of groupStudent"
+                  >{{ x.name }}</mat-option
+                >
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field>
+              <input
+                matInput
+                placeholder="รหัสผ่าน"
+                type="text"
+                required
+                formControlName="topicPassword"
+              />
+            </mat-form-field>
+
+            <mat-form-field>
+              <input
+                matInput
+                readonly
+                [ngxMatDatetimePicker]="timeStart"
+                placeholder="เริ่มการสอบ"
+                formControlName="timeStart"
+                (dateChange)="
+                  formInserttest.patchValue({
+                    timeEnd: ''
+                  })
+                "
+              />
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="timeStart"
+              ></mat-datepicker-toggle>
+              <ngx-mat-datetime-picker
+                #timeStart
+                [touchUi]="'true'"
+              ></ngx-mat-datetime-picker>
+            </mat-form-field>
+
+            <mat-form-field>
+              <input
+                matInput
+                readonly
+                [ngxMatDatetimePicker]="timeEnd"
+                placeholder="สิ้นสุดการสอบ"
+                formControlName="timeEnd"
+                [min]="formInserttest.value.timeStart"
+              />
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="timeEnd"
+              ></mat-datepicker-toggle>
+              <ngx-mat-datetime-picker
+                #timeEnd
+                [touchUi]="'true'"
+              ></ngx-mat-datetime-picker>
+            </mat-form-field>
+
             <mat-form-field>
               <input
                 matInput
@@ -179,15 +358,35 @@
             </mat-form-field>
 
             <div class="mb-3">
+              <label id="example-radio-group-label">การแสดงคำแนะนำ</label>
+
+              <mat-radio-group
+                aria-label="Select an option"
+                formControlName="statusAdvice"
+                class="example-radio-group"
+              >
+                <mat-radio-button value="0"
+                  >ไม่อนุญาตให้แสดงคำแนะนำ</mat-radio-button
+                >
+                <mat-radio-button value="1"
+                  >อนุญาตให้แสดงคำแนะนำ</mat-radio-button
+                >
+              </mat-radio-group>
+            </div>
+
+            <div class="mb-3">
+              <label id="example-radio-group-label">ประวัติการสอบ</label>
+
               <mat-radio-group
                 aria-label="Select an option"
                 formControlName="statusHistory"
+                class="example-radio-group"
               >
-                <mat-radio-button value="1"
-                  >อนุณาติให้นักศึกษาดูประวัติ</mat-radio-button
+                <mat-radio-button value="0"
+                  >ไม่อนุญาตให้นักศึกษาดูประวัติ</mat-radio-button
                 >
-                <mat-radio-button value="0" style="margin-left: 20px"
-                  >ไม่อนุณาติให้นักศึกษาดูประวัติ</mat-radio-button
+                <mat-radio-button value="1"
+                  >อนุญาติให้นักศึกษาดูประวัติ</mat-radio-button
                 >
               </mat-radio-group>
             </div>

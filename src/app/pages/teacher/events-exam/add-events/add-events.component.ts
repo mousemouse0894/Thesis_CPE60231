@@ -34,6 +34,7 @@ export class AddEventsComponent implements OnInit {
 
   public initialFrom = () => {
     this.formInserttest = this.formBuilder.group({
+      examtopicID: [''],
       groupID_fk: ['', Validators.required],
       exambodyID_fk: ['', Validators.required],
       topicPassword: ['', Validators.required],
@@ -191,6 +192,7 @@ export class AddEventsComponent implements OnInit {
   public selectBeforeUpdate = (data: any) => {
     this.topicSelect = data;
     this.formInserttest.patchValue({
+      examtopicID: data['examtopicID'],
       groupID_fk: data['groupID_fk'],
       exambodyID_fk: data['exambodyID_fk'],
       topicPassword: data['topicPassword'],

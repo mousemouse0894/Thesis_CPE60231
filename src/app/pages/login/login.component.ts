@@ -34,7 +34,7 @@ export class LoginComponent implements OnInit {
             console.log(value);
             if (value.success) {
               this.service.localStorage.set('userLogin', value.result);
-              this.service.navRouter('/home');
+              this.service.navRouter('/');
             } else {
               this.service.showAlert(
                 '',
@@ -54,7 +54,7 @@ export class LoginComponent implements OnInit {
         console.log(value);
         if (value.success) {
           this.service.localStorage.set('userLogin', value.result);
-          this.service.navRouter('/home');
+          this.service.navRouter('/');
         } else if (value.ip) {
           this.service.showAlert(
             '',

@@ -20,19 +20,22 @@ export class EventsComponent implements OnInit {
 
   filterTopicList = (topic: Array<any>) => {
     return topic.filter((e) => {
-      console.log(new Date(e.timeEnd));
       return new Date(e.timeEnd).getTime() > this.currentTime.getTime();
     });
   };
 
   public openNewtab = (path: any) => {
-    // window.open(
-    //   environment.url + 'events/' + path,
-    //   '',
-    //   'width=1024, height=728'
-    // );
+    // window.open(environment.url + 'events/' + path, '_blank');
 
-    window.open(environment.url + 'events/' + path, '_blank');
+    let new_window = window.open(
+      environment.url + 'events/' + path,
+      '',
+      'width=1024, height=728'
+    );
+
+    new_window.onbeforeunload = () => {
+      window.location.reload();
+    };
   };
 
   timeRemake = (time) => {

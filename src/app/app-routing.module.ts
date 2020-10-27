@@ -36,11 +36,6 @@ const routes: Routes = [
         canActivate: [CheckLoginGuard],
         children: [
           {
-            path: 'home',
-            loadChildren: () =>
-              import('./pages/home/home.module').then((m) => m.HomeModule),
-          },
-          {
             path: 'change-password',
             loadChildren: () =>
               import('./pages/change-password/change-password.module').then(
@@ -126,11 +121,7 @@ const routes: Routes = [
                 (m) => m.HistoryTestModule
               ),
           },
-          {
-            path: '',
-            redirectTo: '/home',
-            pathMatch: 'full',
-          },
+
         ],
       },
       {

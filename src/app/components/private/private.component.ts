@@ -1,9 +1,12 @@
+import { NavigationEnd, Router } from '@angular/router';
 import { AppService } from 'src/app/services/app.service';
 import { Component, OnInit } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+
+const _window: any = window;
 
 @Component({
   selector: 'app-private',
@@ -21,19 +24,35 @@ export class PrivateComponent implements OnInit {
 
   constructor(
     private breakpointObserver: BreakpointObserver,
-    public service: AppService
+    public service: AppService,
+    private router: Router
   ) {}
 
+  private getLocation = (val) => {
+    val(window.location.pathname);
+
+    this.router.events.subscribe((e) => {
+      if (e instanceof NavigationEnd) {
+        val(e.url);
+      }
+    });
+  };
+
   ngOnInit() {
+    this.getLocation((val: string) => {
+      if (val == '/') {
+        if (this.service.localStorage.get('userLogin')['gidNumber'] == '4500') {
+          this.service.navRouter('/group');
+        } else {
+          this.service.navRouter('/group-student');
+        }
+      }
+    });
+
     if (this.service.localStorage.get('userLogin')['gidNumber'] == '4500') {
       this.getGroup();
       // นักศึกษา
       this.menuList = [
-        {
-          path: '/home',
-          text: 'หน้าหลัก',
-          icon: '<i class="fas fa-home"></i>',
-        },
         {
           path: '/group',
           text: 'กลุ่มเรียน',
@@ -63,11 +82,6 @@ export class PrivateComponent implements OnInit {
     } else {
       // อาจารย์
       this.menuList = [
-        {
-          path: '/home',
-          text: 'หน้าหลัก',
-          icon: '<i class="fas fa-home"></i>',
-        },
         {
           path: '/group-student',
           text: 'กลุ่มเรียน',

@@ -140,6 +140,8 @@
                   <div
                     class="mt-3 mb-3 border border-success box-padding"
                     style="border-radius: 5px"
+                    [hidden]='Getexamtopicdata["result"][0].statusAdvice != "1"'
+                    
                   >
                     <!-- <h3><b>คำแนะนำ</b></h3>
                     <div class="ml-3 mr-3 mb-2">

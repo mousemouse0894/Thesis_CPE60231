@@ -40,7 +40,7 @@ export class PrivateComponent implements OnInit {
 
   ngOnInit() {
     this.getLocation((val: string) => {
-      if (val == '/') {
+      if (val == environment.baseHref) {
         if (this.service.localStorage.get('userLogin')['gidNumber'] == '4500') {
           this.service.navRouter('/group');
         } else {

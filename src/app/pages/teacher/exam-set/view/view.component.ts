@@ -203,6 +203,7 @@ export class ViewComponent implements OnInit {
 
   public onCheckRandom = (x) => {
     this.examList = x == false ? [] : this.examList;
+
     if (!x) {
       this.initFrom(1, this.countExamStore, true);
       this.formTopic.patchValue({
@@ -214,6 +215,7 @@ export class ViewComponent implements OnInit {
         examstoreID_fk: '',
       });
     }
+
     this.checkRandom = x == true ? false : true;
   };
 
@@ -300,6 +302,7 @@ export class ViewComponent implements OnInit {
 
   public onUpdateTopic = (x) => {
     this.examList = x.exambodyData;
+    this.checkRandom = x.exambodyData.length < 1
     this.formUpdateTopic.patchValue({
       topic: x.topic,
       text: x.text,

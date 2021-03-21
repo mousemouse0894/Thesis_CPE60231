@@ -330,6 +330,59 @@
           <b>โจทย์ : </b>
         </h4>
         <div [froalaView]="examSelected.text" class="mb-2"></div>
+
+        <div
+          *ngIf="
+            service.jsParse(examSelected.teacherResult).isQuery;
+            else errQuery
+          "
+          style="overflow: auto"
+          class="mb-2"
+        >
+          <h4 class="mb-2">
+            <b>ผลลัพธ์ : </b>
+          </h4>
+          <table
+            class="table table-sm table-bordered table-hover"
+            *ngIf="
+              getKeyObject(service.jsParse(examSelected.teacherResult).result)
+                .length > 0
+            "
+          >
+            <thead>
+              <tr>
+                <th
+                  *ngFor="
+                    let x of getKeyObject(
+                      service.jsParse(examSelected.teacherResult).result
+                    )
+                  "
+                >
+                  {{ x }}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                *ngFor="
+                  let x of service.jsParse(examSelected.teacherResult).result
+                "
+              >
+                <td *ngFor="let xx of getKeyObject(x)">{{ x[xx] }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <ng-template #errQuery>
+          <div class="mb-2">
+            <h4>
+              <b>ผลลัพธ์ : </b
+              >{{ service.jsParse(examSelected.teacherResult).message }}
+            </h4>
+          </div>
+        </ng-template>
+
         <h4 class="mb-2"><b>คำตอบ : </b>{{ examSelected.answer }}</h4>
         <h4 class="mb-2"><b>คำสำคัญ : </b>{{ showKeyword() }}</h4>
         <h4 class="mb-2"><b>คะแนน : </b>{{ examSelected.score }}</h4>

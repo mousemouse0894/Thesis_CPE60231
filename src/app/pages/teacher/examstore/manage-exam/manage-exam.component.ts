@@ -475,4 +475,15 @@ export class ManageExamComponent implements OnInit {
         }
       });
   };
+
+  public getKeyObject = (array) => {
+    if (array.length > 0) {
+      let ObjectData = [...array];
+      return Object.keys(ObjectData[0]);
+    } else if (typeof array == 'object') {
+      return Object.keys(array);
+    } else {
+      return [];
+    }
+  };
 }

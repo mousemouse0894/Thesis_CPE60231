@@ -728,7 +728,7 @@ export class ExamTestComponent implements OnInit {
     }
   };
 
-  private getKeyObject = (array) => {
+  public getKeyObject = (array) => {
     if (array) {
       if (array.length > 0) {
         let ObjectData = [...array];

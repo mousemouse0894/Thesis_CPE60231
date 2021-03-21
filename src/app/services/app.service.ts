@@ -217,7 +217,13 @@ export class AppService {
   };
 
   jsParse = (data) => {
-    return JSON.parse(data);
+    let rt = null;
+    try {
+      rt = JSON.parse(data);
+    } catch (error) {
+      rt = null;
+    }
+    return rt;
   };
 
   jsStringify = (data) => {
